@@ -1,0 +1,8 @@
+{
+  "name": "BicycleFitter",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue",
+  "id": "ce40ab25"
+}

@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "BicycleFitter",
+	"webDir": "dist",
+	"bundledWebRuntime": false
+}
