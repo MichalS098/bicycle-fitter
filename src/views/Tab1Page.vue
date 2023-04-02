@@ -12,6 +12,12 @@
         </ion-toolbar>
       </ion-header>
 
+      <div class="flex flex-col gap-6">
+        <h2 class="text-red-500 text-2xl">
+          test tailwind
+        </h2>
+      </div>
+
       <ExploreContainer name="Tab 1 page" />
     </ion-content>
   </ion-page>
