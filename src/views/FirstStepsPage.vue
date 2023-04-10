@@ -32,7 +32,7 @@
                     <ion-progress-bar class="progress-bar" :value="current_step / number_of_steps"
                         color="secondary"></ion-progress-bar>
                     <p class="text-lg">
-                        Please select your unit system
+                        What unit system do you prefer?
                     </p>
                     <div class="flex flex-col gap-3 pl-3 pr-12 mt-6">
                         <ion-button @click="setUnitSystem('metric')" expand="block" shape="round"

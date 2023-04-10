@@ -3,7 +3,7 @@ import { RouteRecordRaw } from 'vue-router';
 import TabsPage from '../views/TabsPage.vue'
 import HomeLayout from '@/views/HomeLayout.vue';
 
-const routes: Array<RouteRecordRaw> = [
+const routes: Array<RouteRecordRaw> = [  
   {
     path: '/',
     redirect: () => {
@@ -47,7 +47,7 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/SettingsPage.vue')
       },
     ]
-  }
+  },
 ]
 
 const router = createRouter({
