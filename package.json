@@ -21,8 +21,8 @@
     "@capacitor/preferences": "^4.0.2",
     "@capacitor/status-bar": "4.1.1",
     "@ionic/pwa-elements": "^3.1.1",
-    "@ionic/vue": "^6.0.0",
-    "@ionic/vue-router": "^6.0.0",
+    "@ionic/vue": "^7.0.1",
+    "@ionic/vue-router": "^7.0.1",
     "@mediapipe/camera_utils": "^0.3.1675466862",
     "@mediapipe/control_utils": "^0.6.1675466023",
     "@mediapipe/control_utils_3d": "^0.3.1675466062",
@@ -31,8 +31,8 @@
     "@tailwindcss/forms": "^0.5.3",
     "core-js": "^3.6.5",
     "ionicons": "^6.0.3",
-    "vue": "^3.2.21",
-    "vue-router": "^4.0.12"
+    "vue": "^3.2.47",
+    "vue-router": "^4.1.6"
   },
   "devDependencies": {
     "@capacitor/cli": "4.7.0",

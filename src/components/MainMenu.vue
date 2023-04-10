@@ -1,22 +1,22 @@
 <template>
     <ion-tab-bar slot="bottom">
-        <ion-tab-button tab="home" href="/home">
+        <ion-tab-button tab="home" href="/pages/home">
             <ion-icon aria-hidden="true" :icon="home" />            
         </ion-tab-button>
 
-        <ion-tab-button tab="library" href="/library">
+        <ion-tab-button tab="library" href="/pages/library">
             <ion-icon aria-hidden="true" :icon="book" />
         </ion-tab-button>
 
-        <ion-tab-button tab="camera" href="/camera">
+        <ion-tab-button tab="camera" href="/pages/camera">
             <ion-icon aria-hidden="true" :icon="camera" />
         </ion-tab-button>
 
-        <ion-tab-button tab="favourites" href="/favourites">
+        <ion-tab-button tab="favourites" href="/pages/favourites">
             <ion-icon aria-hidden="true" :icon="heart" />
         </ion-tab-button>
 
-        <ion-tab-button tab="settings" href="/settings">
+        <ion-tab-button tab="settings" href="/pages/settings">
             <ion-icon aria-hidden="true" :icon="cog" />
         </ion-tab-button>
     </ion-tab-bar>

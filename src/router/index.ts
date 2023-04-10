@@ -19,13 +19,9 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/views/FirstStepsPage.vue')
   },
   {
-    path: '/',
+    path: '/pages',
     component: HomeLayout,
-    children: [
-      {
-        path: '',
-        redirect: '/home'
-      },
+    children: [      
       {
         path: 'home',
         component: () => import('@/views/HomePage.vue')
