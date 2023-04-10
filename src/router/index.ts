@@ -7,10 +7,10 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     redirect: () => {
-      if (localStorage.getItem('firstTime') === 'true') {
+      if (localStorage.getItem('first-steps-completed') === null) {
         return '/first-steps'
       } else {
-        return '/home'
+        return '/pages/home'
       }
     }
   },
@@ -21,7 +21,11 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/pages',
     component: HomeLayout,
-    children: [      
+    children: [
+      {
+        path: '',
+        redirect: '/pages/home'
+      },
       {
         path: 'home',
         component: () => import('@/views/HomePage.vue')

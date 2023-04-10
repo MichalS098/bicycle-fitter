@@ -20,6 +20,25 @@
 </template>
   
 <script setup lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
+import {
+    IonPage, IonHeader, IonToolbar, IonTitle, IonContent,
+    onIonViewDidEnter, onIonViewDidLeave, onIonViewWillEnter, onIonViewWillLeave
+} from '@ionic/vue';
+
+onIonViewDidEnter(() => {
+    console.log('Page did enter');
+});
+
+onIonViewDidLeave(() => {
+    console.log('Page did leave');
+});
+
+onIonViewWillEnter(() => {
+    console.log('Page will enter');
+});
+
+onIonViewWillLeave(() => {
+    console.log('Page will leave');
+});
 </script>
   
