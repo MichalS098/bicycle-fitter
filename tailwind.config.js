@@ -10,6 +10,9 @@ module.exports = {
         'secondary': 'var(--ion-color-secondary)',
         'tertiary': 'var(--ion-color-tertiary)',
       },
+      fontFamily: {
+        'sans': ['Lato', 'sans-serif'],
+      },      
     },
   },
   plugins: [

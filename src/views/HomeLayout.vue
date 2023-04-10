@@ -1,5 +1,5 @@
 <template>
-  <ion-page>
+  <ion-page class="font-sans">
     <ion-tabs>
       <ion-router-outlet></ion-router-outlet>
       <MainMenu />

@@ -2,8 +2,10 @@
     <ion-page>
         <ion-content :fullscreen="true">
             <div class="ion-padding">
-                <h1>let your <span class="text-primary-">bike</span>
-                    fit you</h1>
+                <h1 class="text-right text-6xl">
+                    let your <span class="text-primary">bike</span>
+                    fit <span class="text-primary">you</span>
+                </h1>
                 <h2>
                     Start with measuring yourself!
                 </h2>
@@ -13,7 +15,7 @@
                     You can pass your photo,
                     or we can do it live!
                 </p>
-                <ion-button href="/measurements" expand="block" fill="outline">                    
+                <ion-button href="/measurements" expand="block" fill="outline">
                     Get started!
                 </ion-button>
             </div>
