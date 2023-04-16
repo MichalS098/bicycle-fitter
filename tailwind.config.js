@@ -9,6 +9,7 @@ module.exports = {
         'primary': 'var(--ion-color-primary)',
         'secondary': 'var(--ion-color-secondary)',
         'tertiary': 'var(--ion-color-tertiary)',
+        'dark-gray': '#8A8A8A',
       },
       fontFamily: {
         'sans': ['Lato', 'sans-serif'],
