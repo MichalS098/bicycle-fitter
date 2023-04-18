@@ -9,10 +9,10 @@
                 <div class="flex flex-col gap-6 px-3">
                     <h2 class="text-2xl font-semibold text-left">
                         Tell us about yourself!
-                    </h2>
+                    </h2>                    
                     <p class="text-lg text-left pb-12">
-                        As with real bike fitting, we will start 
-                        with a short survey about you, your 
+                        As with real bike fitting, we will start
+                        with a short survey about you, your
                         riding style and your expectations
                     </p>
                     <ion-button @click="nextStep()" expand="block" shape="round" color="primary" mode="ios" type="button"
@@ -58,12 +58,10 @@
                     <ion-progress-bar class="progress-bar" :value="currentStep / numberOfSteps"
                         color="secondary"></ion-progress-bar>
                     <p class="text-lg">
-                        What unit system do you prefer?
+                        What is your height?
                     </p>
                     <div class="flex flex-col gap-3 pl-3 pr-12 mt-6">
-                        <button-input :value="form.height" @update:modelValue="form.height = $event" type="number"
-                            placeholder="Enter your height" />
-                        {{ form.height }}
+                        <button-input v-model="form.height" type="number" placeholder="Enter your height" />
                     </div>
                 </div>
                 <div class="flex items-center justify-between">
@@ -71,7 +69,7 @@
                         Back
                     </ion-button>
                     <ion-button @click="nextStep()" expand="block" fill="clear" size="large"
-                        :color="form.height == '' ? 'light' : 'secondary'">
+                        :color="form.height == 0 ? 'light' : 'secondary'">
                         Next
                     </ion-button>
                 </div>
@@ -90,11 +88,11 @@
                     <div class="flex flex-col gap-3 pl-3 pr-12 mt-6">
                         <first-steps-radio-button @click="form.rideTime = 1" :checked="form.rideTime == 1"
                             label="1 Hour or less" />
-                        <first-steps-radio-button @click="form.rideTime = 2" :checked="form.rideTime == 2" 
+                        <first-steps-radio-button @click="form.rideTime = 2" :checked="form.rideTime == 2"
                             label="1 - 3 Hours" />
-                        <first-steps-radio-button @click="form.rideTime = 3" :checked="form.rideTime == 3" 
+                        <first-steps-radio-button @click="form.rideTime = 3" :checked="form.rideTime == 3"
                             label="3 - 6 Hours" />
-                        <first-steps-radio-button @click="form.rideTime = 4" :checked="form.rideTime == 4" 
+                        <first-steps-radio-button @click="form.rideTime = 4" :checked="form.rideTime == 4"
                             label="6 Hours or more" />
                     </div>
                 </div>
@@ -122,12 +120,12 @@
                     <div class="flex flex-col gap-3 pl-3 pr-12 mt-6">
                         <first-steps-radio-button @click="form.rideStyle = 'casual'" :checked="form.rideStyle == 'casual'"
                             label="Casual" />
-                        <first-steps-radio-button @click="form.rideStyle = 'recreational'" :checked="form.rideStyle == 'recreational'"
-                            label="Recreational" />
+                        <first-steps-radio-button @click="form.rideStyle = 'recreational'"
+                            :checked="form.rideStyle == 'recreational'" label="Recreational" />
                         <first-steps-radio-button @click="form.rideStyle = 'avid'" :checked="form.rideStyle == 'avid'"
                             label="Avid" />
-                        <first-steps-radio-button @click="form.rideStyle = 'weekendwarrior'" :checked="form.rideStyle == 'weekendwarrior'"
-                            label="Weekend Warrior" />
+                        <first-steps-radio-button @click="form.rideStyle = 'weekendwarrior'"
+                            :checked="form.rideStyle == 'weekendwarrior'" label="Weekend Warrior" />
                         <first-steps-radio-button @click="form.rideStyle = 'racer'" :checked="form.rideStyle == 'racer'"
                             label="Racer" />
                     </div>
@@ -155,8 +153,8 @@
                         In order to bikefit you into your bike, we need to know your measurements.
                         You can pass your photo, or we can do it live with your phone camera!
                     </p>
-                    <ion-button router-link="/measure" expand="block" shape="round" color="secondary" mode="ios" type="button"
-                        class="font-bold text-lg">
+                    <ion-button router-link="/measure" expand="block" shape="round" color="secondary" mode="ios"
+                        type="button" class="font-bold text-lg">
                         Measure me!
                     </ion-button>
                 </div>
@@ -180,7 +178,7 @@ const currentStep = ref(0);
 const form = ref({
     unitSystem: '',
     weight: '',
-    height: '',
+    height: null,
     gender: '',
     rideTime: 0,
     rideStyle: '',
@@ -196,8 +194,8 @@ const nextStep = () => {
             return;
         }
     } else if (currentStep.value == 2) {
-        if (form.value.height == '') {
-            // return;
+        if (form.value.height == 0) {
+            return;
         }
     } else if (currentStep.value == 3) {
         if (form.value.rideTime == 0) {
@@ -220,12 +218,12 @@ const prevStep = () => {
     }
 }
 
+const test = ref("rhianan");
+
 </script>
 <style scoped>
 .progress-bar {
     height: 12px;
     border-radius: 100px;
-    /* width: 80%;
-    m */
 }
 </style>
