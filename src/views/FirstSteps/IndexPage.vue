@@ -18,7 +18,7 @@
                         or we can do it live!
                     </p>
                     <ion-button @click="nextStep()" expand="block" shape="round" color="primary" mode="ios" type="button"
-                        class="font-bold text-lg">
+                                class="font-bold text-lg">
                         Get started!
                     </ion-button>
                 </div>
@@ -30,15 +30,15 @@
                         Your unit system
                     </h2>
                     <ion-progress-bar class="progress-bar" :value="currentStep / numberOfSteps"
-                        color="secondary"></ion-progress-bar>
+                                      color="secondary"></ion-progress-bar>
                     <p class="text-lg">
                         What unit system do you prefer?
                     </p>
                     <div class="flex flex-col gap-3 pl-3 pr-12 mt-6">
                         <first-steps-radio-button @click="form.unitSystem = 'metric'" :checked="form.unitSystem == 'metric'"
-                            label="Metric" />
+                                                  label="Metric" />
                         <first-steps-radio-button @click="form.unitSystem = 'imperial'"
-                            :checked="form.unitSystem == 'imperial'" label="Imperial" />
+                                                  :checked="form.unitSystem == 'imperial'" label="Imperial" />
                     </div>
                 </div>
                 <div class="flex items-center justify-between">
@@ -46,7 +46,7 @@
                         Back
                     </ion-button>
                     <ion-button @click="nextStep()" expand="block" fill="clear" size="large"
-                        :color="form.unitSystem == '' ? 'light' : 'secondary'">
+                                :color="form.unitSystem == '' ? 'light' : 'secondary'">
                         Next
                     </ion-button>
                 </div>
@@ -55,17 +55,23 @@
             <div v-if="currentStep == 2" class="ion-padding py-16 flex flex-col gap-6 justify-between h-full">
                 <div class="flex flex-col gap-6">
                     <h2 class="text-4xl font-semibold">
-                        Your height
+                        Your height and weight
                     </h2>
                     <ion-progress-bar class="progress-bar" :value="currentStep / numberOfSteps"
-                        color="secondary"></ion-progress-bar>
+                                      color="secondary"></ion-progress-bar>
                     <p class="text-lg">
-                        What unit system do you prefer?
+                        Input your height and weight
                     </p>
                     <div class="flex flex-col gap-3 pl-3 pr-12 mt-6">
                         <button-input :value="form.height" @update:modelValue="form.height = $event" type="number"
-                            placeholder="Enter your height" />
-                        {{ form.height }}
+                                      placeholder="Enter your height" />
+                        {{ form.height }} 
+                        <!-- <button-input :value="form.weight" @update:modelValue="form.weight = $event" type="number"
+                                      placeholder="Enter your weight" />
+                        {{ form.weight }} -->
+                        <!-- <button-input v-model="form.height" type="number"
+                                      placeholder="Enter your weight" />
+                        {{ form.height }} -->
                     </div>
                 </div>
                 <div class="flex items-center justify-between">
@@ -73,11 +79,75 @@
                         Back
                     </ion-button>
                     <ion-button @click="nextStep()" expand="block" fill="clear" size="large"
-                        :color="form.gender == '' ? 'light' : 'secondary'">
+                                :color="form.height == ''? 'light' : 'secondary'">
+                        Next 
+                    </ion-button>
+                </div>
+            </div>
+
+            <div v-if="currentStep == 3" class="ion-padding py-16 flex flex-col gap-6 justify-between h-full">
+                <div class="flex flex-col gap-6">
+                    <h2 class="text-4xl font-semibold">
+                        Your gender
+                    </h2>
+                    <ion-progress-bar class="progress-bar" :value="currentStep / numberOfSteps"
+                                      color="secondary"></ion-progress-bar>
+                    <p class="text-lg">
+                        Chose your gender
+                    </p>
+                    <div class="flex flex-col gap-3 pl-3 pr-12 mt-6">
+                        <first-steps-radio-button @click="form.gender = 'male'" :checked="form.gender == 'male'"
+                                                  label="Male" />
+                        <first-steps-radio-button @click="form.gender = 'female'"
+                                                  :checked="form.gender == 'female'" label="Female" />
+                        <first-steps-radio-button @click="form.gender = 'other'"
+                                                  :checked="form.gender == 'other'" label="Other" />
+                    </div>
+                </div>
+                <div class="flex items-center justify-between">
+                    <ion-button @click="prevStep()" expand="block" fill="clear" size="large" color="light">
+                        Back
+                    </ion-button>
+                    <ion-button @click="nextStep()" expand="block" fill="clear" size="large"
+                                :color="form.gender == '' ? 'light' : 'secondary'">
                         Next
                     </ion-button>
                 </div>
             </div>
+
+            <div v-if="currentStep == 4" class="ion-padding py-16 flex flex-col gap-6 justify-between h-full">
+                <div class="flex flex-col gap-6">
+                    <h2 class="text-4xl font-semibold">
+                        Your weekly ride time
+                    </h2>
+                    <ion-progress-bar class="progress-bar" :value="currentStep / numberOfSteps"
+                                      color="secondary"></ion-progress-bar>
+                    <p class="text-lg">
+                        Chose the ammount of time you roughly spend on the bike in a week
+                    </p>
+                    <div class="flex flex-col gap-3 pl-3 pr-12 mt-6">
+                        <first-steps-radio-button @click="form.rideTime = 0" :checked="form.rideTime == 0"
+                                                  label="Opt1" />
+                        <first-steps-radio-button @click="form.rideTime = 1" :checked="form.rideTime == 1"
+                                                  label="Opt2" />
+                        <first-steps-radio-button @click="form.rideTime = 2" :checked="form.rideTime == 2"
+                                                  label="Opt3" />
+                        <first-steps-radio-button @click="form.rideTime = 3" :checked="form.rideTime == 3"
+                                                  label="Opt4" />
+                    </div>
+                </div>
+                <div class="flex items-center justify-between">
+                    <ion-button @click="prevStep()" expand="block" fill="clear" size="large" color="light">
+                        Back
+                    </ion-button>
+                    <ion-button @click="nextStep()" expand="block" fill="clear" size="large"
+                                :color="form.gender == '' ? 'light' : 'secondary'">
+                        Finish
+                    </ion-button>
+                </div>
+            </div>
+
+            
         </ion-content>
     </ion-page>
 </template>
@@ -88,13 +158,14 @@ import { ref } from 'vue';
 import FirstStepsRadioButton from '@/views/FirstSteps/FirstStepsRadioButton.vue';
 import ButtonInput from '@/components/ButtonInput.vue';
 
-const numberOfSteps = 7; // 0 - 6
+//changed to 5 - some steps are a bit redundant
+const numberOfSteps = 5; // 0 - 6
 const currentStep = ref(0);
 
 const form = ref({
     unitSystem: '',
     weight: '',
-    height: '',
+    height: '', 
     gender: '',
     rideTime: 0,
     rideStyle: '',
