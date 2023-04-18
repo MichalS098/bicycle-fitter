@@ -22,7 +22,7 @@
                 </div>
             </div>
 
-            <div v-if="currentStep == 1" class="ion-padding pt-16 pb-4 flex flex-col gap-6 justify-between h-full">
+            <div v-if="currentStep == 1" class="ion-padding pt-16 pb-6 flex flex-col gap-6 justify-between h-full">
                 <div class="flex flex-col gap-6">
                     <h2 class="text-4xl font-semibold">
                         Your unit system
@@ -50,7 +50,7 @@
                 </div>
             </div>
 
-            <div v-if="currentStep == 2" class="ion-padding pt-16 pb-4 flex flex-col gap-6 justify-between h-full">
+            <div v-if="currentStep == 2" class="ion-padding pt-16 pb-6 flex flex-col gap-6 justify-between h-full">
                 <div class="flex flex-col gap-6">
                     <h2 class="text-4xl font-semibold">
                         Your height
@@ -77,7 +77,7 @@
                 </div>
             </div>
 
-            <div v-if="currentStep == 3" class="ion-padding pt-16 pb-4 flex flex-col gap-6 justify-between h-full">
+            <div v-if="currentStep == 3" class="ion-padding pt-16 pb-6 flex flex-col gap-6 justify-between h-full">
                 <div class="flex flex-col gap-6">
                     <h2 class="text-4xl font-semibold">
                         Your ride time
@@ -109,7 +109,7 @@
                 </div>
             </div>
 
-            <div v-if="currentStep == 4" class="ion-padding pt-16 pb-4 flex flex-col gap-6 justify-between h-full">
+            <div v-if="currentStep == 4" class="ion-padding pt-16 pb-6 flex flex-col gap-6 justify-between h-full">
                 <div class="flex flex-col gap-6">
                     <h2 class="text-4xl font-semibold">
                         Your rider style
@@ -155,7 +155,7 @@
                         In order to bikefit you into your bike, we need to know your measurements.
                         You can pass your photo, or we can do it live with your phone camera!
                     </p>
-                    <ion-button @click="endSurvey()" expand="block" shape="round" color="secondary" mode="ios" type="button"
+                    <ion-button router-link="/measure" expand="block" shape="round" color="secondary" mode="ios" type="button"
                         class="font-bold text-lg">
                         Measure me!
                     </ion-button>
@@ -169,6 +169,7 @@
 <script setup lang="ts">
 import { IonProgressBar } from '@ionic/vue';
 import { ref } from 'vue';
+import { useIonRouter } from '@ionic/vue';
 import { IonPage, IonContent, IonButton } from '@ionic/vue';
 import FirstStepsRadioButton from '@/views/FirstSteps/FirstStepsRadioButton.vue';
 import ButtonInput from '@/components/ButtonInput.vue';
@@ -217,11 +218,6 @@ const prevStep = () => {
     if (currentStep.value > 0) {
         currentStep.value--;
     }
-}
-
-const endSurvey = () => {
-    // go to Measure/IndexPage.vue
-
 }
 
 </script>
