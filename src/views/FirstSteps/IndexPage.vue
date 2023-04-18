@@ -1,7 +1,6 @@
 <template>
     <ion-page>
         <ion-content :fullscreen="true">
-            <!-- first step -->
             <div v-if="currentStep == 0" class="ion-padding py-24 flex flex-col justify-between gap-6 h-full">
                 <h1 class="text-right text-6xl">
                     let your <span class="text-primary font-semibold">bike</span> <br>
@@ -23,7 +22,7 @@
                 </div>
             </div>
 
-            <div v-if="currentStep == 1" class="ion-padding py-16 flex flex-col gap-6 justify-between h-full">
+            <div v-if="currentStep == 1" class="ion-padding pt-16 pb-4 flex flex-col gap-6 justify-between h-full">
                 <div class="flex flex-col gap-6">
                     <h2 class="text-4xl font-semibold">
                         Your unit system
@@ -51,7 +50,7 @@
                 </div>
             </div>
 
-            <div v-if="currentStep == 2" class="ion-padding py-16 flex flex-col gap-6 justify-between h-full">
+            <div v-if="currentStep == 2" class="ion-padding pt-16 pb-4 flex flex-col gap-6 justify-between h-full">
                 <div class="flex flex-col gap-6">
                     <h2 class="text-4xl font-semibold">
                         Your height
@@ -78,7 +77,7 @@
                 </div>
             </div>
 
-            <div v-if="currentStep == 3" class="ion-padding py-16 flex flex-col gap-6 justify-between h-full">
+            <div v-if="currentStep == 3" class="ion-padding pt-16 pb-4 flex flex-col gap-6 justify-between h-full">
                 <div class="flex flex-col gap-6">
                     <h2 class="text-4xl font-semibold">
                         Your ride time
@@ -110,7 +109,7 @@
                 </div>
             </div>
 
-            <div v-if="currentStep == 4" class="ion-padding py-16 flex flex-col gap-6 justify-between h-full">
+            <div v-if="currentStep == 4" class="ion-padding pt-16 pb-4 flex flex-col gap-6 justify-between h-full">
                 <div class="flex flex-col gap-6">
                     <h2 class="text-4xl font-semibold">
                         Your rider style
@@ -169,7 +168,7 @@
   
 <script setup lang="ts">
 import { IonProgressBar } from '@ionic/vue';
-import { defineComponent, ref } from 'vue';
+import { ref } from 'vue';
 import { IonPage, IonContent, IonButton } from '@ionic/vue';
 import FirstStepsRadioButton from '@/views/FirstSteps/FirstStepsRadioButton.vue';
 import ButtonInput from '@/components/ButtonInput.vue';
