@@ -1,19 +1,17 @@
 <template>
     <div>
-        <input class="rounded-full bg-transparent border-2
-                       border-dark-gray text-dark-gray h-[52px] px-5
-                       focus:text-secondary focus:border-secondary
-                       focus:outline-none focus:ring-0" :type="type" :placeholder="placeholder" :value="input"
-            @input="onInput" />
+        <input
+            class="rounded-full bg-transparent border-2 border-dark-gray text-dark-gray h-[52px] px-5 focus:text-secondary focus:border-secondary focus:outline-none focus:ring-0"
+            :type="type" :placeholder="placeholder" @input="onInput" :value="content" />
     </div>
 </template>
 <script setup lang="ts">
 import { ref, defineEmits } from 'vue'
 
-
 const emits = defineEmits(['update:modelValue'])
 
 const props = defineProps({
+    modelValue: null,
     type: {
         type: String,
         default: 'text'
@@ -22,15 +20,12 @@ const props = defineProps({
         type: String,
         default: ''
     },
-    value: {
-        type: String,
-        default: ''
-    }
 })
 
-const input = ref<string>(props.value)
+const content = ref<string | number>(props.modelValue)
 
 const onInput = (e: Event) => {
-    emits('update:modelValue', input.value);
+    content.value = (e.target as HTMLInputElement).value
+    emits('update:modelValue', content.value)
 }
 </script>
