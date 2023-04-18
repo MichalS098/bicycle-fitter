@@ -168,8 +168,9 @@
 </template>
   
 <script setup lang="ts">
+import { IonProgressBar } from '@ionic/vue';
+import { defineComponent, ref } from 'vue';
 import { IonPage, IonContent, IonButton } from '@ionic/vue';
-import { ref } from 'vue';
 import FirstStepsRadioButton from '@/views/FirstSteps/FirstStepsRadioButton.vue';
 import ButtonInput from '@/components/ButtonInput.vue';
 
