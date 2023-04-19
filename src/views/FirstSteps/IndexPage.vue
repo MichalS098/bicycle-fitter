@@ -131,63 +131,63 @@
                     </div>
 
                     <div>
-                        <div class="flex flex-col gap-3 pl-3 ">
-                            <InformationCircleIcon class="h-8 w-8 text-secondary" @click="showRiderStyleInfo"/>
+                        <div class="flex flex-col gap-3 pl-3 pr-3 ">
+                            <InformationCircleIcon class="h-8 w-8 text-secondary" @click="displayRiderStyleInfo"/>
                         </div>
                         <VueTailwindModal v-if="isRiderStyleInfoVisible" @close="isRiderStyleInfoVisible = false" class="justify-center items-center">
-                            <div class="absolute bg-white rounded-lg py-4 px-4">
+                            <div class="absolute bg-white rounded-lg py-4 mx-">
                                 <div class="flex justify-end">
-                                    <XMarkIcon class="h-8 w-8 text-secondary" @click="hideRiderStyleInfo"/>
+                                    <XMarkIcon class="h-8 w-8 text-secondary" @click="displayRiderStyleInfo"/>
                                 </div>
-                                <h2 class="text-2xl text-gray-600 font-bold mb-4"> 
+                                <h2 class="text-2xl text-gray-600 font-bold m-4"> 
                                     Rider styles:
                                 </h2>
-                                <h3 class="text-xl text-gray-600 font-bold mb-4"> 
+                                <h3 class="text-xl text-gray-600 font-bold m-4"> 
                                     Casual
                                 </h3>
-                                <p class="text-gray-600">
+                                <p class="text-gray-600 mx-5">
                                     Leisurely rider, comfortable on bike paths. <br>
                                     Weekly rides: 1, <br>
-                                    weekly mileage: 25 <br><br>
+                                    weekly mileage: 25 <br>
                                 </p>
-                                <h3 class="text-xl text-gray-600 font-bold mb-4"> 
+                                <h3 class="text-xl text-gray-600 font-bold m-4"> 
                                     Recreational
                                 </h3>
-                                <p class="text-gray-600">
+                                <p class="text-gray-600 mx-5">
                                     Adventure rider, enjoys gran fondos or charity events. <br>
                                     Weekly rides: 2, <br>
-                                    weekly mileage: 50 <br><br>
+                                    weekly mileage: 50 <br>
                                 </p>
-                                <h3 class="text-xl text-gray-600 font-bold mb-4"> 
+                                <h3 class="text-xl text-gray-600 font-bold m-4"> 
                                     Avid
                                 </h3>
-                                <p class="text-gray-600">
+                                <p class="text-gray-600 mx-5">
                                     Casual athlete, participates in bike races or triathlons. <br>
                                     Weekly rides: 3, <br>
-                                    weekly mileage: 100 <br><br>
+                                    weekly mileage: 100 <br>
                                 </p>
-                                <h3 class="text-xl text-gray-600 font-bold mb-4"> 
+                                <h3 class="text-xl text-gray-600 font-bold m-4"> 
                                     Weekend Warrior
                                 </h3>
-                                <p class="text-gray-600">
+                                <p class="text-gray-600 mx-5">
                                     Competitive athlete, skilled on technical descents and climbs. <br>
                                     Weekly rides: 4, <br>
-                                    weekly mileage: 150 <br><br>
+                                    weekly mileage: 150 <br>
                                 </p>
-                                <h3 class="text-xl text-gray-600 font-bold mb-4"> 
+                                <h3 class="text-xl text-gray-600 font-bold m-4"> 
                                     Rider
                                 </h3>
-                                <p class="text-gray-600">
+                                <p class="text-gray-600 mx-5">
                                     Highly competitive, excels in races and group rides. <br>
                                     Weekly rides: 5+,<br>
-                                    weekly mileage: 200+ <br><br>
+                                    weekly mileage: 200+ <br>
                                 </p>
                             </div>
                         </VueTailwindModal>
                     </div>
 
                 </div>
-                <div class="flex items-center justify-between">
+                <div v-if="!isRiderStyleInfoVisible" class="flex items-center justify-between">
                     <ion-button @click="prevStep()" expand="block" fill="clear" size="large" color="light">
                         Back
                     </ion-button>
@@ -279,13 +279,14 @@ const prevStep = () => {
     }
 }
 
-const showRiderStyleInfo = () => {
-    isRiderStyleInfoVisible.value = true;
+const displayRiderStyleInfo = () => {
+    if (isRiderStyleInfoVisible.value) {
+        isRiderStyleInfoVisible.value = false;
+    } else {
+        isRiderStyleInfoVisible.value = true;
+    }
 }
 
-const hideRiderStyleInfo = () => {
-    isRiderStyleInfoVisible.value = false;
-}
 
 const test = ref("rhianan");
 
