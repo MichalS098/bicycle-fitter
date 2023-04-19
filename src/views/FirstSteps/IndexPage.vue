@@ -9,7 +9,7 @@
                 <div class="flex flex-col gap-6 px-3">
                     <h2 class="text-2xl font-semibold text-left">
                         Tell us about yourself!
-                    </h2>                    
+                    </h2>
                     <p class="text-lg text-left pb-12">
                         As with real bike fitting, we will start
                         with a short survey about you, your
@@ -110,12 +110,12 @@
             <div v-if="currentStep == 4" class="ion-padding pt-16 pb-6 flex flex-col gap-6 justify-between h-full">
                 <div class="flex flex-col gap-6">
                     <h2 class="text-4xl font-semibold">
-                        Your rider style
+                        Your rider level
                     </h2>
                     <ion-progress-bar class="progress-bar" :value="currentStep / numberOfSteps"
                         color="secondary"></ion-progress-bar>
                     <p class="text-lg">
-                        What type of cyclist would you describe yourself as?
+                        At what level of cycling would you define yourself?
                     </p>
                     <div class="flex flex-col gap-3 pl-3 pr-12 mt-6">
                         <first-steps-radio-button @click="form.rideStyle = 'casual'" :checked="form.rideStyle == 'casual'"
@@ -127,8 +127,65 @@
                         <first-steps-radio-button @click="form.rideStyle = 'weekendwarrior'"
                             :checked="form.rideStyle == 'weekendwarrior'" label="Weekend Warrior" />
                         <first-steps-radio-button @click="form.rideStyle = 'racer'" :checked="form.rideStyle == 'racer'"
-                            label="Racer" />
+                            label="Racer" />             
                     </div>
+
+                    <div>
+                        <div class="flex flex-col gap-3 pl-3 ">
+                            <InformationCircleIcon class="h-8 w-8 text-secondary" @click="showRiderStyleInfo"/>
+                        </div>
+                        <VueTailwindModal v-if="isRiderStyleInfoVisible" @close="isRiderStyleInfoVisible = false" class="justify-center items-center">
+                            <div class="absolute bg-white rounded-lg py-4 px-4">
+                                <div class="flex justify-end">
+                                    <XMarkIcon class="h-8 w-8 text-secondary" @click="hideRiderStyleInfo"/>
+                                </div>
+                                <h2 class="text-2xl text-gray-600 font-bold mb-4"> 
+                                    Rider styles:
+                                </h2>
+                                <h3 class="text-xl text-gray-600 font-bold mb-4"> 
+                                    Casual
+                                </h3>
+                                <p class="text-gray-600">
+                                    Leisurely rider, comfortable on bike paths. <br>
+                                    Weekly rides: 1, <br>
+                                    weekly mileage: 25 <br><br>
+                                </p>
+                                <h3 class="text-xl text-gray-600 font-bold mb-4"> 
+                                    Recreational
+                                </h3>
+                                <p class="text-gray-600">
+                                    Adventure rider, enjoys gran fondos or charity events. <br>
+                                    Weekly rides: 2, <br>
+                                    weekly mileage: 50 <br><br>
+                                </p>
+                                <h3 class="text-xl text-gray-600 font-bold mb-4"> 
+                                    Avid
+                                </h3>
+                                <p class="text-gray-600">
+                                    Casual athlete, participates in bike races or triathlons. <br>
+                                    Weekly rides: 3, <br>
+                                    weekly mileage: 100 <br><br>
+                                </p>
+                                <h3 class="text-xl text-gray-600 font-bold mb-4"> 
+                                    Weekend Warrior
+                                </h3>
+                                <p class="text-gray-600">
+                                    Competitive athlete, skilled on technical descents and climbs. <br>
+                                    Weekly rides: 4, <br>
+                                    weekly mileage: 150 <br><br>
+                                </p>
+                                <h3 class="text-xl text-gray-600 font-bold mb-4"> 
+                                    Rider
+                                </h3>
+                                <p class="text-gray-600">
+                                    Highly competitive, excels in races and group rides. <br>
+                                    Weekly rides: 5+,<br>
+                                    weekly mileage: 200+ <br><br>
+                                </p>
+                            </div>
+                        </VueTailwindModal>
+                    </div>
+
                 </div>
                 <div class="flex items-center justify-between">
                     <ion-button @click="prevStep()" expand="block" fill="clear" size="large" color="light">
@@ -171,9 +228,13 @@ import { useIonRouter } from '@ionic/vue';
 import { IonPage, IonContent, IonButton } from '@ionic/vue';
 import FirstStepsRadioButton from '@/views/FirstSteps/FirstStepsRadioButton.vue';
 import ButtonInput from '@/components/ButtonInput.vue';
+import { InformationCircleIcon } from "@heroicons/vue/24/outline"
+import { XMarkIcon } from "@heroicons/vue/24/solid"
+
 
 const numberOfSteps = 5; // 0 - 6
 const currentStep = ref(0);
+const isRiderStyleInfoVisible = ref(false);
 
 const form = ref({
     unitSystem: '',
@@ -216,6 +277,14 @@ const prevStep = () => {
     if (currentStep.value > 0) {
         currentStep.value--;
     }
+}
+
+const showRiderStyleInfo = () => {
+    isRiderStyleInfoVisible.value = true;
+}
+
+const hideRiderStyleInfo = () => {
+    isRiderStyleInfoVisible.value = false;
 }
 
 const test = ref("rhianan");

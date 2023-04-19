@@ -20,6 +20,7 @@
     "@capacitor/keyboard": "4.1.1",
     "@capacitor/preferences": "^4.0.2",
     "@capacitor/status-bar": "4.1.1",
+    "@heroicons/vue": "^2.0.17",
     "@ionic/pwa-elements": "^3.1.1",
     "@ionic/vue": "^7.0.1",
     "@ionic/vue-router": "^7.0.1",
@@ -32,7 +33,8 @@
     "core-js": "^3.6.5",
     "ionicons": "^6.0.3",
     "vue": "^3.2.47",
-    "vue-router": "^4.1.6"
+    "vue-router": "^4.1.6",
+    "vue-tailwind-modal": "^1.0.7"
   },
   "devDependencies": {
     "@capacitor/cli": "4.7.0",
