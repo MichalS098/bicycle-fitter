@@ -33,6 +33,7 @@ ion-tab-button svg {
     stroke-width: 2;
     width: 24px;
     height: 24px;
+    transition: all 0.2s ease-in-out;
 }
 
 ion-tab-button.tab-selected svg {
@@ -47,7 +48,7 @@ ion-tab-button {
 
 ion-tab-button.tab-selected {
     background-color: #fff;
-    flex-basis: 25%;
+    flex-basis: 28%;
     border-radius: 1000px;
 }
 </style>
