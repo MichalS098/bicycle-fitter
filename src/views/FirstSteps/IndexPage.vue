@@ -210,7 +210,8 @@
                         In order to bikefit you into your bike, we need to know your measurements.
                         You can pass your photo, or we can do it live with your phone camera!
                     </p>
-                    <ion-button router-link="/measure" expand="block" shape="round" color="secondary" mode="ios"
+                    <!-- Temporary rediraction to Home page for navbar debugging on phone -->
+                    <ion-button router-link="/pages/home" expand="block" shape="round" color="secondary" mode="ios"
                         type="button" class="font-bold text-lg">
                         Measure me!
                     </ion-button>
