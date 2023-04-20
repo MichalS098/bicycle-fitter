@@ -1,23 +1,23 @@
 <template>
     <ion-tab-bar slot="bottom" mode="ios" class="fixed bottom-6 inset-x-3 p-3 rounded-full bg-[#36363660] backdrop-blur-lg">
-        <ion-tab-button tab="home" href="/pages/home" class="bg-transparent">
-            <HomeIcon class="h-6 w-6" />
+        <ion-tab-button tab="home" href="/pages/home" mode="ios">
+            <HomeIcon />
         </ion-tab-button>
 
-        <ion-tab-button tab="library" href="/pages/library" class="bg-transparent">
-            <LightBulbIcon class="h-6 w-6" />
+        <ion-tab-button tab="library" href="/pages/library" mode="ios">
+            <LightBulbIcon />
         </ion-tab-button>
 
-        <ion-tab-button tab="camera" href="/pages/camera" class="bg-transparent">
-            <CameraIcon class="h-6 w-6" />
+        <ion-tab-button tab="camera" href="/pages/camera" mode="ios">
+            <CameraIcon />
         </ion-tab-button>
 
-        <ion-tab-button tab="favourites" href="/pages/favourites" class="bg-transparent">
-            <HeartIcon class="h-6 w-6" />
+        <ion-tab-button tab="favourites" href="/pages/favourites" mode="ios">
+            <HeartIcon />
         </ion-tab-button>
 
-        <ion-tab-button tab="settings" href="/pages/settings" class="bg-transparent">
-            <UserIcon class="h-6 w-6" />
+        <ion-tab-button tab="settings" href="/pages/settings" mode="ios">
+            <UserIcon />
         </ion-tab-button>
     </ion-tab-bar>
 </template>
@@ -31,6 +31,8 @@ import { IonTabBar, IonTabButton } from '@ionic/vue';
 ion-tab-button svg {
     color: #fff;
     stroke-width: 2;
+    width: 24px;
+    height: 24px;
 }
 
 ion-tab-button.tab-selected svg {
@@ -38,6 +40,7 @@ ion-tab-button.tab-selected svg {
 }
 
 ion-tab-button {
+    background-color: transparent;
     flex-basis: 20%;
     transition: all 0.2s ease-in-out;
 }

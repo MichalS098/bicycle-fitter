@@ -4,15 +4,14 @@ import HomeLayout from '@/views/HomeLayout.vue';
 
 const routes: Array<RouteRecordRaw> = [  
   {
-    path: '/',
-    redirect: '/pages/home'
-    // redirect: () => {
-    //   if (localStorage.getItem('first-steps-completed') === null) {
-    //     return '/first-steps'
-    //   } else {
-    //     return '/pages/home'
-    //   }
-    // }
+    path: '/',    
+    redirect: () => {
+      if (localStorage.getItem('first-steps-completed') === null) {
+        return '/first-steps'
+      } else {
+        return '/pages/home'
+      }
+    }
   },
   {
     path: '/first-steps',
