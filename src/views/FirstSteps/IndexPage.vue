@@ -9,7 +9,7 @@
                 <div class="flex flex-col gap-6 px-3">
                     <h2 class="text-2xl font-semibold text-left">
                         Tell us about yourself!
-                    </h2>
+                    </h2>                    
                     <p class="text-lg text-left pb-12">
                         As with real bike fitting, we will start
                         with a short survey about you, your
@@ -150,21 +150,22 @@
                 </div>
             </div>
 
-            <div v-if="currentStep == 5" class="ion-padding py-24 flex flex-col justify-between gap-6 h-full">
-                <h1 class="text-left text-6xl">
+            <div v-if="currentStep == 5"
+                class="ion-padding py-24 flex flex-col justify-between gap-6 h-full bg-secondary-shade">
+                <h1 class="text-center text-6xl">
                     Bike fitting
                 </h1>
                 <div class="flex flex-col gap-6 px-3">
-                    <h2 class="text-2xl font-semibold text-left">
+                    <h2 class="text-2xl font-semibold text-center">
                         Start with measuring yourself!
                     </h2>
-                    <p class="text-lg text-left pb-12">
+                    <img src="@/../resources/images/person-on-bike.png" alt="person on a bike" class="w-full h-48 object-contain" />                                   
+                    <p class="text-lg text-center pb-12">
                         In order to bikefit you into your bike, we need to know your measurements.
                         You can pass your photo, or we can do it live with your phone camera!
                     </p>
-                    <!-- Temporary rediraction to Home page for navbar debugging on phone -->
-                    <ion-button router-link="/pages/home" expand="block" shape="round" color="secondary" mode="ios"
-                        type="button" class="font-bold text-lg">
+                    <ion-button router-link="/measure" expand="block" shape="round" mode="ios" type="button" color="sand-desert"
+                        class="font-bold text-lg">
                         Measure me!
                     </ion-button>
                 </div>
@@ -183,7 +184,7 @@ import { InformationCircleIcon } from "@heroicons/vue/24/outline"
 import FirstStepsRadioButton from '@/views/FirstSteps/FirstStepsRadioButton.vue';
 import RiderStylesInfoModal from '@/views/FirstSteps/RiderStylesInfoModal.vue';
 import ButtonInput from '@/components/ButtonInput.vue';
-
+import BikeRideVector from '@/../resources/svg/BikeRideVector.vue';
 
 const numberOfSteps = 5; // from 0 to 6
 const currentStep = ref(0);
