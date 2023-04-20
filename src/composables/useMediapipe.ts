@@ -1,9 +1,7 @@
-import { ref } from 'vue';
 import { Pose } from '@mediapipe/pose';
 import { drawConnectors, drawLandmarks } from '@mediapipe/drawing_utils';
 import { Results, Options } from '@mediapipe/pose';
 import { POSE_CONNECTIONS } from '@mediapipe/pose';
-import { lerp } from '@mediapipe/drawing_utils';
 /**
  * return configured pose - vue composition api
  */

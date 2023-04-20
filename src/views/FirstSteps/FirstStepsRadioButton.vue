@@ -5,7 +5,7 @@
     </ion-button>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { IonButton } from '@ionic/vue';
 
 const props = defineProps({
@@ -22,7 +22,6 @@ const props = defineProps({
         default: 'secondary',
     },
 });
-
 </script>
 
 <style>

@@ -27,7 +27,7 @@
                     <h2 class="text-4xl font-semibold">
                         Your unit system
                     </h2>
-                    <ion-progress-bar class="progress-bar" :value="currentStep / numberOfSteps"
+                    <ion-progress-bar class="h-3 rounded-full" :value="currentStep / numberOfSteps"
                         color="secondary"></ion-progress-bar>
                     <p class="text-lg">
                         What unit system do you prefer?
@@ -55,7 +55,7 @@
                     <h2 class="text-4xl font-semibold">
                         Your height
                     </h2>
-                    <ion-progress-bar class="progress-bar" :value="currentStep / numberOfSteps"
+                    <ion-progress-bar class="h-3 rounded-full" :value="currentStep / numberOfSteps"
                         color="secondary"></ion-progress-bar>
                     <p class="text-lg">
                         What is your height?
@@ -80,7 +80,7 @@
                     <h2 class="text-4xl font-semibold">
                         Your ride time
                     </h2>
-                    <ion-progress-bar class="progress-bar" :value="currentStep / numberOfSteps"
+                    <ion-progress-bar class="h-3 rounded-full" :value="currentStep / numberOfSteps"
                         color="secondary"></ion-progress-bar>
                     <p class="text-lg">
                         Typically how much time per week do you spend on the bike?
@@ -112,7 +112,7 @@
                     <h2 class="text-4xl font-semibold">
                         Your rider level
                     </h2>
-                    <ion-progress-bar class="progress-bar" :value="currentStep / numberOfSteps"
+                    <ion-progress-bar class="h-3 rounded-full" :value="currentStep / numberOfSteps"
                         color="secondary"></ion-progress-bar>
                     <p class="text-lg">
                         At what level of cycling would you define yourself?
@@ -131,80 +131,11 @@
                     </div>
 
                     <div>
-                        <div class="flex flex-col gap-3 pl-3 pr-3 ">
+                        <div class="px-3">
                             <InformationCircleIcon class="h-8 w-8 text-secondary" @click="isRiderStyleInfoVisible = true" />
                         </div>
-                        <ion-modal :is-open="isRiderStyleInfoVisible">
-                            <ion-header>
-                                <ion-toolbar>
-                                    <ion-buttons slot="start">
-                                    </ion-buttons>
-                                    <ion-title>Rider styles</ion-title>
-                                    <ion-buttons slot="end">
-                                        <ion-button @click="isRiderStyleInfoVisible = false">Cancel</ion-button>
-                                    </ion-buttons>
-                                </ion-toolbar>
-                            </ion-header>
-                            <ion-content>
-                                <ion-list>
-                                    <ion-item>
-                                        <ion-card>
-                                            <ion-card-header>
-                                                <ion-card-title>Casual</ion-card-title>
-                                                <ion-card-subtitle>Weekly rides: 1</ion-card-subtitle>
-                                            </ion-card-header>
-                                            <ion-card-content>
-                                                Leisurely rider, comfortable on bike paths.
-                                            </ion-card-content>
-                                        </ion-card>
-                                    </ion-item>
-                                    <ion-item>
-                                        <ion-card>
-                                            <ion-card-header>
-                                                <ion-card-title>Recreational</ion-card-title>
-                                                <ion-card-subtitle>Weekly rides: 2</ion-card-subtitle>
-                                            </ion-card-header>
-                                            <ion-card-content>
-                                                Adventure rider, enjoys gran fondos or charity events.
-                                            </ion-card-content>
-                                        </ion-card>
-                                    </ion-item>
-                                    <ion-item>
-                                        <ion-card>
-                                            <ion-card-header>
-                                                <ion-card-title>Avid</ion-card-title>
-                                                <ion-card-subtitle>Weekly rides: 3</ion-card-subtitle>
-                                            </ion-card-header>
-                                            <ion-card-content>
-                                                Casual athlete, participates in bike races or triathlons.
-                                            </ion-card-content>
-                                        </ion-card>
-                                    </ion-item>
-                                    <ion-item>
-                                        <ion-card>
-                                            <ion-card-header>
-                                                <ion-card-title>Weekend Warrior</ion-card-title>
-                                                <ion-card-subtitle>Weekly rides: 4</ion-card-subtitle>
-                                            </ion-card-header>
-                                            <ion-card-content>
-                                                Competitive athlete, skilled on technical descents and climbs.
-                                            </ion-card-content>
-                                        </ion-card>
-                                    </ion-item>
-                                    <ion-item>
-                                        <ion-card>
-                                            <ion-card-header>
-                                                <ion-card-title>Rider</ion-card-title>
-                                                <ion-card-subtitle>Weekly rides: 5+</ion-card-subtitle>
-                                            </ion-card-header>
-                                            <ion-card-content>
-                                                Highly competitive, excels in races and group rides.
-                                            </ion-card-content>
-                                        </ion-card>
-                                    </ion-item>
-                                </ion-list>
-                            </ion-content>
-                        </ion-modal>
+                        <rider-styles-info-modal :is-open="isRiderStyleInfoVisible"
+                            @close="isRiderStyleInfoVisible = false" />
                     </div>
 
                 </div>
@@ -244,20 +175,17 @@
 </template>
   
 <script setup lang="ts">
-import { IonProgressBar } from '@ionic/vue';
 import { ref } from 'vue';
-import { useIonRouter } from '@ionic/vue';
 import {
-    IonPage, IonContent, IonButton, IonModal, IonHeader, IonToolbar, IonButtons, IonTitle, IonList, IonItem,
-    IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle
+    IonPage, IonContent, IonButton, IonProgressBar
 } from '@ionic/vue';
-import FirstStepsRadioButton from '@/views/FirstSteps/FirstStepsRadioButton.vue';
-import ButtonInput from '@/components/ButtonInput.vue';
 import { InformationCircleIcon } from "@heroicons/vue/24/outline"
-import { XMarkIcon } from "@heroicons/vue/24/solid"
+import FirstStepsRadioButton from '@/views/FirstSteps/FirstStepsRadioButton.vue';
+import RiderStylesInfoModal from '@/views/FirstSteps/RiderStylesInfoModal.vue';
+import ButtonInput from '@/components/ButtonInput.vue';
 
 
-const numberOfSteps = 5; // 0 - 6
+const numberOfSteps = 5; // from 0 to 6
 const currentStep = ref(0);
 const isRiderStyleInfoVisible = ref(false);
 
@@ -269,10 +197,6 @@ const form = ref({
     rideTime: 0,
     rideStyle: '',
 });
-
-const setUnitSystem = (unitSystem: string) => {
-    form.value.unitSystem = unitSystem;
-}
 
 const nextStep = () => {
     if (currentStep.value == 1) {
@@ -292,7 +216,6 @@ const nextStep = () => {
             return;
         }
     }
-
     if (currentStep.value < numberOfSteps) {
         currentStep.value++;
     }
@@ -304,9 +227,3 @@ const prevStep = () => {
     }
 }
 </script>
-<style scoped>
-.progress-bar {
-    height: 12px;
-    border-radius: 100px;
-}
-</style>
