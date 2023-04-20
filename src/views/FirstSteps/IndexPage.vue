@@ -127,63 +127,84 @@
                         <first-steps-radio-button @click="form.rideStyle = 'weekendwarrior'"
                             :checked="form.rideStyle == 'weekendwarrior'" label="Weekend Warrior" />
                         <first-steps-radio-button @click="form.rideStyle = 'racer'" :checked="form.rideStyle == 'racer'"
-                            label="Racer" />             
+                            label="Racer" />
                     </div>
 
                     <div>
                         <div class="flex flex-col gap-3 pl-3 pr-3 ">
-                            <InformationCircleIcon class="h-8 w-8 text-secondary" @click="displayRiderStyleInfo"/>
+                            <InformationCircleIcon class="h-8 w-8 text-secondary" @click="isRiderStyleInfoVisible = true" />
                         </div>
-                        <VueTailwindModal v-if="isRiderStyleInfoVisible" @close="isRiderStyleInfoVisible = false" class="justify-center items-center">
-                            <div class="absolute bg-white rounded-lg py-4 mx-">
-                                <div class="flex justify-end">
-                                    <XMarkIcon class="h-8 w-8 text-secondary" @click="displayRiderStyleInfo"/>
-                                </div>
-                                <h2 class="text-2xl text-gray-600 font-bold m-4"> 
-                                    Rider styles:
-                                </h2>
-                                <h3 class="text-xl text-gray-600 font-bold m-4"> 
-                                    Casual
-                                </h3>
-                                <p class="text-gray-600 mx-5">
-                                    Leisurely rider, comfortable on bike paths. <br>
-                                    Weekly rides: 1, <br>
-                                    weekly mileage: 25 <br>
-                                </p>
-                                <h3 class="text-xl text-gray-600 font-bold m-4"> 
-                                    Recreational
-                                </h3>
-                                <p class="text-gray-600 mx-5">
-                                    Adventure rider, enjoys gran fondos or charity events. <br>
-                                    Weekly rides: 2, <br>
-                                    weekly mileage: 50 <br>
-                                </p>
-                                <h3 class="text-xl text-gray-600 font-bold m-4"> 
-                                    Avid
-                                </h3>
-                                <p class="text-gray-600 mx-5">
-                                    Casual athlete, participates in bike races or triathlons. <br>
-                                    Weekly rides: 3, <br>
-                                    weekly mileage: 100 <br>
-                                </p>
-                                <h3 class="text-xl text-gray-600 font-bold m-4"> 
-                                    Weekend Warrior
-                                </h3>
-                                <p class="text-gray-600 mx-5">
-                                    Competitive athlete, skilled on technical descents and climbs. <br>
-                                    Weekly rides: 4, <br>
-                                    weekly mileage: 150 <br>
-                                </p>
-                                <h3 class="text-xl text-gray-600 font-bold m-4"> 
-                                    Rider
-                                </h3>
-                                <p class="text-gray-600 mx-5">
-                                    Highly competitive, excels in races and group rides. <br>
-                                    Weekly rides: 5+,<br>
-                                    weekly mileage: 200+ <br>
-                                </p>
-                            </div>
-                        </VueTailwindModal>
+                        <ion-modal :is-open="isRiderStyleInfoVisible">
+                            <ion-header>
+                                <ion-toolbar>
+                                    <ion-buttons slot="start">
+                                    </ion-buttons>
+                                    <ion-title>Rider styles</ion-title>
+                                    <ion-buttons slot="end">
+                                        <ion-button @click="isRiderStyleInfoVisible = false">Cancel</ion-button>
+                                    </ion-buttons>
+                                </ion-toolbar>
+                            </ion-header>
+                            <ion-content>
+                                <ion-list>
+                                    <ion-item>
+                                        <ion-card>
+                                            <ion-card-header>
+                                                <ion-card-title>Casual</ion-card-title>
+                                                <ion-card-subtitle>Weekly rides: 1</ion-card-subtitle>
+                                            </ion-card-header>
+                                            <ion-card-content>
+                                                Leisurely rider, comfortable on bike paths.
+                                            </ion-card-content>
+                                        </ion-card>
+                                    </ion-item>
+                                    <ion-item>
+                                        <ion-card>
+                                            <ion-card-header>
+                                                <ion-card-title>Recreational</ion-card-title>
+                                                <ion-card-subtitle>Weekly rides: 2</ion-card-subtitle>
+                                            </ion-card-header>
+                                            <ion-card-content>
+                                                Adventure rider, enjoys gran fondos or charity events.
+                                            </ion-card-content>
+                                        </ion-card>
+                                    </ion-item>
+                                    <ion-item>
+                                        <ion-card>
+                                            <ion-card-header>
+                                                <ion-card-title>Avid</ion-card-title>
+                                                <ion-card-subtitle>Weekly rides: 3</ion-card-subtitle>
+                                            </ion-card-header>
+                                            <ion-card-content>
+                                                Casual athlete, participates in bike races or triathlons.
+                                            </ion-card-content>
+                                        </ion-card>
+                                    </ion-item>
+                                    <ion-item>
+                                        <ion-card>
+                                            <ion-card-header>
+                                                <ion-card-title>Weekend Warrior</ion-card-title>
+                                                <ion-card-subtitle>Weekly rides: 4</ion-card-subtitle>
+                                            </ion-card-header>
+                                            <ion-card-content>
+                                                Competitive athlete, skilled on technical descents and climbs.
+                                            </ion-card-content>
+                                        </ion-card>
+                                    </ion-item>
+                                    <ion-item>
+                                        <ion-card>
+                                            <ion-card-header>
+                                                <ion-card-title>Rider</ion-card-title>
+                                                <ion-card-subtitle>Weekly rides: 5+</ion-card-subtitle>
+                                            </ion-card-header>
+                                            <ion-card-content>
+                                                Highly competitive, excels in races and group rides.
+                                            </ion-card-content>
+                                        </ion-card>
+                                    </ion-item>
+                                </ion-list>
+                            </ion-content>
+                        </ion-modal>
                     </div>
 
                 </div>
@@ -226,7 +247,10 @@
 import { IonProgressBar } from '@ionic/vue';
 import { ref } from 'vue';
 import { useIonRouter } from '@ionic/vue';
-import { IonPage, IonContent, IonButton } from '@ionic/vue';
+import {
+    IonPage, IonContent, IonButton, IonModal, IonHeader, IonToolbar, IonButtons, IonTitle, IonList, IonItem,
+    IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle
+} from '@ionic/vue';
 import FirstStepsRadioButton from '@/views/FirstSteps/FirstStepsRadioButton.vue';
 import ButtonInput from '@/components/ButtonInput.vue';
 import { InformationCircleIcon } from "@heroicons/vue/24/outline"
@@ -279,18 +303,6 @@ const prevStep = () => {
         currentStep.value--;
     }
 }
-
-const displayRiderStyleInfo = () => {
-    if (isRiderStyleInfoVisible.value) {
-        isRiderStyleInfoVisible.value = false;
-    } else {
-        isRiderStyleInfoVisible.value = true;
-    }
-}
-
-
-const test = ref("rhianan");
-
 </script>
 <style scoped>
 .progress-bar {
