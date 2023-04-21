@@ -27,8 +27,8 @@
                     <h2 class="text-4xl font-semibold">
                         Your unit system
                     </h2>
-                    <ion-progress-bar class="progress-bar" :value="currentStep / numberOfSteps"
-                                      color="secondary"></ion-progress-bar>
+                    <ion-progress-bar class="h-3 rounded-full" :value="currentStep / numberOfSteps"
+                        color="secondary"></ion-progress-bar>
                     <p class="text-lg">
                         What unit system do you prefer?
                     </p>
@@ -55,8 +55,8 @@
                     <h2 class="text-4xl font-semibold">
                         Your height and weight
                     </h2>
-                    <ion-progress-bar class="progress-bar" :value="currentStep / numberOfSteps"
-                                      color="secondary"></ion-progress-bar>
+                    <ion-progress-bar class="h-3 rounded-full" :value="currentStep / numberOfSteps"
+                        color="secondary"></ion-progress-bar>
                     <p class="text-lg">
                         What is your height?
                     </p>
@@ -80,7 +80,7 @@
                     <h2 class="text-4xl font-semibold">
                         Your ride time
                     </h2>
-                    <ion-progress-bar class="progress-bar" :value="currentStep / numberOfSteps"
+                    <ion-progress-bar class="h-3 rounded-full" :value="currentStep / numberOfSteps"
                         color="secondary"></ion-progress-bar>
                     <p class="text-lg">
                         Typically how much time per week do you spend on the bike?
@@ -110,12 +110,12 @@
             <div v-if="currentStep == 4" class="ion-padding pt-16 pb-6 flex flex-col gap-6 justify-between h-full">
                 <div class="flex flex-col gap-6">
                     <h2 class="text-4xl font-semibold">
-                        Your rider style
+                        Your rider level
                     </h2>
-                    <ion-progress-bar class="progress-bar" :value="currentStep / numberOfSteps"
+                    <ion-progress-bar class="h-3 rounded-full" :value="currentStep / numberOfSteps"
                         color="secondary"></ion-progress-bar>
                     <p class="text-lg">
-                        What type of cyclist would you describe yourself as?
+                        At what level of cycling would you define yourself?
                     </p>
                     <div class="flex flex-col gap-3 pl-3 pr-12 mt-6">
                         <first-steps-radio-button @click="form.rideStyle = 'casual'" :checked="form.rideStyle == 'casual'"
@@ -129,8 +129,17 @@
                         <first-steps-radio-button @click="form.rideStyle = 'racer'" :checked="form.rideStyle == 'racer'"
                             label="Racer" />
                     </div>
+
+                    <div>
+                        <div class="px-3">
+                            <InformationCircleIcon class="h-8 w-8 text-secondary" @click="isRiderStyleInfoVisible = true" />
+                        </div>
+                        <rider-styles-info-modal :is-open="isRiderStyleInfoVisible"
+                            @close="isRiderStyleInfoVisible = false" />
+                    </div>
+
                 </div>
-                <div class="flex items-center justify-between">
+                <div v-if="!isRiderStyleInfoVisible" class="flex items-center justify-between">
                     <ion-button @click="prevStep()" expand="block" fill="clear" size="large" color="light">
                         Back
                     </ion-button>
@@ -141,20 +150,23 @@
                 </div>
             </div>
 
-            <div v-if="currentStep == 5" class="ion-padding py-24 flex flex-col justify-between gap-6 h-full">
-                <h1 class="text-left text-6xl">
+            <div v-if="currentStep == 5"
+                class="ion-padding py-24 flex flex-col justify-between gap-6 h-full bg-secondary-shade">
+                <h1 class="text-center text-6xl">
                     Bike fitting
                 </h1>
                 <div class="flex flex-col gap-6 px-3">
+                    
+                    <img src="@/../resources/images/person-on-bike.png" alt="person on a bike" class="w-full h-48 object-contain" />    
                     <h2 class="text-2xl font-semibold text-left">
                         Start with measuring yourself!
-                    </h2>
+                    </h2>                              
                     <p class="text-lg text-left pb-12">
                         In order to bikefit you into your bike, we need to know your measurements.
                         You can pass your photo, or we can do it live with your phone camera!
                     </p>
-                    <ion-button router-link="/measure" expand="block" shape="round" color="secondary" mode="ios"
-                        type="button" class="font-bold text-lg">
+                    <ion-button router-link="/measure" expand="block" shape="round" mode="ios" type="button" color="sand-desert"
+                        class="font-bold text-lg">
                         Measure me!
                     </ion-button>
                 </div>
@@ -165,15 +177,19 @@
 </template>
   
 <script setup lang="ts">
-import { IonProgressBar } from '@ionic/vue';
 import { ref } from 'vue';
-import { useIonRouter } from '@ionic/vue';
-import { IonPage, IonContent, IonButton } from '@ionic/vue';
+import {
+    IonPage, IonContent, IonButton, IonProgressBar
+} from '@ionic/vue';
+import { InformationCircleIcon } from "@heroicons/vue/24/outline"
 import FirstStepsRadioButton from '@/views/FirstSteps/FirstStepsRadioButton.vue';
+import RiderStylesInfoModal from '@/views/FirstSteps/RiderStylesInfoModal.vue';
 import ButtonInput from '@/components/ButtonInput.vue';
+import BikeRideVector from '@/../resources/svg/BikeRideVector.vue';
 
-const numberOfSteps = 5; // 0 - 6
+const numberOfSteps = 5; // from 0 to 6
 const currentStep = ref(0);
+const isRiderStyleInfoVisible = ref(false);
 
 const form = ref({
     unitSystem: '',
@@ -183,10 +199,6 @@ const form = ref({
     rideTime: 0,
     rideStyle: '',
 });
-
-const setUnitSystem = (unitSystem: string) => {
-    form.value.unitSystem = unitSystem;
-}
 
 const nextStep = () => {
     if (currentStep.value == 1) {
@@ -206,7 +218,6 @@ const nextStep = () => {
             return;
         }
     }
-
     if (currentStep.value < numberOfSteps) {
         currentStep.value++;
     }
@@ -217,13 +228,4 @@ const prevStep = () => {
         currentStep.value--;
     }
 }
-
-const test = ref("rhianan");
-
 </script>
-<style scoped>
-.progress-bar {
-    height: 12px;
-    border-radius: 100px;
-}
-</style>

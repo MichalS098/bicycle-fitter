@@ -1,11 +1,10 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
-import TabsPage from '../views/TabsPage.vue'
 import HomeLayout from '@/views/HomeLayout.vue';
 
 const routes: Array<RouteRecordRaw> = [  
   {
-    path: '/',
+    path: '/',    
     redirect: () => {
       if (localStorage.getItem('first-steps-completed') === null) {
         return '/first-steps'

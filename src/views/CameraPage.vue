@@ -64,7 +64,7 @@ import { ref } from 'vue';
 import useMediapipe from '@/composables/useMediapipe';
 import { onMounted } from 'vue';
 import { Camera } from '@mediapipe/camera_utils';
-import { shoulderHeight } from '@/functions/mediapipeHelpers';
+import { shoulderHeight} from '@/functions/mediapipeHelpers';
 
 const video = ref<HTMLVideoElement>();
 const canvas = ref<HTMLCanvasElement>();

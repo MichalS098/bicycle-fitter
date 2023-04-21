@@ -1,12 +1,8 @@
-import { ref } from 'vue';
 import { Pose } from '@mediapipe/pose';
 import { drawConnectors, drawLandmarks } from '@mediapipe/drawing_utils';
 import { Results, Options } from '@mediapipe/pose';
 import { POSE_CONNECTIONS } from '@mediapipe/pose';
-import { lerp } from '@mediapipe/drawing_utils';
-/**
- * return configured pose - vue composition api
- */
+
 export default function useMediapipePose() {
     const pose = new Pose({
         locateFile: (file) => {
@@ -26,9 +22,21 @@ export default function useMediapipePose() {
 
     const drawResults = (results: Results, canvas: HTMLCanvasElement) => {
         const ctx = canvas.getContext('2d');
+        const canvasWidth = canvas.width;
+        const scaleFactor = canvasWidth / results.image.width;
+        canvas.width = results.image.width * scaleFactor;
+        canvas.height = results.image.height * scaleFactor;
+
         if (ctx) {
             ctx.save();
+            // clear canvas
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // mirror image
+            ctx.scale(-1, 1);
+            ctx.translate(-canvas.width, 0);
+
+            // draw image
             ctx.drawImage(
                 results.image,
                 0, 0, canvas.width, canvas.height

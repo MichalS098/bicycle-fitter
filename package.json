@@ -7,7 +7,8 @@
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "test": "jest"
   },
   "dependencies": {
     "@capacitor/android": "4.7.0",
@@ -20,7 +21,9 @@
     "@capacitor/keyboard": "4.1.1",
     "@capacitor/preferences": "^4.0.2",
     "@capacitor/status-bar": "4.1.1",
+    "@heroicons/vue": "^2.0.17",
     "@ionic/pwa-elements": "^3.1.1",
+    "@ionic/storage": "^3.0.6",
     "@ionic/vue": "^7.0.1",
     "@ionic/vue-router": "^7.0.1",
     "@mediapipe/camera_utils": "^0.3.1675466862",
@@ -36,7 +39,7 @@
   },
   "devDependencies": {
     "@capacitor/cli": "4.7.0",
-    "@types/jest": "^27.0.2",
+    "@types/jest": "^27.5.2",
     "@typescript-eslint/eslint-plugin": "^5.6.0",
     "@typescript-eslint/parser": "^5.6.0",
     "@vue/cli-plugin-babel": "~5.0.0-rc.1",
@@ -54,10 +57,10 @@
     "cypress": "^8.7.0",
     "eslint": "^8.4.1",
     "eslint-plugin-vue": "^9.8.0",
-    "jest": "^27.3.1",
+    "jest": "^27.5.1",
     "postcss": "^8.4.21",
     "tailwindcss": "^3.3.1",
-    "ts-jest": "^27.0.7",
+    "ts-jest": "^27.1.5",
     "typescript": "^4.3.5"
   },
   "description": "An Ionic project"
