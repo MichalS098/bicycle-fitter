@@ -156,11 +156,12 @@
                     Bike fitting
                 </h1>
                 <div class="flex flex-col gap-6 px-3">
-                    <h2 class="text-2xl font-semibold text-center">
+                    
+                    <img src="@/../resources/images/person-on-bike.png" alt="person on a bike" class="w-full h-48 object-contain" />    
+                    <h2 class="text-2xl font-semibold text-left">
                         Start with measuring yourself!
-                    </h2>
-                    <img src="@/../resources/images/person-on-bike.png" alt="person on a bike" class="w-full h-48 object-contain" />                                   
-                    <p class="text-lg text-center pb-12">
+                    </h2>                              
+                    <p class="text-lg text-left pb-12">
                         In order to bikefit you into your bike, we need to know your measurements.
                         You can pass your photo, or we can do it live with your phone camera!
                     </p>

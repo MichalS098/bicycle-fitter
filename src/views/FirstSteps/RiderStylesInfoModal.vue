@@ -7,7 +7,7 @@
                     </ion-buttons>
                     <ion-title>Rider styles</ion-title>
                     <ion-buttons slot="end">
-                        <ion-button @click="closeModal()">Cancel</ion-button>
+                        <ion-button @click="closeModal()" color="secondary">Cancel</ion-button>
                     </ion-buttons>
                 </ion-toolbar>
             </ion-header>
