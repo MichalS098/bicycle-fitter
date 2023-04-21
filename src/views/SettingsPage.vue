@@ -47,12 +47,30 @@ const store = new Storage({
 });
 store.create();
 
+// json data test
+const test = {
+    name: 'test',
+    height: 180,
+    array: [1, 2, 3, 4, 5],
+    object: {
+        a: '1',
+        b: '2',
+        c: '3'
+    }
+};
 
 onMounted(async () => {
     name.value = await store.get('name');
     height.value = await store.get('height');
-    console.log("odczyt");
-    console.log(name, height);
+
+    const test_from_db = await store.get('test');
+    if (test_from_db !== null) {
+        console.log("jest test");
+        console.log(test_from_db);
+    } else {
+        console.log("nie ma test");
+        await store.set('test', test);
+    }
 });
 
 const save = async () => {
