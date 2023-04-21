@@ -18,6 +18,10 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/views/FirstSteps/IndexPage.vue')
   },
   {
+    path: '/new-bike-steps',
+    component: () => import('@/views/NewBikeSteps/IndexPage.vue')
+  },
+  {
     path: '/measure',
     component: () => import('@/views/Measure/IndexPage.vue')
   },
