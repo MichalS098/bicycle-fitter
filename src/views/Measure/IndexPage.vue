@@ -79,7 +79,7 @@ const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
 
         // jesli wszystkie punkty nie sa widoczne to niech
         // apka wyswietli jakas informacje na ekranie 
-        
+
         // showInfoNotVisible.value = true;
 
 
