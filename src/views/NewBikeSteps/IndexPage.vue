@@ -50,7 +50,7 @@
                     </p>
                     <div class="flex flex-col gap-3 pl-3 pr-12 mt-6">
                         <button-input color="primary" v-model="form.bikeCompany" placeholder="Your bike company" />
-                        <button-input color="primary" v-model="form.bikeCompany" placeholder="Your bike model" />
+                        <button-input color="primary" v-model="form.bikeModel" placeholder="Your bike model" />
                         <new-bike-steps-radio-button @click="noBikeModel()" :checked="form.noBikeModel == true"
                             label="I don't know my bike model" />
                         <new-bike-steps-radio-button @click="suggestNewBike()" :checked="form.suggestNewBike == true"
@@ -62,7 +62,7 @@
                         Back
                     </ion-button>
                     <ion-button @click="nextStep()" expand="block" fill="clear" size="large"
-                        :color="(form.noBikeModel == false) && (form.suggestNewBike == false) ? 'light' : 'primary'">
+                        :color="(form.noBikeModel == false) && (form.suggestNewBike == false) && (form.bikeCompany == '' || form.bikeModel == '')? 'light' : 'primary'">
                         Next
                     </ion-button>
                 </div>
