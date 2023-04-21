@@ -1,108 +1,89 @@
 <template>
-    <div class="pose-container">
-      <video ref="video" autoplay playsinline muted></video>
-      <canvas ref="canvas"></canvas>
-    </div>
+    <ion-page>
+        <ion-content :fullscreen="true" class="relative">
+            <video class="hidden" ref="video"></video>
+            <canvas class="absolute inset-0 w-full my-auto" ref="canvas"></canvas>
+
+            <div class="absolute inset-0 w-full flex items-start justify-end p-6">
+                <div ref="height">
+                </div>
+            </div>
+
+            <div class="absolute bottom-0 left-0 w-full p-4 flex items-center justify-center flex-col gap-1">
+                <div class="flex items-center justify-evenly w-full">
+                    <ion-button fill="clear" size="large">
+                        <ArrowUturnLeftIcon class="w-6 h-6 text-white" />
+                    </ion-button>
+                    <button class="rounded-full w-16 h-16 p-1 bg-white flex items-center justify-center">
+                        <div class="w-full h-full bg-[#E48C56] rounded-full">
+                        </div>
+                    </button>
+                    <ion-button fill="clear" size="large">
+                        <PhotoIcon class="w-6 h-6 text-white" />
+                    </ion-button>
+                </div>
+                <div class="flex items-center justify-center gap-1 w-full">
+                    <ion-button fill="clear" size="large">
+                        <ion-icon class="text-white" :icon="flashOutline"></ion-icon>
+                    </ion-button>
+                    <ion-button fill="clear" size="large">
+                        <ion-icon class="text-white" :icon="refreshOutline"></ion-icon>
+                    </ion-button>
+                    <ion-button fill="clear" size="large">
+                        <ion-icon class="text-white" :icon="stopwatchOutline"></ion-icon>
+                    </ion-button>
+                </div>
+            </div>
+        </ion-content>
+    </ion-page>
 </template>
   
+<script lang="ts" setup>
+import {
+    IonPage,
+    IonContent,
+    IonIcon
+} from '@ionic/vue';
+import { ref, onMounted } from "vue";
+import useMediapipe from '@/composables/useMediapipe';
+import { Camera } from '@mediapipe/camera_utils';
+import {
+    ArrowUturnLeftIcon,
+    PhotoIcon,
+} from '@heroicons/vue/24/outline';
+import { refreshOutline, stopwatchOutline, flashOutline } from 'ionicons/icons';
+import { shoulderHeight } from '@/functions/mediapipeHelpers';
 
-<script>
+const video = ref<HTMLVideoElement>();
+const canvas = ref<HTMLCanvasElement>();
+const camera = ref<Camera>();
+const height = ref<HTMLDivElement>();
 
-    import { ref, onMounted } from "vue";
-    import { Pose, POSE_CONNECTIONS } from "@mediapipe/pose";
-    //   import { load as loadPose, Pose, POSE_CONNECTIONS } from "@mediapipe/pose";
+onMounted(async () => {
+    if (video.value === undefined || canvas.value === undefined) {
+        return;
+    }
+    setupMediaPipe(video.value, canvas.value);
+});
 
-    import { drawConnectors, drawLandmarks } from "@mediapipe/drawing_utils";
-    
-    export default {
-        setup() {
-        const video = ref(null);
-        const canvas = ref(null);
-    
-        onMounted(async () => {
-            await setupCamera();
-            setupMediaPipe();
-        });
-    
-        async function setupCamera() {
-            try {
-            const stream = await navigator.mediaDevices.getUserMedia({
-                video: { facingMode: "user" },
-                audio: false,
-            });
-            video.value.srcObject = stream;
-            console.log(stream)
-    
-            return new Promise((resolve) => {
-                video.value.onloadedmetadata = () => {
-                    resolve(video.value.play());
-                };
-            });
-            } catch (err) {
-                console.error(err);
-            }
+
+const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
+    const { pose, drawResults } = useMediapipe();
+
+    pose.onResults((results) => {
+        drawResults(results, canvas);
+        const shoulderHeightResult = shoulderHeight(results);
+        if (height.value !== undefined) {
+            height.value.innerHTML = shoulderHeightResult.toString();
+            height.value.style.color = 'white';
+            height.value.style.fontSize = '2rem';
         }
-    
-        function setupMediaPipe() {
-            const pose = new Pose({
-                locateFile: (file) => {
-                return `https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.4.163/${file}`;
-                },
-            });
+    });
 
-
-            pose.setOptions({
-            modelComplexity: 1,
-            smoothLandmarks: true,
-            enableSegmentation: true,
-            smoothSegmentation: true,
-            minDetectionConfidence: 0.5,
-            minTrackingConfidence: 0.5,
-            });
-    
-            pose.onResults(onResults);
-    
-            const ctx = canvas.value.getContext("2d");
-    
-            function onResults(results) {
-            canvas.value.width = video.value.videoWidth;
-            canvas.value.height = video.value.videoHeight;
-            ctx.clearRect(0, 0, canvas.value.width, canvas.value.height);
-    
-            drawConnectors(ctx, results.poseLandmarks, POSE_CONNECTIONS, {
-                color: "white",
-                lineWidth: 4,
-            });
-    
-            drawLandmarks(ctx, results.poseLandmarks, {
-                color: "white",
-                fillColor: "white",
-                lineWidth: 2,
-                radius: 4,
-            });
-            }
-    
-            const cameraListener = () => {
-            pose.send({ image: video.value });
-            requestAnimationFrame(cameraListener);
-            };
-            cameraListener();
+    new Camera(video, {
+        onFrame: async () => {
+            await pose.send({ image: video });
         }
-    
-        return { video, canvas };
-        },
-    };
+    }).start();
+}
 </script>
-    
-<style scoped>
-    .pose-container {
-        position: relative;
-    }
-    
-    canvas {
-        position: absolute;
-        top: 0;
-        left: 0;
-    }
-</style>
-    

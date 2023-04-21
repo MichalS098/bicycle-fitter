@@ -1,5 +1,6 @@
 <template>
-    <ion-tab-bar slot="bottom" mode="ios" class="fixed bottom-6 inset-x-3 p-3 rounded-full bg-[#36363660] backdrop-blur-lg h-16">
+    <ion-tab-bar slot="bottom" mode="ios"
+        class="fixed bottom-6 inset-x-3 p-3 rounded-full bg-[#36363660] backdrop-blur-lg h-16">
         <ion-tab-button tab="home" href="/pages/home" mode="ios">
             <HomeIcon />
         </ion-tab-button>
@@ -33,7 +34,7 @@ ion-tab-button svg {
     stroke-width: 2;
     width: 24px;
     height: 24px;
-    transition: all 0.2s ease-in-out;    
+    transition: all 0.2s ease-in-out;
 }
 
 ion-tab-button.tab-selected svg {
@@ -42,7 +43,7 @@ ion-tab-button.tab-selected svg {
 
 ion-tab-button {
     background-color: transparent;
-    flex-basis: 20%;    
+    flex-basis: 20%;
     transition: all 0.2s ease-in-out;
 }
 
