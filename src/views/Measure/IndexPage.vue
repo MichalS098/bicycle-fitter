@@ -63,6 +63,9 @@ onMounted(async () => {
     if (video.value === undefined || canvas.value === undefined) {
         return;
     }
+
+    // 
+    
     setupMediaPipe(video.value, canvas.value);
 });
 
@@ -71,6 +74,15 @@ const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
     const { pose, drawResults } = useMediapipe();
 
     pose.onResults((results) => {
+        // zapisac do jakiejs tabeli
+        // tutaj obliczyc srednia
+
+        // jesli wszystkie punkty nie sa widoczne to niech
+        // apka wyswietli jakas informacje na ekranie 
+        
+        // showInfoNotVisible.value = true;
+
+
         drawResults(results, canvas);
         const shoulderHeightResult = shoulderHeight(results);
         if (height.value !== undefined) {
@@ -81,7 +93,7 @@ const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
     });
 
     new Camera(video, {
-        onFrame: async () => {
+        onFrame: async () => {            
             await pose.send({ image: video });
         }
     }).start();
