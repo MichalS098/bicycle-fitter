@@ -21,6 +21,7 @@
     "@capacitor/keyboard": "4.1.1",
     "@capacitor/preferences": "^4.0.2",
     "@capacitor/status-bar": "4.1.1",
+    "@capacitor-community/camera-preview": "4.0.0",
     "@heroicons/vue": "^2.0.17",
     "@ionic/pwa-elements": "^3.1.1",
     "@ionic/storage": "^3.0.6",
