@@ -11,20 +11,25 @@
             <ion-header collapse="condense">
                 <ion-toolbar>
                     <ion-title size="large">
-                        Lista rowerów
+                        My bikes
                     </ion-title>
                 </ion-toolbar>
             </ion-header>
+            <div class="px-5 mt-10"  router-link="/new-bike-steps">
+                <ion-button router-link="/new-bike-steps" expand="block" fill="clear" size="large" >
+                    Add new bike
+                </ion-button>
+            </div>
         </ion-content>
     </ion-page>
 </template>
   
 <script setup lang="ts">
 import {
-    IonPage, IonHeader, IonToolbar, IonTitle, IonContent,
+    IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton,
     onIonViewDidEnter, onIonViewDidLeave, onIonViewWillEnter, onIonViewWillLeave
 } from '@ionic/vue';
-
+import { PlusIcon } from "@heroicons/vue/24/outline"
 onIonViewDidEnter(() => {
     console.log('Page did enter');
 });
@@ -40,5 +45,8 @@ onIonViewWillEnter(() => {
 onIonViewWillLeave(() => {
     console.log('Page will leave');
 });
+const goToNewBikeSteps = () => {
+    console.log("goToNewBikeSteps")
+}
 </script>
   
