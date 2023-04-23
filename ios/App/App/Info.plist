@@ -24,6 +24,10 @@
 	<true/>
 	<key>NSCameraPortraitEffectEnabled</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>raw</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>mic</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
