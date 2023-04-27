@@ -43,11 +43,11 @@ export default function useMediapipePose() {
             );
             drawConnectors(
                 ctx, results.poseLandmarks, POSE_CONNECTIONS,
-                { color: '#00FF00', lineWidth: 4 }
+                { color: '#E48C56', lineWidth: 2 }
             );
             drawLandmarks(
                 ctx, results.poseLandmarks,
-                { color: '#FF0000', lineWidth: 2 }
+                { color: '#E48C56', radius: 3 }
             );
         }
     };
