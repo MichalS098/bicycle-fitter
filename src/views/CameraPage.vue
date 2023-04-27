@@ -64,18 +64,22 @@ import { ref } from 'vue';
 import useMediapipe from '@/composables/useMediapipe';
 import { onMounted } from 'vue';
 import { Camera } from '@mediapipe/camera_utils';
-import { shoulderHeight} from '@/functions/mediapipeHelpers';
+import { footLength} from '@/functions/mediapipeHelpers';
 
 const video = ref<HTMLVideoElement>();
 const canvas = ref<HTMLCanvasElement>();
 const shoulderHeightResult = ref(0);
+const footLengthResult = ref(0);
 const { pose, drawResults } = useMediapipe();
 const camera = ref<Camera>();
 
 onMounted(() => {
   pose.onResults((results) => {
-    drawResults(results, canvas.value);
-    shoulderHeightResult.value = shoulderHeight(results);
+     drawResults(results, canvas.value);
+     footLengthResult.value = footLength(results);
+     console.log("footLength");
+     console.log(footLengthResult);
+    // shoulderHeightResult.value = shoulderHeight(results);
   });
 
   camera.value = new Camera(video.value, {

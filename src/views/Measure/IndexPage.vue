@@ -5,7 +5,11 @@
             <canvas class="absolute inset-0 w-full my-auto" ref="canvas"></canvas>
 
             <div class="absolute inset-0 w-full flex items-start justify-end p-6">
-                <div ref="height">
+                <div ref="shoulderHeight">
+                </div>
+                <div ref="footLength">
+                </div>
+                <div ref="armLength">
                 </div>
             </div>
 
@@ -52,12 +56,14 @@ import {
     PhotoIcon,
 } from '@heroicons/vue/24/outline';
 import { refreshOutline, stopwatchOutline, flashOutline } from 'ionicons/icons';
-import { shoulderHeight } from '@/functions/mediapipeHelpers';
+import { globalCalcMediaPipe } from '@/functions/mediapipeHelpers';
 
 const video = ref<HTMLVideoElement>();
 const canvas = ref<HTMLCanvasElement>();
 const camera = ref<Camera>();
-const height = ref<HTMLDivElement>();
+const shoulderHeight = ref<HTMLDivElement>();
+const footLength = ref<HTMLDivElement>();
+const armLength = ref<HTMLDivElement>();
 
 onMounted(async () => {
     if (video.value === undefined || canvas.value === undefined) {
@@ -84,12 +90,24 @@ const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
 
 
         drawResults(results, canvas);
-        const shoulderHeightResult = shoulderHeight(results);
-        if (height.value !== undefined) {
-            height.value.innerHTML = shoulderHeightResult.toString();
-            height.value.style.color = 'white';
-            height.value.style.fontSize = '2rem';
-        }
+         let [shoulderHeightResult, footLengthResult, armLengthResult] = globalCalcMediaPipe(results);
+         if (shoulderHeight.value !== undefined) {
+            shoulderHeight.value.innerHTML = shoulderHeightResult.toString();
+            shoulderHeight.value.style.color = 'white';
+            shoulderHeight.value.style.fontSize = '2rem';
+         }
+
+        if (footLength.value !== undefined) {
+            footLength.value.innerHTML = footLengthResult.toString();
+            footLength.value.style.color = 'white';
+            footLength.value.style.fontSize = '2rem';
+         }
+
+         if (armLength.value !== undefined) {
+            armLength.value.innerHTML = armLengthResult.toString();
+            armLength.value.style.color = 'white';
+            armLength.value.style.fontSize = '2rem';
+         }
     });
 
     new Camera(video, {
