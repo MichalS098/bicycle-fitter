@@ -56,7 +56,7 @@ import {
     PhotoIcon,
 } from '@heroicons/vue/24/outline';
 import { refreshOutline, stopwatchOutline, flashOutline } from 'ionicons/icons';
-import { globalCalcMediaPipe } from '@/functions/mediapipeHelpers';
+import { globalCalcMediaPipe } from '@/functions/mediapipeCalculatedHumanParams';
 
 const video = ref<HTMLVideoElement>();
 const canvas = ref<HTMLCanvasElement>();
@@ -64,6 +64,10 @@ const camera = ref<Camera>();
 const shoulderHeight = ref<HTMLDivElement>();
 const footLength = ref<HTMLDivElement>();
 const armLength = ref<HTMLDivElement>();
+const shankLength = ref<HTMLDivElement>();
+const thighLength = ref<HTMLDivElement>();
+const inseamLength = ref<HTMLDivElement>();
+
 
 onMounted(async () => {
     if (video.value === undefined || canvas.value === undefined) {
@@ -90,7 +94,7 @@ const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
 
 
         drawResults(results, canvas);
-         let [shoulderHeightResult, footLengthResult, armLengthResult] = globalCalcMediaPipe(results);
+         let [shoulderHeightResult, footLengthResult, armLengthResult, shankLengthTemp, thighLengthTemp, inseamLengthTemp] = globalCalcMediaPipe(results);
          if (shoulderHeight.value !== undefined) {
             shoulderHeight.value.innerHTML = shoulderHeightResult.toString();
             shoulderHeight.value.style.color = 'white';
@@ -107,6 +111,24 @@ const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
             armLength.value.innerHTML = armLengthResult.toString();
             armLength.value.style.color = 'white';
             armLength.value.style.fontSize = '2rem';
+         }
+
+         if (shankLength.value !== undefined) {
+            shankLength.value.innerHTML = shoulderHeightResult.toString();
+            shankLength.value.style.color = 'white';
+            shankLength.value.style.fontSize = '2rem';
+         }
+
+        if (thighLength.value !== undefined) {
+            thighLength.value.innerHTML = footLengthResult.toString();
+            thighLength.value.style.color = 'white';
+            thighLength.value.style.fontSize = '2rem';
+         }
+
+         if (inseamLength.value !== undefined) {
+            inseamLength.value.innerHTML = armLengthResult.toString();
+            inseamLength.value.style.color = 'white';
+            inseamLength.value.style.fontSize = '2rem';
          }
     });
 
