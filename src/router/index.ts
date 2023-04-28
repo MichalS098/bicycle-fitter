@@ -3,6 +3,7 @@ import { RouteRecordRaw } from 'vue-router';
 import HomeLayout from '@/views/HomeLayout.vue';
 
 const firstStepsCompleted = () => {
+  // check if 
   return true;
 }
 
