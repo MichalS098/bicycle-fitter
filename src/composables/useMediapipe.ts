@@ -15,8 +15,8 @@ export default function useMediapipePose() {
         smoothLandmarks: true,
         enableSegmentation: true,
         smoothSegmentation: true,
-        minDetectionConfidence: 0.5,
-        minTrackingConfidence: 0.5
+        minDetectionConfidence: 0.7,
+        minTrackingConfidence: 0.7
     };
     pose.setOptions(options);
 
@@ -43,11 +43,11 @@ export default function useMediapipePose() {
             );
             drawConnectors(
                 ctx, results.poseLandmarks, POSE_CONNECTIONS,
-                { color: '#E48C56', lineWidth: 2 }
+                { color: '#E48C56', lineWidth: 1 }
             );
             drawLandmarks(
                 ctx, results.poseLandmarks,
-                { color: '#E48C56', radius: 3 }
+                { color: '#E48C56', radius: 1 }
             );
         }
     };
