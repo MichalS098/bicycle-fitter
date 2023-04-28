@@ -3,15 +3,10 @@ import { RouteRecordRaw } from 'vue-router';
 import HomeLayout from '@/views/HomeLayout.vue';
 import { User } from '@/entity/User';
 
-const firstStepsCompleted = async() => {
-  return await User.createQueryBuilder('user').getCount() > 0
-}
-const homeOrFirstSteps = await firstStepsCompleted() ? '/pages/home' : '/first-steps'
-
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    redirect: homeOrFirstSteps
+    redirect: '/pages/home'
   },
   {
     path: '/first-steps',
@@ -56,6 +51,14 @@ const routes: Array<RouteRecordRaw> = [
     ]
   },
 ]
+
+const firstStepsCompleted = async () => {
+  return await User.createQueryBuilder('user').getCount() > 0
+}
+
+firstStepsCompleted().then((completed) => {
+  routes[0].redirect = completed ? '/pages/home' : '/first-steps'
+})
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
