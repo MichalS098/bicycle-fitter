@@ -15,8 +15,8 @@ export default function useMediapipePose() {
         smoothLandmarks: true,
         enableSegmentation: true,
         smoothSegmentation: true,
-        minDetectionConfidence: 0.5,
-        minTrackingConfidence: 0.5
+        minDetectionConfidence: 0.7,
+        minTrackingConfidence: 0.7
     };
     pose.setOptions(options);
 

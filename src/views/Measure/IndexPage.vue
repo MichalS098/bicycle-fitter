@@ -4,25 +4,32 @@
             <video class="hidden" ref="video"></video>
             <canvas class="absolute inset-0 w-full my-auto" ref="canvas"></canvas>
 
-            <!-- <div class=" inset-0 w-full flex items-start justify-center pt-12 pb-1">
-                <div ref="shoulderHeight"> </div>
+            <div class="flex  justify-center gap-1 w-full pt-12 px-10">
+                <!-- <div class=" inset-0 w-full flex">
+                    <div id="shoulderH"></div>
+                </div> -->
+                <div class=" inset-0 w-full flex">
+                    <div ref="shoulderHeight"> </div>
+                </div>
+                <div class=" inset-0 w-full flex">
+                    <div ref="footLength"> </div>
+                </div>
+                <div class=" inset-0 w-full flex">
+                    <div ref="armLength"> </div>
+                </div>
             </div>
-            <div class=" inset-0 w-full flex items-end justify-center p-1">
-                <div ref="footLength"> </div>
-            </div>
-            <div class=" inset-0 w-full flex items-start justify-center p-1">
-                <div ref="armLength"> </div>
-            </div>
-            <div class=" inset-0 w-full flex items-end justify-center p-1">
-                <div ref="shankLength"> </div>
-            </div>
-            <div class=" inset-0 w-full flex items-center justify-center p-1">
-                <div ref="thighLength"> </div>
-            </div>
-            <div class=" inset-0 w-full flex items-center justify-center p-1">
-                <div ref="inseamLength"> </div>
-            </div> -->
 
+            <div class="flex items-center justify-center pt-3 px-10">
+                <div class=" inset-0 w-full flex">
+                    <div ref="shankLength"> </div>
+                </div>
+                <div class=" inset-0 w-full flex">
+                    <div ref="thighLength"> </div>
+                </div>
+                <div class=" inset-0 w-full flex">
+                    <div ref="inseamLength"> </div>
+                </div>
+            </div>
             <div class="absolute bottom-0 left-0 w-full p-4 flex items-center justify-center flex-col gap-1">
                 <div class="flex items-center justify-evenly w-full">
                     <ion-button fill="clear" size="large">
@@ -71,6 +78,13 @@ const shankLength = ref<HTMLDivElement>();
 const thighLength = ref<HTMLDivElement>();
 const inseamLength = ref<HTMLDivElement>();
 
+type Landmark = {
+  x: number;
+  y: number;
+  z: number;
+  visibility: number;
+};
+
 let measuringProgress = 0;
 let shoulderHeightResult = 0.0, footLengthResult = 0.0, armLengthResult = 0.0, shankLengthResult = 0.0, thighLengthResult = 0.0, inseamLengthResult = 0.0;
 const shoulderHeightTable = new Array(60);
@@ -103,86 +117,83 @@ const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
 
         // showInfoNotVisible.value = true;
 
-        
+        drawResults(results, canvas);
 
         if (results.poseLandmarks !== undefined) {
-            drawResults(results, canvas);
-            const [shoulderHeightTemp, footLengthTemp, armLengthTemp, shankLengthTemp, thighLengthTemp, inseamLengthTemp] = globalCalcMediaPipe(results);
 
-
-            // to jest tylko do wyświetlenia na ekranie na biezaco
-            // shoulderHeight.value.innerHTML = shoulderHeightTemp.toString();
-            // shoulderHeight.value.style.color = 'white';
-            // shoulderHeight.value.style.fontSize = '1rem';
-            
-            // footLength.value.innerHTML = footLengthTemp.toString();
-            // footLength.value.style.color = 'white';
-            // footLength.value.style.fontSize = '1rem';
-            
-            // armLength.value.innerHTML = armLengthTemp.toString();
-            // armLength.value.style.color = 'white';
-            // armLength.value.style.fontSize = '1rem';
-            
-            // shankLength.value.innerHTML = shankLengthTemp.toString();
-            // shankLength.value.style.color = 'white';
-            // shankLength.value.style.fontSize = '1rem';
-
-            // thighLength.value.innerHTML = thighLengthTemp.toString();
-            // thighLength.value.style.color = 'white';
-            // thighLength.value.style.fontSize = '1rem';
+            if (areAllBodyPointsVisible(results.poseLandmarks)) {
+                console.log("All body points are visible.");
         
-            // inseamLength.value.innerHTML = inseamLengthTemp.toString();
-            // inseamLength.value.style.color = 'white';
-            // inseamLength.value.style.fontSize = '1rem';
+                const [shoulderHeightTemp, footLengthTemp, armLengthTemp, shankLengthTemp, thighLengthTemp, inseamLengthTemp] = globalCalcMediaPipe(results);
+
+                if (measuringProgress > 60) {
+
+                    shoulderHeightResult = median(shoulderHeightTable);
+                    footLengthResult = median(footLengthTable);
+                    armLengthResult = median(armLengthTable);
+                    shankLengthResult  = median(shankLengthTable);
+                    thighLengthResult = median(thighLengthTable);
+                    inseamLengthResult = median(inseamLengthTable);
+
+                    console.log("shoulderHeightResult:", shoulderHeightResult);
+                    console.log("footLengthResult:", footLengthResult);
+                    console.log("armLengthResult:", armLengthResult);
+                    console.log("shankLengthResult:", shankLengthResult);
+                    console.log("thighLengthResult:", thighLengthResult);
+                    console.log("inseamLengthResult:", inseamLengthResult);
+
+                    measureDone();
+                } else {
+                    
+
+                    // console.log all tables:
+                    console.log("shoulderHeightTable:", shoulderHeightTable);
+                    console.log("footLengthTable:", footLengthTable);
+                    console.log("armLengthTable:", armLengthTable);
+                    console.log("shankLengthTable:", shankLengthTable);
+                    console.log("thighLengthTable:", thighLengthTable);
+                    console.log("inseamLengthTable:", inseamLengthTable);
 
 
+                    // to jest tylko do wyświetlenia na ekranie na biezaco
+                    shoulderHeight.value.innerHTML = shoulderHeightTemp.toFixed(3);
+                    shoulderHeight.value.style.color = 'white';
+                    shoulderHeight.value.style.fontSize = '1rem';
+                    
+                    footLength.value.innerHTML = footLengthTemp.toFixed(3);
+                    footLength.value.style.color = 'white';
+                    footLength.value.style.fontSize = '1rem';
+                    
+                    armLength.value.innerHTML = armLengthTemp.toFixed(3);
+                    armLength.value.style.color = 'white';
+                    armLength.value.style.fontSize = '1rem';
+                    
+                    shankLength.value.innerHTML = shankLengthTemp.toFixed(3);
+                    shankLength.value.style.color = 'white';
+                    shankLength.value.style.fontSize = '1rem';
 
-            shoulderHeightTable[measuringProgress] = shoulderHeightTemp;
-            footLengthTable[measuringProgress]     = footLengthTemp;
-            armLengthTable[measuringProgress]      = armLengthTemp;
-            shankLengthTable[measuringProgress]    = shankLengthTemp;
-            thighLengthTable[measuringProgress]    = thighLengthTemp;
-            inseamLengthTable[measuringProgress]   = inseamLengthTemp;            
-
-            if (measuringProgress === 59) {
+                    thighLength.value.innerHTML = thighLengthTemp.toFixed(3);
+                    thighLength.value.style.color = 'white';
+                    thighLength.value.style.fontSize = '1rem';
                 
-                // const tableValues = [4, 2, 9, 7, 5, 3, 1];
-                // console.log(median(tableValues)); // Output: 4
+                    inseamLength.value.innerHTML = inseamLengthTemp.toFixed(3);
+                    inseamLength.value.style.color = 'white';
+                    inseamLength.value.style.fontSize = '1rem';
 
-
-                shoulderHeightResult = median(shoulderHeightTable);
-                footLengthResult = median(footLengthTable);
-                armLengthResult = median(armLengthTable);
-                shankLengthResult  = median(shankLengthTable);
-                thighLengthResult = median(thighLengthTable);
-                inseamLengthResult = median(inseamLengthTable);
-
-                console.log("shoulderHeightResult:", shoulderHeightResult);
-                console.log("footLengthResult:", footLengthResult);
-                console.log("armLengthResult:", armLengthResult);
-                console.log("shankLengthResult:", shankLengthResult);
-                console.log("thighLengthResult:", thighLengthResult);
-                console.log("inseamLengthResult:", inseamLengthResult);
-
-
-                // measuringProgress = 0;
-                measureDone();
-            } else {
+                    shoulderHeightTable[measuringProgress] = shoulderHeightTemp;
+                    footLengthTable[measuringProgress]     = footLengthTemp;
+                    armLengthTable[measuringProgress]      = armLengthTemp;
+                    shankLengthTable[measuringProgress]    = shankLengthTemp;
+                    thighLengthTable[measuringProgress]    = thighLengthTemp;
+                    inseamLengthTable[measuringProgress]   = inseamLengthTemp;   
+                }
                 measuringProgress++;
-
-                // console.log all tables:
-                console.log("shoulderHeightTable:", shoulderHeightTable);
-                console.log("footLengthTable:", footLengthTable);
-                console.log("armLengthTable:", armLengthTable);
-                console.log("shankLengthTable:", shankLengthTable);
-                console.log("thighLengthTable:", thighLengthTable);
-                console.log("inseamLengthTable:", inseamLengthTable);
+            } else {
+            console.log("Some body points are not visible.");
             }
-            
         } else {
             measuringProgress = 0;
         }
-        // console.log(measuringProgress);
     }
 );
 
@@ -202,10 +213,36 @@ function median(arr: number[]): number {
   return (middleValue1 + middleValue2) / 2;
 }
 
+const areAllBodyPointsVisible = (landmarks: Landmark[]) => {
+    const visibilityThreshold = 0.5;
+
+    for (let i = 0; i < landmarks.length; i++) 
+        if (landmarks[i].visibility < visibilityThreshold) 
+            return false;
+  return true;
+}
 
 
 const measureDone = () => {
     // wyswietlic wyniki
+
+    shoulderHeight.value.innerHTML = shoulderHeightResult.toFixed(3);
+    shoulderHeight.value.style.color = 'green';
+    
+    footLength.value.innerHTML = footLengthResult.toFixed(3);
+    footLength.value.style.color = 'green';
+    
+    armLength.value.innerHTML = armLengthResult.toFixed(3);
+    armLength.value.style.color = 'green';
+    
+    shankLength.value.innerHTML = shankLengthResult.toFixed(3);
+    shankLength.value.style.color = 'green';
+
+    thighLength.value.innerHTML = thighLengthResult.toFixed(3);
+    thighLength.value.style.color = 'green';
+
+    inseamLength.value.innerHTML = inseamLengthResult.toFixed(3);
+    inseamLength.value.style.color = 'green';
 }
 
     new Camera(video, {
