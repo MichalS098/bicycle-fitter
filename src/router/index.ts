@@ -1,23 +1,17 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
 import HomeLayout from '@/views/HomeLayout.vue';
+import { User } from '@/entity/User';
 
-const firstStepsCompleted = () => {
-  // check if 
-  return true;
+const firstStepsCompleted = async() => {
+  return await User.createQueryBuilder('user').getCount() > 0
 }
-
+const homeOrFirstSteps = await firstStepsCompleted() ? '/pages/home' : '/first-steps'
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    redirect: () => {
-      if (firstStepsCompleted()) {
-        return '/pages/home'
-      } else {
-        return '/first-steps'
-      }
-    }
+    redirect: homeOrFirstSteps
   },
   {
     path: '/first-steps',
