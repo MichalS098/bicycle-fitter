@@ -5,9 +5,6 @@
             <canvas class="absolute inset-0 w-full my-auto" ref="canvas"></canvas>
 
             <div class="flex  justify-center gap-1 w-full pt-12 px-10">
-                <!-- <div class=" inset-0 w-full flex">
-                    <div id="shoulderH"></div>
-                </div> -->
                 <div class=" inset-0 w-full flex">
                     <div ref="shoulderHeight"> </div>
                 </div>
@@ -21,10 +18,10 @@
 
             <div class="flex items-center justify-center pt-3 px-10">
                 <div class=" inset-0 w-full flex">
-                    <div ref="shankLength"> </div>
+                    <div ref="thighLength"> </div>
                 </div>
                 <div class=" inset-0 w-full flex">
-                    <div ref="thighLength"> </div>
+                    <div ref="shankLength"> </div>
                 </div>
                 <div class=" inset-0 w-full flex">
                     <div ref="inseamLength"> </div>
@@ -122,10 +119,7 @@ const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
         if (results.poseLandmarks !== undefined) {
 
             if (areAllBodyPointsVisible(results.poseLandmarks)) {
-                console.log("All body points are visible.");
         
-                const [shoulderHeightTemp, footLengthTemp, armLengthTemp, shankLengthTemp, thighLengthTemp, inseamLengthTemp] = globalCalcMediaPipe(results);
-
                 if (measuringProgress > 60) {
 
                     shoulderHeightResult = median(shoulderHeightTable);
@@ -135,27 +129,11 @@ const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
                     thighLengthResult = median(thighLengthTable);
                     inseamLengthResult = median(inseamLengthTable);
 
-                    console.log("shoulderHeightResult:", shoulderHeightResult);
-                    console.log("footLengthResult:", footLengthResult);
-                    console.log("armLengthResult:", armLengthResult);
-                    console.log("shankLengthResult:", shankLengthResult);
-                    console.log("thighLengthResult:", thighLengthResult);
-                    console.log("inseamLengthResult:", inseamLengthResult);
-
                     measureDone();
                 } else {
-                    
-
-                    // console.log all tables:
-                    console.log("shoulderHeightTable:", shoulderHeightTable);
-                    console.log("footLengthTable:", footLengthTable);
-                    console.log("armLengthTable:", armLengthTable);
-                    console.log("shankLengthTable:", shankLengthTable);
-                    console.log("thighLengthTable:", thighLengthTable);
-                    console.log("inseamLengthTable:", inseamLengthTable);
-
-
-                    // to jest tylko do wyświetlenia na ekranie na biezaco
+                    const [shoulderHeightTemp, footLengthTemp, armLengthTemp, shankLengthTemp, thighLengthTemp, inseamLengthTemp] = globalCalcMediaPipe(results);
+                    // just for displaying tmp values
+                    // ignore the errors, it's just for testing and these elements are always defined
                     shoulderHeight.value.innerHTML = shoulderHeightTemp.toFixed(3);
                     shoulderHeight.value.style.color = 'white';
                     shoulderHeight.value.style.fontSize = '1rem';
