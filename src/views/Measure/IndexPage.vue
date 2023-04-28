@@ -119,7 +119,7 @@ const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
                     shankLengthResult  = median(shankLengthTable);
                     thighLengthResult = median(thighLengthTable);
                     inseamLengthResult = median(inseamLengthTable);
-
+                    
                     measureDone();
                 } else {
                     const [shoulderHeightTemp, footLengthTemp, armLengthTemp, shankLengthTemp, thighLengthTemp, inseamLengthTemp] = globalCalcMediaPipe(results);

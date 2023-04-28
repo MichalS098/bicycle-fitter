@@ -1,6 +1,5 @@
-import { mount } from '@vue/test-utils'
 import { calculatedBikeFittingParams } from '@/functions/calculatedBikeFittingParams';
-import { seatHeightCalc, degToRad, sind, cosd } from '@/functions/bikefittinglogic/bikeFittingParamsLogic';
+import { seatHeightCalc, sind, cosd } from '@/functions/bikefittinglogic/bikeFittingParamsLogic';
 import { bikeParams, bikeType, ridingStyle } from '@/classes/bikeParams';
 import { humanParams } from '@/classes/humanParams';
 

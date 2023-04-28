@@ -15,9 +15,20 @@
                     </ion-title>
                 </ion-toolbar>
             </ion-header>
-            <div class="px-5 mt-10"  router-link="/new-bike-steps">
-                <ion-button router-link="/new-bike-steps" expand="block" fill="clear" size="large" >
-                    Add new bike
+            <div class="px-5 mt-10" router-link="/new-bike-steps">
+
+                <div class="ion-padding">
+                    <ion-list>
+                        <ion-item v-for="bike in user?.bikes" :key="bike.id">
+                            <ion-label>
+                                <h2>{{ bike.brand }} {{ bike.model }}</h2>
+                            </ion-label>
+                        </ion-item>
+                    </ion-list>
+                </div>
+
+                <ion-button router-link="/new-bike-steps">
+                    test add new bike
                 </ion-button>
             </div>
         </ion-content>
@@ -27,26 +38,24 @@
 <script setup lang="ts">
 import {
     IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton,
-    onIonViewDidEnter, onIonViewDidLeave, onIonViewWillEnter, onIonViewWillLeave
+    IonList, IonItem, IonLabel
 } from '@ionic/vue';
-import { PlusIcon } from "@heroicons/vue/24/outline"
-onIonViewDidEnter(() => {
-    console.log('Page did enter');
-});
+import { Bike } from '@/entity/Bike';
+import { User } from '@/entity/User';
+import { onMounted, ref } from 'vue';
+import { saveDbForWeb } from '@/composables/useSqliteOnWeb';
 
-onIonViewDidLeave(() => {
-    console.log('Page did leave');
-});
+const user = ref<User | null>(null);
 
-onIonViewWillEnter(() => {
-    console.log('Page will enter');
+onMounted(async () => {
+    user.value = await User.findOne({
+        where: {
+            id: 1
+        },
+        relations: {
+            bikes: true
+        }
+    });
 });
-
-onIonViewWillLeave(() => {
-    console.log('Page will leave');
-});
-const goToNewBikeSteps = () => {
-    console.log("goToNewBikeSteps")
-}
 </script>
   
