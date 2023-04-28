@@ -36,11 +36,6 @@
                     test db
                 </ion-button>
                 <!-- /test db -->
-
-
-                <ion-button router-link="/new-bike-steps" expand="block" fill="clear" size="large">
-                    Add new bike
-                </ion-button>
             </div>
         </ion-content>
     </ion-page>
