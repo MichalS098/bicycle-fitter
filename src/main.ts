@@ -45,7 +45,6 @@ applyPolyfills().then(() => {
 window.addEventListener('DOMContentLoaded', async () => {
   const app = createApp(App)
     .use(IonicVue)
-    .use(router);
 
   //	const platform = ref(Capacitor.getPlatform());
   const platform = Capacitor.getPlatform();
@@ -74,14 +73,14 @@ window.addEventListener('DOMContentLoaded', async () => {
     }).catch((e) => {
       // the plugin throws an error when closing connections. we can ignore
       // that since it is expected behaviour
-      console.log('ignore this: CapacitorSQLite.checkConnectionsConsistency', e);      
+      console.log('ignore this: CapacitorSQLite.checkConnectionsConsistency', e);
       return {};
     });
 
     for (const connection of [AppDataSource]) {
       if (!connection.isInitialized) {
         await connection.initialize();
-      }      
+      }
       await connection.runMigrations();
     }
 
@@ -90,6 +89,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       await sqliteConnection.saveToStore('app-bicycle-fitter');
     }
 
+    app.use(router);
     router.isReady().then(() => {
       app.mount('#app');
     });
