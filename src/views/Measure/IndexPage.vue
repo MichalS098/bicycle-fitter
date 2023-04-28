@@ -1,8 +1,9 @@
 <template>
     <ion-page>
         <ion-content :fullscreen="true" class="relative">
-            <video class="hidden" ref="video"></video>
-            <canvas class="absolute inset-0 w-full my-auto" ref="canvas"></canvas>
+            <video class="hidden" ref="video" style="position: absolute; z-index: -1;"></video>
+
+            <canvas class="absolute inset-0 w-full my-auto pd-15" ref="canvas"></canvas>
 
             <div class="flex  justify-center gap-1 w-full pt-12 px-10">
                 <div class=" inset-0 w-full flex">
@@ -96,8 +97,6 @@ onMounted(async () => {
         return;
     }
 
-    // 
-    
     setupMediaPipe(video.value, canvas.value);
 });
 
@@ -106,19 +105,11 @@ const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
     const { pose, drawResults } = useMediapipe();
 
     pose.onResults((results) => {
-        // zapisac do jakiejs tabeli
-        // tutaj obliczyc srednia
-
-        // jesli wszystkie punkty nie sa widoczne to niech
-        // apka wyswietli jakas informacje na ekranie 
-
-        // showInfoNotVisible.value = true;
-
         drawResults(results, canvas);
 
         if (results.poseLandmarks !== undefined) {
 
-            if (areAllBodyPointsVisible(results.poseLandmarks)) {
+            if (areAllBodyPointsVisible(results.poseLandmarks)) {   // check if all body points are visible
         
                 if (measuringProgress > 60) {
 
@@ -202,7 +193,6 @@ const areAllBodyPointsVisible = (landmarks: Landmark[]) => {
 
 
 const measureDone = () => {
-    // wyswietlic wyniki
 
     shoulderHeight.value.innerHTML = shoulderHeightResult.toFixed(3);
     shoulderHeight.value.style.color = 'green';

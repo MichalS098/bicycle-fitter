@@ -25,7 +25,7 @@
 	<key>NSCameraPortraitEffectEnabled</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>raw</string>
+	<string>We need camera permission so we can measure you</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>mic</string>
 	<key>UILaunchStoryboardName</key>
