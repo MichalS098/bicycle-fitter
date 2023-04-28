@@ -15,8 +15,30 @@
                     </ion-title>
                 </ion-toolbar>
             </ion-header>
-            <div class="px-5 mt-10"  router-link="/new-bike-steps">
-                <ion-button router-link="/new-bike-steps" expand="block" fill="clear" size="large" >
+            <div class="px-5 mt-10" router-link="/new-bike-steps">
+
+                <div class="ion-padding">
+                    <ion-list>
+                        <ion-item v-for="bike in bikes" :key="bike.id">
+                            <ion-label>
+                                <h2>{{ bike.brand }} {{ bike.model }}</h2>
+                            </ion-label>
+                        </ion-item>
+                    </ion-list>
+                </div>
+
+                <!-- test db -->
+                <ion-button @click="addNewBike()" expand="block" fill="clear" size="large">
+                    test add new bike
+                </ion-button>
+
+                <ion-button @click="testDb()" expand="block" fill="clear" size="large">
+                    test db
+                </ion-button>
+                <!-- /test db -->
+
+
+                <ion-button router-link="/new-bike-steps" expand="block" fill="clear" size="large">
                     Add new bike
                 </ion-button>
             </div>
@@ -27,9 +49,58 @@
 <script setup lang="ts">
 import {
     IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton,
-    onIonViewDidEnter, onIonViewDidLeave, onIonViewWillEnter, onIonViewWillLeave
+    onIonViewDidEnter, onIonViewDidLeave, onIonViewWillEnter, onIonViewWillLeave,
+    IonList, IonItem, IonLabel
 } from '@ionic/vue';
-import { PlusIcon } from "@heroicons/vue/24/outline"
+import { Bike } from '@/entity/Bike';
+import { User } from '@/entity/User';
+import { onMounted, ref } from 'vue';
+
+// on mounted get all bikes
+const bikes = ref<Bike[]>([]);
+const user = ref<User | null>(null);
+
+onMounted(async () => {
+    // add user if not exists
+    const users = await User.find();
+    if (users.length === 0) {
+        const newUser = new User();
+        newUser.id = 1;
+        newUser.height = 180;
+        await newUser.save();
+        user.value = newUser;
+    }
+    else {
+        user.value = users[0];
+    }
+
+    // get all bikes
+    bikes.value = await Bike.findBy({ user: user.value });
+    console.log("user", user.value);
+    console.log("bikes", bikes.value);
+});
+
+
+
+const addNewBike = async () => {
+    if (user.value) {
+        const newBike = new Bike();
+        newBike.brand = "test brand";
+        newBike.model = "test model";
+        newBike.user = user.value;
+        await newBike.save();
+        bikes.value = await Bike.findBy({ user: user.value });
+    }
+}
+
+const testDb = async () => {
+    const users = await User.find();
+    console.log("users", users);
+    const bikes = await Bike.find();
+    console.log("bikes", bikes);
+}
+
+
 onIonViewDidEnter(() => {
     console.log('Page did enter');
 });

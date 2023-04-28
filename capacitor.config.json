@@ -1,6 +1,1 @@
-{
-	"appId": "com.bike.fitter.app.project",
-	"appName": "BicycleFitter",
-	"webDir": "dist",
-	"bundledWebRuntime": false
-}
+{}

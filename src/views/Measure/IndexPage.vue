@@ -90,7 +90,7 @@ const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
 
 
         drawResults(results, canvas);
-         let [shoulderHeightResult, footLengthResult, armLengthResult] = globalCalcMediaPipe(results);
+         const [shoulderHeightResult, footLengthResult, armLengthResult] = globalCalcMediaPipe(results);
          if (shoulderHeight.value !== undefined) {
             shoulderHeight.value.innerHTML = shoulderHeightResult.toString();
             shoulderHeight.value.style.color = 'white';
