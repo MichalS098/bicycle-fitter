@@ -65,6 +65,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       // Initialize the Web store
       await sqliteConnection.initWebStore();
     }
+
     // when using Capacitor, you might want to close existing connections,
     // otherwise new connections will fail when using dev-live-reload
     // see https://github.com/capacitor-community/sqlite/issues/106
@@ -73,7 +74,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     }).catch((e) => {
       // the plugin throws an error when closing connections. we can ignore
       // that since it is expected behaviour
-      console.log(e);
+      console.log('ignore this: CapacitorSQLite.checkConnectionsConsistency', e);      
       return {};
     });
 

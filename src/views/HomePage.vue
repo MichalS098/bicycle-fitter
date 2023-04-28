@@ -49,11 +49,18 @@ import {
 } from '@ionic/vue';
 import { Bike } from '@/entity/Bike';
 import { User } from '@/entity/User';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, getCurrentInstance } from 'vue';
+import SqliteDataSource from '@/data-sources/SqliteDataSource';
 
 // on mounted get all bikes
 const bikes = ref<Bike[]>([]);
 const user = ref<User | null>(null);
+const app = getCurrentInstance();
+const platform = app?.appContext.config.globalProperties.$platform;
+const sqlite = app?.appContext.config.globalProperties.$sqlite;
+
+const connection = SqliteDataSource;
+const database = connection.options.database;
 
 onMounted(async () => {
     // add user if not exists
@@ -63,6 +70,9 @@ onMounted(async () => {
         newUser.id = 1;
         newUser.height = 180;
         await newUser.save();
+        if (platform === 'web') {
+            await sqlite.saveToStore(database);
+        }
         user.value = newUser;
     }
     else {
@@ -85,6 +95,10 @@ const addNewBike = async () => {
         newBike.user = user.value;
         await newBike.save();
         bikes.value = await Bike.findBy({ user: user.value });
+
+        if (platform === 'web') {
+            await sqlite.saveToStore(database);
+        }
     }
 }
 
