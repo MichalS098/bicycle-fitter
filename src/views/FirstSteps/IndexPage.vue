@@ -1,177 +1,116 @@
 <template>
     <ion-page>
-        <ion-content :fullscreen="true">
-            <div v-if="currentStep == 0" class="ion-padding py-24 flex flex-col justify-between gap-6 h-full">
-                <h1 class="text-right text-6xl">
+        <ion-content :fullscreen="true" :scroll-y="false">
+            <div v-if="currentStep == 0"
+                class="ion-padding py-6 xxs:py-12 xs:py-24 flex flex-col justify-between gap-3 xs:gap-6 h-full">
+                <h2 class="text-right text-4xl xxs:text-5xl xs:text-6xl">
                     let your <span class="text-primary font-semibold">bike</span> <br>
                     fit <span class="text-primary font-semibold">you</span>
-                </h1>
-                <div class="flex flex-col gap-6 px-3">
-                    <h2 class="text-2xl font-semibold text-left">
-                        Tell us about yourself!
-                    </h2>                    
-                    <p class="text-lg text-left pb-12">
-                        As with real bike fitting, we will start
-                        with a short survey about you, your
-                        riding style and your expectations
-                    </p>
+                </h2>
+                <div class="flex flex-col gap-12 px-3">
+                    <div class="flex flex-col gap-6">
+                        <h3 class="text-2xl font-semibold text-left">
+                            Tell us about yourself!
+                        </h3>
+                        <p class="text-lg text-left">
+                            As with real bike fitting, we will start
+                            with a short survey about you, your
+                            riding style and your expectations
+                        </p>
+                    </div>                    
                     <ion-button @click="nextStep()" expand="block" shape="round" color="primary" mode="ios" type="button"
-                                class="font-bold text-lg">
+                        class="font-bold text-lg">
                         Get started!
                     </ion-button>
                 </div>
             </div>
 
-            <div v-if="currentStep == 1" class="ion-padding pt-16 pb-6 flex flex-col gap-6 justify-between h-full">
-                <div class="flex flex-col gap-6">
-                    <h2 class="text-4xl font-semibold">
-                        Your unit system
-                    </h2>
-                    <ion-progress-bar class="h-3 rounded-full" :value="currentStep / numberOfSteps"
-                        color="secondary"></ion-progress-bar>
-                    <p class="text-lg">
-                        What unit system do you prefer?
-                    </p>
-                    <div class="flex flex-col gap-3 pl-3 pr-12 mt-6">
-                        <first-steps-radio-button @click="form.unitSystem = 'metric'" :checked="form.unitSystem == 'metric'"
-                                                  label="Metric" />
-                        <first-steps-radio-button @click="form.unitSystem = 'imperial'"
-                                                  :checked="form.unitSystem == 'imperial'" label="Imperial" />
-                    </div>
-                </div>
-                <div class="flex items-center justify-between">
-                    <ion-button @click="prevStep()" expand="block" fill="clear" size="large" color="light">
-                        Back
-                    </ion-button>
-                    <ion-button @click="nextStep()" expand="block" fill="clear" size="large"
-                                :color="form.unitSystem == '' ? 'light' : 'secondary'">
-                        Next
-                    </ion-button>
-                </div>
-            </div>
+            <step-card 
+                title="Your unit system" 
+                sub-title="What unit system do you prefer?"                                        
+                :this-step="1"
+                :current-step="currentStep"
+                :number-of-steps="numberOfSteps"                                
+                @prev="prevStep"
+                @next="nextStep"
+            >   
+                <steps-radio-button @click="nextStep()" v-model="form.unitSystem" label="Metric" value="metric" />
+                <steps-radio-button @click="nextStep()" v-model="form.unitSystem" label="Imperial" value="imperial" />
+            </step-card>                                    
 
-            <div v-if="currentStep == 2" class="ion-padding pt-16 pb-6 flex flex-col gap-6 justify-between h-full">
-                <div class="flex flex-col gap-6">
-                    <h2 class="text-4xl font-semibold">
-                        Your height and weight
-                    </h2>
-                    <ion-progress-bar class="h-3 rounded-full" :value="currentStep / numberOfSteps"
-                        color="secondary"></ion-progress-bar>
-                    <p class="text-lg">
-                        What is your height?
-                    </p>
-                    <div class="flex flex-col gap-3 pl-3 pr-12 mt-6">
-                        <button-input v-model="form.height" type="number" placeholder="Enter your height" />
-                    </div>
-                </div>
-                <div class="flex items-center justify-between">
-                    <ion-button @click="prevStep()" expand="block" fill="clear" size="large" color="light">
-                        Back
-                    </ion-button>
-                    <ion-button @click="nextStep()" expand="block" fill="clear" size="large"
-                        :color="form.height == 0 ? 'light' : 'secondary'">
-                        Next
-                    </ion-button>
-                </div>
-            </div>
+            <step-card 
+                title="Your height" 
+                sub-title="What is your height?"
+                :this-step="2"
+                :current-step="currentStep"
+                :number-of-steps="numberOfSteps"                
+                @prev="prevStep"
+                @next="nextStep"
+            >   
+                <button-input
+                    :max="form.unitSystem === 'metric' ? 250 : 100"
+                    :min="form.unitSystem === 'metric' ? 50 : 20"
+                    v-model="form.height" type="number" inputmode="numeric" placeholder="Enter your height" :postfix="form.unitSystem === 'metric' ? 'cm' : 'inch'"/>                
+            </step-card>                                    
+            
+            <step-card 
+                title="Your ride time" 
+                sub-title="Typically how much time per week do you spend on the bike?"
+                :this-step="3"
+                :current-step="currentStep"
+                :number-of-steps="numberOfSteps"                
+                @prev="prevStep"
+                @next="nextStep"
+            >   
+                <steps-radio-button @click="nextStep()" v-model="form.rideTime" label="1 hour or less" value="1" />                            
+                <steps-radio-button @click="nextStep()" v-model="form.rideTime" label="1 - 3 hours" value="2" />                            
+                <steps-radio-button @click="nextStep()" v-model="form.rideTime" label="3 - 6 hours" value="3" />                            
+                <steps-radio-button @click="nextStep()" v-model="form.rideTime" label="6 hours or more" value="4" />                                                
+            </step-card>                                    
 
-            <div v-if="currentStep == 3" class="ion-padding pt-16 pb-6 flex flex-col gap-6 justify-between h-full">
-                <div class="flex flex-col gap-6">
-                    <h2 class="text-4xl font-semibold">
-                        Your ride time
-                    </h2>
-                    <ion-progress-bar class="h-3 rounded-full" :value="currentStep / numberOfSteps"
-                        color="secondary"></ion-progress-bar>
-                    <p class="text-lg">
-                        Typically how much time per week do you spend on the bike?
-                    </p>
-                    <div class="flex flex-col gap-3 pl-3 pr-12 mt-6">
-                        <first-steps-radio-button @click="form.rideTime = 1" :checked="form.rideTime == 1"
-                            label="1 Hour or less" />
-                        <first-steps-radio-button @click="form.rideTime = 2" :checked="form.rideTime == 2"
-                            label="1 - 3 Hours" />
-                        <first-steps-radio-button @click="form.rideTime = 3" :checked="form.rideTime == 3"
-                            label="3 - 6 Hours" />
-                        <first-steps-radio-button @click="form.rideTime = 4" :checked="form.rideTime == 4"
-                            label="6 Hours or more" />
-                    </div>
-                </div>
-                <div class="flex items-center justify-between">
-                    <ion-button @click="prevStep()" expand="block" fill="clear" size="large" color="light">
-                        Back
-                    </ion-button>
-                    <ion-button @click="nextStep()" expand="block" fill="clear" size="large"
-                        :color="form.rideTime == 0 ? 'light' : 'secondary'">
-                        Next
-                    </ion-button>
-                </div>
-            </div>
-
-            <div v-if="currentStep == 4" class="ion-padding pt-16 pb-6 flex flex-col gap-6 justify-between h-full">
-                <div class="flex flex-col gap-6">
-                    <h2 class="text-4xl font-semibold">
-                        Your rider level
-                    </h2>
-                    <ion-progress-bar class="h-3 rounded-full" :value="currentStep / numberOfSteps"
-                        color="secondary"></ion-progress-bar>
-                    <p class="text-lg">
-                        At what level of cycling would you define yourself?
-                    </p>
-                    <div class="flex flex-col gap-3 pl-3 pr-12 mt-6">
-                        <first-steps-radio-button @click="form.rideStyle = 'casual'" :checked="form.rideStyle == 'casual'"
-                            label="Casual" />
-                        <first-steps-radio-button @click="form.rideStyle = 'recreational'"
-                            :checked="form.rideStyle == 'recreational'" label="Recreational" />
-                        <first-steps-radio-button @click="form.rideStyle = 'avid'" :checked="form.rideStyle == 'avid'"
-                            label="Avid" />
-                        <first-steps-radio-button @click="form.rideStyle = 'weekendwarrior'"
-                            :checked="form.rideStyle == 'weekendwarrior'" label="Weekend Warrior" />
-                        <first-steps-radio-button @click="form.rideStyle = 'racer'" :checked="form.rideStyle == 'racer'"
-                            label="Racer" />
-                    </div>
-
-                    <div>
-                        <div class="px-3">
-                            <InformationCircleIcon class="h-8 w-8 text-secondary" @click="isRiderStyleInfoVisible = true" />
-                        </div>
-                        <rider-styles-info-modal :is-open="isRiderStyleInfoVisible"
-                            @close="isRiderStyleInfoVisible = false" />
-                    </div>
-
-                </div>
-                <div v-if="!isRiderStyleInfoVisible" class="flex items-center justify-between">
-                    <ion-button @click="prevStep()" expand="block" fill="clear" size="large" color="light">
-                        Back
-                    </ion-button>
-                    <ion-button @click="nextStep()" expand="block" fill="clear" size="large"
-                        :color="form.rideStyle == '' ? 'light' : 'secondary'">
-                        Next
-                    </ion-button>
-                </div>
-            </div>
+            <step-card 
+                title="Your rider level" 
+                sub-title="At what level of cycling would you define yourself?"
+                :this-step="4"
+                :current-step="currentStep"
+                :number-of-steps="numberOfSteps"                
+                @prev="prevStep"
+                @next="nextStep"
+                class="overflow-y-auto"
+            >   
+                <steps-radio-button @click="nextStep()" v-model="form.rideStyle" label="Casual" value="casual" />
+                <steps-radio-button @click="nextStep()" v-model="form.rideStyle" label="Recreational" value="recreational" />
+                <steps-radio-button @click="nextStep()" v-model="form.rideStyle" label="Avid" value="avid" />
+                <steps-radio-button @click="nextStep()" v-model="form.rideStyle" label="Weekend Warrior" value="weekendwarrior" />
+                <steps-radio-button @click="nextStep()" v-model="form.rideStyle" label="Racer" value="racer" />
+                <InformationCircleIcon class="mx-3 h-8 w-8 text-secondary" @click="isRiderStyleInfoVisible = true" />
+            </step-card>                                                                   
+            
+            <rider-styles-info-modal :is-open="isRiderStyleInfoVisible" @close="isRiderStyleInfoVisible = false" />
 
             <div v-if="currentStep == 5"
-                class="ion-padding py-24 flex flex-col justify-between gap-6 h-full bg-secondary-shade">
-                <h1 class="text-center text-6xl">
+                class="ion-padding overflow-y-scroll py-6 xxs:py-12 xs:py-24 flex flex-col justify-between gap-6 h-full bg-secondary-shade">
+                <h2 class="text-left xs:text-right text-4xl xxs:text-5xl xs:text-6xl">
                     Bike fitting
-                </h1>
-                <div class="flex flex-col gap-6 px-3">
-                    
-                    <img src="@/../resources/images/person-on-bike.png" alt="person on a bike" class="w-full h-48 object-contain" />    
-                    <h2 class="text-2xl font-semibold text-left">
-                        Start with measuring yourself!
-                    </h2>                              
-                    <p class="text-lg text-left pb-12">
-                        In order to bikefit you into your bike, we need to know your measurements.
-                        You can pass your photo, or we can do it live with your phone camera!
-                    </p>
-                    <ion-button router-link="/measure" expand="block" shape="round" mode="ios" type="button" color="sand-desert"
-                        class="font-bold text-lg">
+                </h2>
+                <div class="flex flex-col justify-between h-full gap-3 px-3">                    
+                    <div class="flex flex-col gap-6">                    
+                        <img src="@/../resources/images/person-on-bike.png" alt="person on a bike"
+                            class="w-full h-24 xxs:h-32 xs:h-48 object-contain" />
+                        <h3 class="text-lg xxs:text-xl xs:text-2xl font-semibold text-left">
+                            Start with measuring yourself!
+                        </h3>
+                        <p class="text-base xxs:text-lg text-left">
+                            In order to bikefit you into your bike, we need to know your measurements.
+                            You can pass your photo, or we can do it live with your phone camera!
+                        </p>
+                    </div>
+                    <ion-button router-link="/measure" expand="block" shape="round" mode="ios" type="button"
+                        color="sand-desert" class="font-bold text-lg">
                         Measure me!
                     </ion-button>
                 </div>
             </div>
-
         </ion-content>
     </ion-page>
 </template>
@@ -182,10 +121,10 @@ import {
     IonPage, IonContent, IonButton, IonProgressBar
 } from '@ionic/vue';
 import { InformationCircleIcon } from "@heroicons/vue/24/outline"
-import FirstStepsRadioButton from '@/views/FirstSteps/FirstStepsRadioButton.vue';
 import RiderStylesInfoModal from '@/views/FirstSteps/RiderStylesInfoModal.vue';
 import ButtonInput from '@/components/ButtonInput.vue';
-import BikeRideVector from '@/../resources/svg/BikeRideVector.vue';
+import StepsRadioButton from '@/components/StepsRadioButton.vue';
+import StepCard from '@/components/StepCard.vue';
 
 const numberOfSteps = 5; // from 0 to 6
 const currentStep = ref(0);

@@ -1,13 +1,16 @@
 <template>
     <ion-modal :is-open="isOpen">
-        <ion-content>
-            <ion-header>
+        <ion-content :fullscreen="true">
+            <ion-header :translucent="true" class="sticky top-0">
                 <ion-toolbar>
                     <ion-buttons slot="start">
+                        <ion-button @click="closeModal()" color="secondary" fill="clear">
+                            <ion-icon slot="start" :icon="arrowBackOutline"></ion-icon>
+                            Go back
+                        </ion-button>
                     </ion-buttons>
                     <ion-title>Rider styles</ion-title>
                     <ion-buttons slot="end">
-                        <ion-button @click="closeModal()" color="secondary">Cancel</ion-button>
                     </ion-buttons>
                 </ion-toolbar>
             </ion-header>
@@ -68,13 +71,14 @@
                     </ion-card>
                 </ion-item>
             </ion-list>
-        </ion-content>
+        </ion-content>        
     </ion-modal>
 </template>
 
 <script lang="ts" setup>
 import { defineProps, defineEmits } from 'vue';
-import { IonModal, IonHeader, IonToolbar, IonButtons, IonButton, IonTitle, IonContent, IonList, IonItem, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent } from '@ionic/vue';
+import { IonModal, IonHeader, IonToolbar, IonButtons, IonButton, IonTitle, IonContent, IonList, IonItem, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonIcon, IonFooter } from '@ionic/vue';
+import { arrowBackOutline } from 'ionicons/icons';
 
 const emits = defineEmits(['close']);
 

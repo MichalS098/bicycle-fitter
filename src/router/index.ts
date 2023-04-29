@@ -62,7 +62,7 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
-  const isCompleted = await firstStepsCompleted();
+  const isCompleted = await firstStepsCompleted();  
   if (!isCompleted && to.path === '/') {
     next('/first-steps');
   } else {

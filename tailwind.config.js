@@ -5,6 +5,10 @@ module.exports = {
   ],
   theme: {
     extend: {
+      screens: {        
+        'xxs': '375px',        
+        'xs': '390px',
+      },
       colors: {
         'primary': 'var(--ion-color-primary)',
         'primary-shade': 'var(--ion-color-primary-shade)',
