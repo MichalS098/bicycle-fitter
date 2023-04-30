@@ -17,7 +17,7 @@
             <HeartIcon />
         </ion-tab-button>
 
-        <ion-tab-button tab="settings" href="/pages/settings" mode="ios">
+        <ion-tab-button tab="profile" href="/pages/profile" mode="ios">
             <UserIcon />
         </ion-tab-button>
     </ion-tab-bar>

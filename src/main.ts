@@ -81,7 +81,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       if (!connection.isInitialized) {
         await connection.initialize();
       }
-      await connection.runMigrations();
+      await connection.runMigrations();      
     }
 
     if (platform === 'web') {
