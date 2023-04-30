@@ -47,6 +47,7 @@
                 @prev="prevStep"
                 @next="nextStep"
             >   
+            <!-- TODO: Test this button on mobile and fix validation -->
                 <button-input
                     :max="form.unitSystem === 'metric' ? 250 : 100"
                     :min="form.unitSystem === 'metric' ? 50 : 20"
@@ -117,9 +118,7 @@
   
 <script setup lang="ts">
 import { ref } from 'vue';
-import {
-    IonPage, IonContent, IonButton, IonProgressBar
-} from '@ionic/vue';
+import { IonPage, IonContent, IonButton } from '@ionic/vue';
 import { InformationCircleIcon } from "@heroicons/vue/24/outline"
 import RiderStylesInfoModal from '@/views/FirstSteps/RiderStylesInfoModal.vue';
 import ButtonInput from '@/components/ButtonInput.vue';
