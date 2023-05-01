@@ -20,9 +20,19 @@ import '@ionic/vue/css/text-transformation.css';
 import '@ionic/vue/css/flex-utils.css';
 import '@ionic/vue/css/display.css';
 
+/* Swiper */
+import 'swiper/css';
+// import 'swiper/css/autoplay';
+// import 'swiper/css/keyboard';
+// import 'swiper/css/pagination';
+// import 'swiper/css/scrollbar';
+// import 'swiper/css/zoom';
+// import '@ionic/vue/css/ionic-swiper.css';
+
 /* Theme variables */
 import './theme/variables.css';
 import './theme/tailwind.css';
+
 
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
 

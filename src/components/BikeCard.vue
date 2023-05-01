@@ -1,6 +1,6 @@
 <template>
     <div :class="colorClass"
-        class="w-full aspect-[1.54] rounded-[30px] bg-gradient-to-br p-5 relative flex flex-col justify-between items-start overflow-hidden">
+        class="w-full aspect-[1.54] rounded-[30px] bg-gradient-to-br p-5 sm:p-6 md:p-8 lg:p-12 relative flex flex-col justify-between items-start overflow-hidden">
         <div>
             <h2 class="text-3xl xs:text-4xl text-white font-bold">
                 {{ bike.brand ?? 'No brand' }}
@@ -13,7 +13,7 @@
             <ion-progress-bar class="h-4 rounded-full" color="dark" :value="0.3"></ion-progress-bar>
         </div>
         <img src="@/../resources/images/bike.png" alt="realistic bike"
-            class="absolute object-contain top-[-60px] h-[145%] right-[-90px]" />
+            class="absolute object-contain top-[-25%] h-[145%] right-[-25%]" />
     </div>
 </template>
 <script setup lang="ts">

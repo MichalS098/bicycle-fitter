@@ -15,12 +15,11 @@
                         Bikes
                     </h2>
                 </div>
-                <div class="flex flex-col justify-between gap-3 xxs:gap-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 xxs:gap-6">
                     <bike-card v-for="bike in user?.bikes" :key="bike.id" :bike="bike" />
                     <new-bike-card />
                 </div>
-            </div>
-            <div class="h-[6rem] xs:h-[7rem] bg-transparent"></div>
+            </div>            
         </ion-content>
     </ion-page>
 </template>
@@ -33,6 +32,7 @@ import { User } from '@/entity/User';
 import { onMounted, ref } from 'vue';
 import BikeCard from '@/components/BikeCard.vue';
 import NewBikeCard from '@/components/NewBikeCard.vue';
+import SpaceForTabBarMenu from '@/components/SpaceForTabBarMenu.vue';
 
 const router = useIonRouter();
 const user = ref<User | null>(null);

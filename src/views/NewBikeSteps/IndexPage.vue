@@ -1,142 +1,72 @@
 <template>
     <ion-page>
-        <ion-content :fullscreen="true">
+        <ion-content :fullscreen="true" :scroll-y="false">
 
-            <div v-if="currentStep == 1" class="ion-padding pt-16 pb-6 flex flex-col gap-6 justify-between h-full">
-                <div class="flex flex-col gap-6">
-                    <h2 class="text-4xl font-semibold">
-                        Your bike type
-                    </h2>
-                    <ion-progress-bar class="h-3 rounded-full" :value="currentStep / numberOfSteps"
-                        color="primary"></ion-progress-bar>
-                    <p class="text-lg">
-                        What is your bike type?
-                    </p>
-                    <div class="flex flex-col gap-3 pl-3 pr-12 mt-6">
-                        <new-bike-steps-radio-button @click="form.bikeType = 'city'" :checked="form.bikeType == 'city'"
-                            label="City" />
-                        <new-bike-steps-radio-button @click="form.bikeType = 'road'" :checked="form.bikeType == 'road'"
-                            label="Road" />
-                        <new-bike-steps-radio-button @click="form.bikeType = 'gravel'" :checked="form.bikeType == 'gravel'"
-                            label="Gravel" />
-                        <new-bike-steps-radio-button @click="form.bikeType = 'cross'" :checked="form.bikeType == 'cross'"
-                            label="Cross" />
-                        <new-bike-steps-radio-button @click="form.bikeType = 'electric'" :checked="form.bikeType == 'electric'"
-                            label="Electric" />
-                        <new-bike-steps-radio-button @click="form.bikeType = 'mtb'" :checked="form.bikeType == 'mtb'"
-                            label="MTB" />
-                    </div>
-                </div>
-                <div class="flex items-center justify-between">
-                    <ion-button @click="prevStep()" expand="block" fill="clear" size="large" color="light">
-                        Back
-                    </ion-button>
-                    <ion-button @click="nextStep()" expand="block" fill="clear" size="large"
-                        :color="form.bikeType == '' ? 'light' : 'primary'">
-                        Next
-                    </ion-button>
-                </div>
-            </div>
+            <step-card 
+                title="Your bike type" 
+                sub-title="What is your bike type?"                                        
+                :this-step="1"
+                :current-step="currentStep"
+                :number-of-steps="numberOfSteps"                                
+                @prev="prevStep()"
+                @next="nextStep()"
+                color="primary"
+            >   
+                <steps-radio-button @click="nextStep()" v-model="form.bikeType" label="city" value="city" color="primary"/>
+                <steps-radio-button @click="nextStep()" v-model="form.bikeType" label="road" value="road" color="primary"/>
+                <steps-radio-button @click="nextStep()" v-model="form.bikeType" label="gravel" value="gravel" color="primary"/>
+                <steps-radio-button @click="nextStep()" v-model="form.bikeType" label="cross" value="cross" color="primary"/>
+                <steps-radio-button @click="nextStep()" v-model="form.bikeType" label="electric" value="electric" color="primary"/>
+                <steps-radio-button @click="nextStep()" v-model="form.bikeType" label="mtb" value="mtb" color="primary"/>
+            </step-card>                                                
 
-            <div v-if="currentStep == 2" class="ion-padding pt-16 pb-6 flex flex-col gap-6 justify-between h-full">
-                <div class="flex flex-col gap-6">
-                    <h2 class="text-4xl font-semibold">
-                        Your bike model
-                    </h2>
-                    <ion-progress-bar class="h-3 rounded-full" :value="currentStep / numberOfSteps"
-                        color="primary"></ion-progress-bar>
-                    <p class="text-lg">
-                        What is your bike model?
-                    </p>
-                    <div class="flex flex-col gap-3 pl-3 pr-12 mt-6">
-                        <button-input color="primary" v-model="form.bikeCompany" placeholder="Your bike company" />
-                        <button-input color="primary" v-model="form.bikeModel" placeholder="Your bike model" />
-                        <new-bike-steps-radio-button @click="noBikeModel()" :checked="form.noBikeModel == true"
-                            label="I don't know my bike model" />
-                        <new-bike-steps-radio-button @click="suggestNewBike()" :checked="form.suggestNewBike == true"
-                            label="Suggest new bike" />
-                    </div>
-                </div>
-                <div class="flex items-center justify-between">
-                    <ion-button @click="prevStep()" expand="block" fill="clear" size="large" color="light">
-                        Back
-                    </ion-button>
-                    <ion-button @click="nextStep()" expand="block" fill="clear" size="large"
-                        :color="(form.noBikeModel == false) && (form.suggestNewBike == false) && (form.bikeCompany == '' || form.bikeModel == '')? 'light' : 'primary'">
-                        Next
-                    </ion-button>
-                </div>
-            </div>
+            <step-card 
+                title="Your bike model" 
+                sub-title="What is your bike model?"                                        
+                :this-step="2"
+                :current-step="currentStep"
+                :number-of-steps="numberOfSteps"                                
+                @prev="prevStep()"
+                @next="nextStep()"
+                color="primary"
+            >   
+                <button-input type="text" color="primary" v-model="form.bikeCompany" placeholder="Your bike company" />
+                <button-input type="text" color="primary" v-model="form.bikeModel" placeholder="Your bike model" />            
+                <steps-radio-button @click="nextStep()" v-model="form.noBikeModel" label="I don't know my bike model" value="unknown" color="primary"/>                
+            </step-card>       
 
-            <div v-if="currentStep == 3" class="ion-padding pt-16 pb-6 flex flex-col gap-6 justify-between h-full">
-                <div class="flex flex-col gap-6">
-                    <h2 class="text-4xl font-semibold">
-                        Your goal
-                    </h2>
-                    <ion-progress-bar class="h-3 rounded-full" :value="currentStep / numberOfSteps"
-                        color="primary"></ion-progress-bar>
-                    <p class="text-lg">
-                        How do you want to sit on your bike?
-                    </p>
-                    <div class="flex flex-col gap-3 pl-3 pr-12 mt-6">
-                        <new-bike-steps-radio-button @click="form.bikeFittingGoal = 'ergonomic'" :checked="form.bikeFittingGoal == 'ergonomic'"
-                            label="Ergonomic" />
-                        <new-bike-steps-radio-button @click="form.bikeFittingGoal = 'sportslike'" :checked="form.bikeFittingGoal == 'sportslike'"
-                            label="Sportslike" />
-                        <new-bike-steps-radio-button @click="form.bikeFittingGoal = 'aerodynamic'" :checked="form.bikeFittingGoal == 'aerodynamic'"
-                            label="Aerodynamic" />
-                    </div>
-                </div>
-                <div class="flex items-center justify-between">
-                    <ion-button @click="prevStep()" expand="block" fill="clear" size="large" color="light">
-                        Back
-                    </ion-button>
-                    <ion-button @click="nextStep()" expand="block" fill="clear" size="large"
-                        :color="form.bikeFittingGoal == '' ? 'light' : 'primary'">
-                        Next
-                    </ion-button>
-                </div>
-            </div>
+            <step-card 
+                title="Your goal" 
+                sub-title="How do you want to sit on your bike?"                                        
+                :this-step="3"
+                :current-step="currentStep"
+                :number-of-steps="numberOfSteps"                                
+                @prev="prevStep()"
+                @next="nextStep()"
+                color="primary"
+            >                   
+                <steps-radio-button @click="nextStep()" v-model="form.bikeFittingGoal" label="ergonomic" value="ergonomic" color="primary"/>                
+                <steps-radio-button @click="nextStep()" v-model="form.bikeFittingGoal" label="sportslike" value="sportslike" color="primary"/>                
+                <steps-radio-button @click="nextStep()" v-model="form.bikeFittingGoal" label="aerodynamic" value="aerodynamic" color="primary"/>                
+            </step-card>                   
 
-            <div v-if="currentStep == 4" class="ion-padding pt-16 pb-6 flex flex-col gap-6 justify-between h-full">
-                <div class="flex flex-col gap-6">
-                    <h2 class="text-4xl font-semibold">
-                        Your expectations
-                    </h2>
-                    <ion-progress-bar class="h-3 rounded-full" :value="currentStep / numberOfSteps"
-                        color="primary"></ion-progress-bar>
-                    <p class="text-lg">
-                        What do you expect from bikefitting?
-                    </p>
-                    <div class="flex flex-col gap-3 pl-3 pr-12 mt-6">
-                        <new-bike-steps-radio-button @click="form.expectations = 'backpain'" :checked="form.expectations == 'backpain'"
-                            label="I want to get rod of back pain" />
-                        <new-bike-steps-radio-button @click="form.expectations = 'buttpain'" :checked="form.expectations == 'buttpain'"
-                            label="I want to get rod of butt pain" />
-                        <new-bike-steps-radio-button @click="form.expectations = 'kneepain'" :checked="form.expectations == 'kneepain'"
-                            label="I want to get rod of knee pain" />
-                        <new-bike-steps-radio-button @click="form.expectations = 'feetpain'" :checked="form.expectations == 'feetpain'"
-                            label="I want to get rod of feet pain" />
-                        <new-bike-steps-radio-button @click="form.expectations = 'clickpedals'" :checked="form.expectations == 'clickpedals'"
-                            label="I want to switch to click pedals" />
-                        <new-bike-steps-radio-button @click="form.expectations = 'nothing'" :checked="form.expectations == 'nothing'"
-                            label="I'm well fitted" />
-                    </div>
-                </div>
-                <div class="flex items-center justify-between">
-                    <ion-button @click="prevStep()" expand="block" fill="clear" size="large" color="light">
-                        Back
-                    </ion-button>
-
-                    <!-- Na razie przekierowanie do home, ale jak dodamy bike view to router będzie tam -->
-                    <ion-button router-link="/pages/home" expand="block" fill="clear" size="large"
-                        :color="form.expectations == '' ? 'light' : 'primary'">
-                        Next
-                    </ion-button>
-                </div>
-            </div>
-
-
+            <step-card 
+                title="Your expectations" 
+                sub-title="What do you expect from bikefitting?"                                        
+                :this-step="4"
+                :current-step="currentStep"
+                :number-of-steps="numberOfSteps"                                
+                @prev="prevStep()"
+                @next="createBike()"
+                color="primary"
+            >                   
+                <steps-radio-button v-model="form.expectations" label="backpain" value="backpain" color="primary"/>                
+                <steps-radio-button v-model="form.expectations" label="buttpain" value="buttpain" color="primary"/>                
+                <steps-radio-button v-model="form.expectations" label="kneepain" value="kneepain" color="primary"/>                
+                <steps-radio-button v-model="form.expectations" label="feetpain" value="feetpain" color="primary"/>                
+                <steps-radio-button v-model="form.expectations" label="clickpedals" value="clickpedals" color="primary"/>                
+                <steps-radio-button v-model="form.expectations" label="nothing" value="nothing" color="primary"/>                                                                                                                            
+            </step-card>                   
         </ion-content>
     </ion-page>
 </template>
@@ -144,12 +74,13 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import {
-    IonPage, IonContent, IonButton, IonProgressBar
+    IonPage, IonContent
 } from '@ionic/vue';
-import NewBikeStepsRadioButton from '@/views/NewBikeSteps/NewBikeStepsRadioButton.vue';
 import ButtonInput from '@/components/ButtonInput.vue';
+import StepsRadioButton from '@/components/StepsRadioButton.vue';
+import StepCard from '@/components/StepCard.vue';
 
-const numberOfSteps = 4.5; // looks better with 4.5 than with 4
+const numberOfSteps = 4;
 const currentStep = ref(1);
 
 const form = ref({
@@ -189,27 +120,14 @@ const nextStep = () => {
     }
 }
 
-const noBikeModel = () => {
-    if (form.value.noBikeModel == true) {
-        form.value.noBikeModel = false;
-    } else {
-        if (form.value.bikeCompany == '' && form.value.bikeModel == '') {
-            form.value.noBikeModel = true;
-        }
-    }
-}
-
-const suggestNewBike = () => {
-    if (form.value.suggestNewBike == true) {
-        form.value.suggestNewBike = false;
-    } else {
-        form.value.suggestNewBike = true;
-    }
-}
-
 const prevStep = () => {
     if (currentStep.value > 0) {
         currentStep.value--;
     }
+}
+
+const createBike = () => {
+    // TODO: create bike in database
+    console.log(form.value);
 }
 </script>

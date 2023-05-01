@@ -1,9 +1,11 @@
 <template>
   <ion-page class="font-sans">
     <ion-tabs>
-      <ion-router-outlet></ion-router-outlet>            
+      <ion-router-outlet></ion-router-outlet>                  
+      <!-- TODO: fix this -->
+      <!-- <space-for-tab-bar-menu />  -->
       <MainMenu />
-    </ion-tabs>
+    </ion-tabs>    
   </ion-page>
 </template>
 

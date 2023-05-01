@@ -1,6 +1,6 @@
 <template>
     <ion-tab-bar slot="bottom" mode="ios"
-        class="fixed bottom-3 xxs:bottom-4 xs:bottom-6 inset-x-3 p-3 rounded-full bg-[#36363660] backdrop-blur-lg h-16">
+        class="fixed bottom-3 xxs:bottom-4 xs:bottom-6 inset-x-3 p-3 rounded-full bg-[#36363660] backdrop-blur-lg h-16 max-w-xl mx-auto">
         <ion-tab-button tab="home" href="/pages/home" mode="ios">
             <HomeIcon />
         </ion-tab-button>
