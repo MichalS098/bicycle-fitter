@@ -40,6 +40,7 @@
           </ion-item>
         </ion-list>
       </div>
+      <space-for-tab-bar-menu /> 
     </ion-content>
   </ion-page>
 </template>
@@ -65,6 +66,7 @@ import useMediapipe from '@/composables/useMediapipe';
 import { onMounted } from 'vue';
 import { Camera } from '@mediapipe/camera_utils';
 import { footLength} from '@/functions/mediapipeCalculatedHumanParams';
+import SpaceForTabBarMenu from '@/components/SpaceForTabBarMenu.vue';
 
 const video = ref<HTMLVideoElement>();
 const canvas = ref<HTMLCanvasElement>();
