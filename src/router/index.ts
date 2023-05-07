@@ -37,20 +37,16 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/HomePage.vue')
       },
       {
-        path: 'library',
-        component: () => import('@/views/LibraryPage.vue')
-      },
-      {
-        path: 'camera',
-        component: () => import('@/views/CameraPage.vue')
-      },
+        path: 'tips',
+        component: () => import('@/views/Tips/IndexPage.vue')
+      },  
       {
         path: 'favourites',
-        component: () => import('@/views/FavouritePage.vue')
+        component: () => import('@/views/Tips/FavouritesPage.vue')
       },
       {
-        path: 'settings',
-        component: () => import('@/views/SettingsPage.vue')
+        path: 'profile',
+        component: () => import('@/views/Profile/IndexPage.vue')
       },
     ]
   },

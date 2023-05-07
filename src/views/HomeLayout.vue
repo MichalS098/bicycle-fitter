@@ -1,9 +1,9 @@
 <template>
   <ion-page class="font-sans">
     <ion-tabs>
-      <ion-router-outlet></ion-router-outlet>            
+      <ion-router-outlet></ion-router-outlet>                              
       <MainMenu />
-    </ion-tabs>
+    </ion-tabs>    
   </ion-page>
 </template>
 

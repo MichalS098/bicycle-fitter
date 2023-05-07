@@ -26,8 +26,8 @@
     "@heroicons/vue": "^2.0.17",
     "@ionic/pwa-elements": "^3.1.1",
     "@ionic/storage": "^3.0.6",
-    "@ionic/vue": "^7.0.1",
-    "@ionic/vue-router": "^7.0.1",
+    "@ionic/vue": "^7.0.4",
+    "@ionic/vue-router": "^7.0.4",
     "@mediapipe/camera_utils": "^0.3.1675466862",
     "@mediapipe/control_utils": "^0.6.1675466023",
     "@mediapipe/control_utils_3d": "^0.3.1675466062",
@@ -37,6 +37,7 @@
     "core-js": "^3.6.5",
     "ionicons": "^6.0.3",
     "jeep-sqlite": "^1.4.2",
+    "swiper": "^9.2.4",
     "typeorm": "^0.3.6",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6"
