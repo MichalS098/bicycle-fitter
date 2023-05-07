@@ -17,8 +17,8 @@
                             <h3 class="text-lg xxs:text-xl col-span-2 pb-3">
                                 My measurements
                             </h3>
-                            <span class="text-white font-bold text-3xl">192cm</span>
-                            <span class="text-white font-bold text-3xl">75cm</span>
+                            <span class="text-white font-bold text-2xl xxs:text-3xl">192cm</span>
+                            <span class="text-white font-bold text-2xl xxs:text-3xl">75cm</span>
                             <span class="text-white text-sm">height</span>
                             <span class="text-white text-sm">leg</span>
                         </div>
@@ -30,24 +30,15 @@
                     <h2 class="text-2xl xxs:text-3xl px-3 xxs:px-6">
                         Settings
                     </h2>
-                    <ion-list lines="none">
+                    <ion-list lines="none" class="px-3">
                         <ion-item>
                             <ion-label>
-                                <ion-icon :icon="moonOutline" class="h-6 w-6" />
+                                <ion-icon :icon="optionsOutline"></ion-icon>
                                 Units
                             </ion-label>
-                            <ion-select value="m">
+                            <ion-select value="m" interface="action-sheet">
                                 <ion-select-option value="m">Metric</ion-select-option>
                                 <ion-select-option value="i">Imperial</ion-select-option>
-                            </ion-select>
-                        </ion-item>
-                        <ion-item>
-                            <ion-label>
-                                Theme
-                            </ion-label>
-                            <ion-select value="light">
-                                <ion-select-option value="light">Light</ion-select-option>
-                                <ion-select-option value="dark">Dark</ion-select-option>
                             </ion-select>
                         </ion-item>
                         <ion-item>
@@ -55,12 +46,13 @@
                                 <ion-icon :icon="languageOutline"></ion-icon>
                                 Language
                             </ion-label>
-                            <ion-select value="en">
+                            <ion-select value="en" interface="action-sheet">
                                 <ion-select-option value="en">English</ion-select-option>
                                 <ion-select-option value="de">Deutsch</ion-select-option>
+                                <ion-select-option value="pl">Polski</ion-select-option>
                             </ion-select>
                         </ion-item>
-                    </ion-list>                    
+                    </ion-list>
                 </div>
             </div>
             <space-for-tab-bar-menu />
@@ -75,8 +67,9 @@ import {
 import SpaceForTabBarMenu from '@/components/SpaceForTabBarMenu.vue';
 import { EllipsisHorizontalIcon } from '@heroicons/vue/24/outline';
 import { ChartBarIcon } from '@heroicons/vue/24/solid';
-import { moonOutline, languageOutline
- } from 'ionicons/icons';
+import {
+    languageOutline, optionsOutline
+} from 'ionicons/icons';
 </script>
 <style scoped>
 ion-content::part(background) {
@@ -90,27 +83,7 @@ ion-content::part(background) {
     --tw-gradient-to-position:
 }
 
-ion-item {
-  /* --background: #19422d;
-  --color: #fff;
-
-  --border-color: #fff;
-  --border-style: dashed;
-  --border-width: 2px;
-
-  --border-radius: 20px;
-
-  --ripple-color: purple;
-
-  --detail-icon-color: white;
-  --detail-icon-opacity: 1;
-  --detail-icon-font-size: 20px; */
-}
-
 ion-list {
-  /* --background: #19422d;
-  --color: #fff;
-  --ion-background-color: #19422d; */
-  --ion-item-background: transparent;
+    --ion-item-background: transparent;
 }
 </style>
