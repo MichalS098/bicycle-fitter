@@ -10,10 +10,6 @@
             <LightBulbIcon />
         </ion-tab-button>
 
-        <ion-tab-button tab="camera" href="/pages/camera" mode="ios">
-            <CameraIcon />
-        </ion-tab-button>
-
         <ion-tab-button tab="favourites" href="/pages/favourites" mode="ios">
             <HeartIcon />
         </ion-tab-button>

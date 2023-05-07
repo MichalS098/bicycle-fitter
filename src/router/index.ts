@@ -39,11 +39,7 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'tips',
         component: () => import('@/views/Tips/IndexPage.vue')
-      },
-      {
-        path: 'camera',
-        component: () => import('@/views/CameraPage.vue')
-      },
+      },  
       {
         path: 'favourites',
         component: () => import('@/views/Tips/FavouritesPage.vue')
