@@ -37,8 +37,8 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/HomePage.vue')
       },
       {
-        path: 'library',
-        component: () => import('@/views/LibraryPage.vue')
+        path: 'tips',
+        component: () => import('@/views/Tips/IndexPage.vue')
       },
       {
         path: 'camera',
@@ -46,11 +46,11 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: 'favourites',
-        component: () => import('@/views/FavouritePage.vue')
+        component: () => import('@/views/Tips/FavouritesPage.vue')
       },
       {
         path: 'profile',
-        component: () => import('@/views/ProfilePage.vue')
+        component: () => import('@/views/Profile/IndexPage.vue')
       },
     ]
   },

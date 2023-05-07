@@ -4,12 +4,11 @@
             <div class="flex flex-col justify-between gap-6 xxs:gap-12 pt-12">
                 <div class="px-3 xxs:px-6 pt-3 xxs:pt-6">
                     <h1 class="text-5xl xxs:text-6xl">
-                        Tips
+                        Favourites
                     </h1>
                 </div>
                 <div class="w-full">
-                    <h3 class="text-2xl xxs:text-3xl px-3 xxs:px-6">
-                        Crucial in b-fitting
+                    <h3 class="text-2xl xxs:text-3xl px-3 xxs:px-6">                        
                     </h3>
                     <swiper>
                         <swiper-slide v-for="tip in tips" :key="tip.id">

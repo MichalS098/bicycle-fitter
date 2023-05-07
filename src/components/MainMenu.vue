@@ -6,7 +6,7 @@
             <HomeIcon />
         </ion-tab-button>
 
-        <ion-tab-button tab="library" href="/pages/library" mode="ios">
+        <ion-tab-button tab="tips" href="/pages/tips" mode="ios">
             <LightBulbIcon />
         </ion-tab-button>
 
