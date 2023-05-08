@@ -65,6 +65,17 @@ import { Camera } from '@mediapipe/camera_utils';
 import { ArrowUturnLeftIcon, PhotoIcon } from '@heroicons/vue/24/outline';
 import { refreshOutline, stopwatchOutline, flashOutline } from 'ionicons/icons';
 import { globalCalcMediaPipe } from '@/functions/mediapipeCalculatedHumanParams';
+import {
+    useIonRouter,
+    createAnimation,
+    AnimationBuilder
+} from '@ionic/vue';
+
+import { User } from '@/entity/User';
+import AppDataSource from '@/data-sources/SqliteDataSource';
+import { updateUserProperty } from '@/helpers/helpersDataBase';
+
+const userRepository = AppDataSource.getRepository(User);
 
 const video = ref<HTMLVideoElement>();
 const canvas = ref<HTMLCanvasElement>();
@@ -191,26 +202,36 @@ const areAllBodyPointsVisible = (landmarks: Landmark[]) => {
   return true;
 }
 
-
-const measureDone = () => {
+const router = useIonRouter();
+const measureDone = async () => {
 
     shoulderHeight.value.innerHTML = shoulderHeightResult.toFixed(3);
     shoulderHeight.value.style.color = 'green';
+    await updateUserProperty('shoulderHeight', shoulderHeightResult);
     
     footLength.value.innerHTML = footLengthResult.toFixed(3);
     footLength.value.style.color = 'green';
     
     armLength.value.innerHTML = armLengthResult.toFixed(3);
     armLength.value.style.color = 'green';
+    await updateUserProperty('armLength', armLengthResult);
     
     shankLength.value.innerHTML = shankLengthResult.toFixed(3);
     shankLength.value.style.color = 'green';
+    await updateUserProperty('shankLength', shankLengthResult);
 
     thighLength.value.innerHTML = thighLengthResult.toFixed(3);
     thighLength.value.style.color = 'green';
+    await updateUserProperty('thighLength', thighLengthResult);
 
     inseamLength.value.innerHTML = inseamLengthResult.toFixed(3);
     inseamLength.value.style.color = 'green';
+    await updateUserProperty('inseamLength', inseamLengthResult);
+
+    const allUser = await userRepository.find();
+        console.log("All User from the db after measuring: ", allUser);
+
+    router.navigate('/pages/home', 'none', 'replace');
 }
 
     new Camera(video, {

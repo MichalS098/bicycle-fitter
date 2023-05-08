@@ -80,6 +80,11 @@ import ButtonInput from '@/components/ButtonInput.vue';
 import StepsRadioButton from '@/components/StepsRadioButton.vue';
 import StepCard from '@/components/StepCard.vue';
 
+import { Bike } from '@/entity/Bike';
+import { User } from '@/entity/User';
+import AppDataSource from '@/data-sources/SqliteDataSource';
+import { updateUserProperty } from '@/helpers/helpersDataBase';
+
 const numberOfSteps = 4;
 const currentStep = ref(1);
 

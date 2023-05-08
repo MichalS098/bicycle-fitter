@@ -17,7 +17,7 @@
                             with a short survey about you, your
                             riding style and your expectations
                         </p>
-                    </div>                    
+                    </div>
                     <ion-button @click="nextStep()" expand="block" shape="round" color="primary" mode="ios" type="button"
                         class="font-bold text-lg">
                         Get started!
@@ -25,68 +25,42 @@
                 </div>
             </div>
 
-            <step-card 
-                title="Your unit system" 
-                sub-title="What unit system do you prefer?"                                        
-                :this-step="1"
-                :current-step="currentStep"
-                :number-of-steps="numberOfSteps"                                
-                @prev="prevStep"
-                @next="nextStep"
-            >   
+            <step-card title="Your unit system" sub-title="What unit system do you prefer?" :this-step="1"
+                :current-step="currentStep" :number-of-steps="numberOfSteps" @prev="prevStep" @next="nextStep">
                 <steps-radio-button @click="nextStep()" v-model="form.unitSystem" label="Metric" value="metric" />
                 <steps-radio-button @click="nextStep()" v-model="form.unitSystem" label="Imperial" value="imperial" />
-            </step-card>                                    
+            </step-card>
 
-            <step-card 
-                title="Your height" 
-                sub-title="What is your height?"
-                :this-step="2"
-                :current-step="currentStep"
-                :number-of-steps="numberOfSteps"                
-                @prev="prevStep"
-                @next="nextStep"
-            >   
-            <!-- TODO: Test this button on mobile and fix validation -->
-                <button-input
-                    :max="form.unitSystem === 'metric' ? 250 : 100"
-                    :min="form.unitSystem === 'metric' ? 50 : 20"
-                    v-model="form.height" type="number" inputmode="numeric" placeholder="Enter your height" :postfix="form.unitSystem === 'metric' ? 'cm' : 'inch'"/>                
-            </step-card>                                    
-            
-            <step-card 
-                title="Your ride time" 
-                sub-title="Typically how much time per week do you spend on the bike?"
-                :this-step="3"
-                :current-step="currentStep"
-                :number-of-steps="numberOfSteps"                
-                @prev="prevStep"
-                @next="nextStep"
-            >   
-                <steps-radio-button @click="nextStep()" v-model="form.rideTime" label="1 hour or less" value="1" />                            
-                <steps-radio-button @click="nextStep()" v-model="form.rideTime" label="1 - 3 hours" value="2" />                            
-                <steps-radio-button @click="nextStep()" v-model="form.rideTime" label="3 - 6 hours" value="3" />                            
-                <steps-radio-button @click="nextStep()" v-model="form.rideTime" label="6 hours or more" value="4" />                                                
-            </step-card>                                    
+            <step-card title="Your height" sub-title="What is your height?" :this-step="2" :current-step="currentStep"
+                :number-of-steps="numberOfSteps" @prev="prevStep" @next="nextStep">
+                <!-- TODO: Test this button on mobile and fix validation -->
+                <button-input :max="form.unitSystem === 'metric' ? 250 : 100" :min="form.unitSystem === 'metric' ? 50 : 20"
+                    v-model="form.height" type="number" inputmode="numeric" placeholder="Enter your height"
+                    :postfix="form.unitSystem === 'metric' ? 'cm' : 'inch'" />
+            </step-card>
 
-            <step-card 
-                title="Your rider level" 
-                sub-title="At what level of cycling would you define yourself?"
-                :this-step="4"
-                :current-step="currentStep"
-                :number-of-steps="numberOfSteps"                
-                @prev="prevStep"
-                @next="nextStep"
-                class="overflow-y-auto"
-            >   
+            <step-card title="Your ride time" sub-title="Typically how much time per week do you spend on the bike?"
+                :this-step="3" :current-step="currentStep" :number-of-steps="numberOfSteps" @prev="prevStep"
+                @next="nextStep">
+                <steps-radio-button @click="nextStep()" v-model="form.rideTime" label="1 hour or less" value="1" />
+                <steps-radio-button @click="nextStep()" v-model="form.rideTime" label="1 - 3 hours" value="2" />
+                <steps-radio-button @click="nextStep()" v-model="form.rideTime" label="3 - 6 hours" value="3" />
+                <steps-radio-button @click="nextStep()" v-model="form.rideTime" label="6 hours or more" value="4" />
+            </step-card>
+
+            <step-card title="Your rider level" sub-title="At what level of cycling would you define yourself?"
+                :this-step="4" :current-step="currentStep" :number-of-steps="numberOfSteps" @prev="prevStep"
+                @next="nextStep" class="overflow-y-auto">
                 <steps-radio-button @click="nextStep()" v-model="form.rideStyle" label="Casual" value="casual" />
-                <steps-radio-button @click="nextStep()" v-model="form.rideStyle" label="Recreational" value="recreational" />
+                <steps-radio-button @click="nextStep()" v-model="form.rideStyle" label="Recreational"
+                    value="recreational" />
                 <steps-radio-button @click="nextStep()" v-model="form.rideStyle" label="Avid" value="avid" />
-                <steps-radio-button @click="nextStep()" v-model="form.rideStyle" label="Weekend Warrior" value="weekendwarrior" />
+                <steps-radio-button @click="nextStep()" v-model="form.rideStyle" label="Weekend Warrior"
+                    value="weekendwarrior" />
                 <steps-radio-button @click="nextStep()" v-model="form.rideStyle" label="Racer" value="racer" />
                 <InformationCircleIcon class="mx-3 h-8 w-8 text-secondary" @click="isRiderStyleInfoVisible = true" />
-            </step-card>                                                                   
-            
+            </step-card>
+
             <rider-styles-info-modal :is-open="isRiderStyleInfoVisible" @close="isRiderStyleInfoVisible = false" />
 
             <div v-if="currentStep == 5"
@@ -94,8 +68,8 @@
                 <h2 class="text-left xs:text-right text-4xl xxs:text-5xl xs:text-6xl">
                     Bike fitting
                 </h2>
-                <div class="flex flex-col justify-between h-full gap-3 px-3">                    
-                    <div class="flex flex-col gap-6">                    
+                <div class="flex flex-col justify-between h-full gap-3 px-3">
+                    <div class="flex flex-col gap-6">
                         <img src="@/../resources/images/person-on-bike.png" alt="person on a bike"
                             class="w-full h-24 xxs:h-32 xs:h-48 object-contain" />
                         <h3 class="text-lg xxs:text-xl xs:text-2xl font-semibold text-left">
@@ -124,37 +98,134 @@ import RiderStylesInfoModal from '@/views/FirstSteps/RiderStylesInfoModal.vue';
 import ButtonInput from '@/components/ButtonInput.vue';
 import StepsRadioButton from '@/components/StepsRadioButton.vue';
 import StepCard from '@/components/StepCard.vue';
+import { User } from '@/entity/User';
+import AppDataSource from '@/data-sources/SqliteDataSource';
+import { updateUserProperty } from '@/helpers/helpersDataBase';
 
 const numberOfSteps = 5; // from 0 to 6
 const currentStep = ref(0);
 const isRiderStyleInfoVisible = ref(false);
+const userRepository = AppDataSource.getRepository(User);
+const newDataBase = true;
 
 const form = ref({
     unitSystem: '',
     weight: '',
-    height: null,
+    height: 0,
     gender: '',
     rideTime: 0,
     rideStyle: '',
 });
 
-const nextStep = () => {
+
+
+
+async function initializationDataBase() {
+
+    //inicjalization data base
+    let allUser = await userRepository.find();
+
+
+    await userRepository.remove(allUser);
+    console.log("All User from the db: after delete", allUser);
+
+
+    const user = new User();
+
+    //user.unitSystem = form.value.unitSystem;
+    await userRepository.save(user);
+
+    allUser = await userRepository.find();
+    console.log("All User from the db:", allUser)
+
+}
+
+async function checkWhichStepIsActual() {
+
+    const userToUpdate = await userRepository.findOneBy({
+        id: 1,
+    });
+
+    if (userToUpdate != null) {
+
+        if (userToUpdate.unitSystem == null) {
+            currentStep.value = 1
+        }
+        else if (userToUpdate.height == null) {
+            currentStep.value = 2
+        }
+        else if (userToUpdate.rideTime == null) {
+            currentStep.value = 3
+        }
+        else if (userToUpdate.riderStyle == null) {
+            currentStep.value = 4
+        }
+        else {
+            currentStep.value = 5
+        }
+    }
+
+}
+
+
+const nextStep = async () => {
+
+
+    if (currentStep.value == 0) {
+
+        if (newDataBase) {
+            initializationDataBase();
+        }
+
+        const allUser = await userRepository.find();
+        console.log("newDataBase false All User from the db:", allUser)
+
+        //checkWhichStepIsActual();
+
+    }
+
     if (currentStep.value == 1) {
+
         if (form.value.unitSystem == '') {
             return;
         }
+        else {
+
+            await updateUserProperty('unitSystem', form.value.unitSystem);
+        }
+
+
     } else if (currentStep.value == 2) {
+
         if (form.value.height == 0) {
             return;
         }
+        else {
+            await updateUserProperty('height', form.value.height);
+        }
+
+
     } else if (currentStep.value == 3) {
+
         if (form.value.rideTime == 0) {
             return;
         }
+        else {
+            await updateUserProperty('rideTime', form.value.rideTime);
+        }
+
+
     } else if (currentStep.value == 4) {
         if (form.value.rideStyle == '') {
             return;
         }
+        else {
+            await updateUserProperty('riderStyle', form.value.rideStyle);
+        }
+
+    } else if (currentStep.value == 5) {
+        const allUser = await userRepository.find();
+        console.log("All User from the db: ", allUser);
     }
     if (currentStep.value < numberOfSteps) {
         currentStep.value++;

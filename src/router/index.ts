@@ -10,7 +10,7 @@ const firstStepsCompleted = async () => {
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    redirect: '/pages/home'
+    redirect: '/first-steps'
   },
   {
     path: '/first-steps',
