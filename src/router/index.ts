@@ -25,6 +25,10 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/views/Measure/IndexPage.vue')
   },
   {
+    path: '/bike-measurements',
+    component: () => import('@/views/BikeMeasurements/IndexPage.vue')
+  },
+  {
     path: '/pages',
     component: HomeLayout,
     children: [

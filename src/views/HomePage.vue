@@ -29,10 +29,70 @@ import BikeCard from '@/components/BikeCard.vue';
 import NewBikeCard from '@/components/NewBikeCard.vue';
 import SpaceForTabBarMenu from '@/components/SpaceForTabBarMenu.vue';
 
+import { Bike } from '@/entity/Bike';
+import AppDataSource from '@/data-sources/SqliteDataSource';
+import { updateProperty } from '@/helpers/helpersDataBase';
+
+
 const router = useIonRouter();
 const user = ref<User | null>(null);
 
+const bikeRepository = AppDataSource.getRepository(Bike);
+const userRepository = AppDataSource.getRepository(User);
+
+async function initializationDataBaseForBike() {
+
+    /*const bikeToRemove = await bikeRepository.findOneBy({
+                id: 1,
+            })
+
+    if(bikeToRemove != null) 
+    {
+        await bikeRepository.remove(bikeToRemove);
+    }    */   
+    
+    let allBike = await bikeRepository.find();
+
+    console.log("All Bike from the db: before save", allBike);
+
+
+    const bike = new Bike();
+
+    //user.unitSystem = form.value.unitSystem;
+    await bikeRepository.save(bike);
+
+    allBike = await bikeRepository.find();
+    console.log("All Bike from the db: after save", allBike)
+
+}
+
 onMounted(async () => {
+    /*user.value = await User.findOne({
+        where: {
+            id: 1
+        },
+        relations: {
+            bikes: true
+        }
+    });*/
+
+     //inicjalization data base
+   /*  let allUser = await userRepository.find();
+
+
+//await userRepository.remove(allUser);
+console.log("All User from the db: before save", allUser);
+
+
+const user1 = new User();
+
+//user.unitSystem = form.value.unitSystem;
+await userRepository.save(user1);
+
+allUser = await userRepository.find();
+console.log("All User from the db: after save", allUser)*/
+
+
     user.value = await User.findOne({
         where: {
             id: 1
@@ -41,6 +101,8 @@ onMounted(async () => {
             bikes: true
         }
     });
+
+   // initializationDataBaseForBike();
 });
 </script>
   

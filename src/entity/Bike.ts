@@ -11,6 +11,8 @@ export class Bike extends BaseEntity {
     model!: string;
     @Column()
     type!: string;
+    //@Column()
+    //expectations!: string;
     @Column()
     style!: string;
     // Calculated parameters

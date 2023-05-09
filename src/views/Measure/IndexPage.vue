@@ -73,7 +73,7 @@ import {
 
 import { User } from '@/entity/User';
 import AppDataSource from '@/data-sources/SqliteDataSource';
-import { updateUserProperty } from '@/helpers/helpersDataBase';
+import { updateProperty } from '@/helpers/helpersDataBase';
 
 const userRepository = AppDataSource.getRepository(User);
 
@@ -207,26 +207,26 @@ const measureDone = async () => {
 
     shoulderHeight.value.innerHTML = shoulderHeightResult.toFixed(3);
     shoulderHeight.value.style.color = 'green';
-    await updateUserProperty('shoulderHeight', shoulderHeightResult);
+    await updateProperty(User, { id: 1 },'shoulderHeight', shoulderHeightResult);
     
     footLength.value.innerHTML = footLengthResult.toFixed(3);
     footLength.value.style.color = 'green';
     
     armLength.value.innerHTML = armLengthResult.toFixed(3);
     armLength.value.style.color = 'green';
-    await updateUserProperty('armLength', armLengthResult);
+    await updateProperty(User, { id: 1 },'armLength', armLengthResult);
     
     shankLength.value.innerHTML = shankLengthResult.toFixed(3);
     shankLength.value.style.color = 'green';
-    await updateUserProperty('shankLength', shankLengthResult);
+    await updateProperty(User, { id: 1 },'shankLength', shankLengthResult);
 
     thighLength.value.innerHTML = thighLengthResult.toFixed(3);
     thighLength.value.style.color = 'green';
-    await updateUserProperty('thighLength', thighLengthResult);
+    await updateProperty(User, { id: 1 },'thighLength', thighLengthResult);
 
     inseamLength.value.innerHTML = inseamLengthResult.toFixed(3);
     inseamLength.value.style.color = 'green';
-    await updateUserProperty('inseamLength', inseamLengthResult);
+    await updateProperty(User, { id: 1 },'inseamLength', inseamLengthResult);
 
     const allUser = await userRepository.find();
         console.log("All User from the db after measuring: ", allUser);

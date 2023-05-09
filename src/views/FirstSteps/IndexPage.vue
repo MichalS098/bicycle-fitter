@@ -100,7 +100,7 @@ import StepsRadioButton from '@/components/StepsRadioButton.vue';
 import StepCard from '@/components/StepCard.vue';
 import { User } from '@/entity/User';
 import AppDataSource from '@/data-sources/SqliteDataSource';
-import { updateUserProperty } from '@/helpers/helpersDataBase';
+import { updateProperty } from '@/helpers/helpersDataBase';
 
 const numberOfSteps = 5; // from 0 to 6
 const currentStep = ref(0);
@@ -126,8 +126,8 @@ async function initializationDataBase() {
     let allUser = await userRepository.find();
 
 
-    await userRepository.remove(allUser);
-    console.log("All User from the db: after delete", allUser);
+    //await userRepository.remove(allUser);
+    console.log("All User from the db: before save", allUser);
 
 
     const user = new User();
@@ -136,7 +136,7 @@ async function initializationDataBase() {
     await userRepository.save(user);
 
     allUser = await userRepository.find();
-    console.log("All User from the db:", allUser)
+    console.log("All User from the db: after save", allUser)
 
 }
 
@@ -191,7 +191,7 @@ const nextStep = async () => {
         }
         else {
 
-            await updateUserProperty('unitSystem', form.value.unitSystem);
+            await updateProperty(User, { id: 1 },'unitSystem', form.value.unitSystem);
         }
 
 
@@ -201,7 +201,7 @@ const nextStep = async () => {
             return;
         }
         else {
-            await updateUserProperty('height', form.value.height);
+            await updateProperty(User, { id: 1 },'height', form.value.height);
         }
 
 
@@ -211,7 +211,7 @@ const nextStep = async () => {
             return;
         }
         else {
-            await updateUserProperty('rideTime', form.value.rideTime);
+            await updateProperty(User, { id: 1 },'rideTime', form.value.rideTime);
         }
 
 
@@ -220,7 +220,7 @@ const nextStep = async () => {
             return;
         }
         else {
-            await updateUserProperty('riderStyle', form.value.rideStyle);
+            await updateProperty(User, { id: 1 },'riderStyle', form.value.rideStyle);
         }
 
     } else if (currentStep.value == 5) {
