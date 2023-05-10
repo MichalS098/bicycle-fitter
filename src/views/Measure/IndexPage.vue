@@ -73,7 +73,7 @@ import {
 
 import { User } from '@/entity/User';
 import AppDataSource from '@/data-sources/SqliteDataSource';
-import { getUserFromDataBase } from '@/helpers/helpersDataBase'
+import { getUserFromDatabase } from '@/helpers/helpersDataBase'
 
 const userRepository = AppDataSource.getRepository(User);
 
@@ -224,7 +224,7 @@ const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
         inseamLength.value.style.color = 'green';
 
 
-        const user = await getUserFromDataBase();
+        const user = await getUserFromDatabase();
 
         if (user != null) {
             user.shoulderHeight = shoulderHeightResult;

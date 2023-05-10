@@ -1,14 +1,10 @@
 import AppDataSource from '@/data-sources/SqliteDataSource';
 import { Bike } from '@/entity/Bike';
 import { User } from '@/entity/User';
-import { Tip } from '@/entity/Tip';
 
-//DONT TOUCH, MAYBE WORK IN FUTURE
 export async function updateProperty<T, K extends keyof T, W extends object>(entityType: new () => T, where: W, property: K, newValue: T[K]): Promise<void> {
     const repository = AppDataSource.getRepository(entityType);
-
     const entityToUpdate = await repository.findOneBy(where);
-
     if (entityToUpdate != null) {
         (entityToUpdate as any)[property] = newValue;
         await repository.save(entityToUpdate);
@@ -17,11 +13,8 @@ export async function updateProperty<T, K extends keyof T, W extends object>(ent
     }
 }
 
-export async function getLastBikeOfUser() {
-
-    const userRepository = AppDataSource.getRepository(User);
-
-    const user = await userRepository.findOne({
+export async function getLastBikeOfUser(): Promise<Bike | null> {
+    const user = await User.findOne({
         where: {
             id: 1
         },
@@ -31,22 +24,21 @@ export async function getLastBikeOfUser() {
     });
 
     if (!user) {
-        console.log('User not found');
+        console.error('User not found');
         return null;
     }
 
     return user.bikes[user.bikes.length - 1];
 }
 
-export const getUserFromDataBase = async () => {
-    const userRepository = AppDataSource.getRepository(User);
-
-    const user = await userRepository.findOneBy({
+export async function getUserFromDatabase(): Promise<User | null> {
+    const user = await User.findOneBy({
         id: 1,
     })
 
     if (!user) {
-        console.log('User not found');
+        console.error('User not found');
+        return null;
     }
 
     return user;

@@ -100,7 +100,7 @@ import StepsRadioButton from '@/components/StepsRadioButton.vue';
 import StepCard from '@/components/StepCard.vue';
 import { User } from '@/entity/User';
 import AppDataSource from '@/data-sources/SqliteDataSource';
-import { getUserFromDataBase } from '@/helpers/helpersDataBase'
+import { getUserFromDatabase } from '@/helpers/helpersDataBase'
 
 const numberOfSteps = 5; // from 0 to 6
 const currentStep = ref(0);
@@ -210,7 +210,7 @@ const nextStep = async () => {
         }
         else {
 
-            const user = await getUserFromDataBase();
+            const user = await getUserFromDatabase();
 
             console.log("step 5!!!!!!!!!")
             if (user != null) {
