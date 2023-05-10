@@ -14,7 +14,7 @@ describe('calculatedBikeFittingParams', () => {
     const feetPain = 2;
     const kneePain = 2;
     const choiceFlexibilitySurvey = 1;
-    const person = new humanParams(47, 42, 42, 81, 145, 70, 85, 190);
+    const person = new humanParams(47, 42, 42, 81, 145, 70, 85, 190,0);
     const bike = new bikeParams();
 
     // Ustawienie wartości dla bike

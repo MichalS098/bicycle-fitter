@@ -6,7 +6,7 @@ import { bikeParams, bikeType, ridingStyle } from '@/classes/bikeParams';
 import { humanParams } from '@/classes/humanParams';
 
 
-export function calculatedBikeFittingParams(clickPedals: number, neckOrBackPain: number, butPain: number, feetPain: number, kneePain: number, choiceFlexibilitySurvey: number, person: humanParams, bike: bikeParams) : [bikeParams, humanParams] {
+export function calculatedBikeFittingParams(clickPedals: number, neckOrBackPain: number, butPain: number, feetPain: number, kneePain: number, choiceFlexibilitySurvey: number, person: humanParams, bike: bikeParams): [bikeParams, humanParams] {
 
     //KLIK od "Clickk Peals?"
     if (clickPedals == 1) {
@@ -68,7 +68,7 @@ export function calculatedBikeFittingParams(clickPedals: number, neckOrBackPain:
 
     [person, bike] = calcFrameHeight(person, bike);
 
-    let [SWnew, messageFromFlexibilitySurvey] = flexibilitySurvey(SWa, neckOrBackPain, choiceFlexibilitySurvey)
+    const [SWnew, messageFromFlexibilitySurvey] = flexibilitySurvey(SWa, neckOrBackPain, choiceFlexibilitySurvey)
 
     let S2R
     let M
@@ -76,17 +76,19 @@ export function calculatedBikeFittingParams(clickPedals: number, neckOrBackPain:
     let H
     let S
     [S2R, M, PS, H, S, bike, person] = bicycleFunction(person, bike, Sa, NSa, SWnew)
-    let [SG, ST2, RE2] = seatSize(person, PS)
+    const [SG, ST2, RE2] = seatSize(person, PS)
 
-    let SHlemond = Math.round((S * 0.883) + bike.crankLength)
+    const SHlemond = Math.round((S * 0.883) + bike.crankLength)
 
-    let SHhamley = Math.round(S * 1.09)
+    const SHhamley = Math.round(S * 1.09)
 
-    ST2 = Math.round(ST2) / 10
+    //ST2 = Math.round(ST2) / 10
 
-    RE2 = Math.round(RE2) / 10
+    //RE2 = Math.round(RE2) / 10
 
     bike.seatHeigth = clickPedals + bike.seatHeigth
 
+    //console.log("person", person)
+    //console.log("bike", bike)
     return [bike, person]
 }

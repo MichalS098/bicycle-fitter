@@ -3,6 +3,7 @@ import { Bike } from '@/entity/Bike';
 import { User } from '@/entity/User';
 import { Tip } from '@/entity/Tip';
 
+//DONT TOUCH, MAYBE WORK IN FUTURE
 export async function updateProperty<T, K extends keyof T, W extends object>(entityType: new () => T, where: W, property: K, newValue: T[K]): Promise<void> {
     const repository = AppDataSource.getRepository(entityType);
 
@@ -16,17 +17,37 @@ export async function updateProperty<T, K extends keyof T, W extends object>(ent
     }
 }
 
-/*export async function updateUserProperty<K extends keyof User>(property: K, newValue: User[K]): Promise<void> {
+export async function getLastBikeOfUser() {
+
     const userRepository = AppDataSource.getRepository(User);
 
-    const userToUpdate = await userRepository.findOneBy({
-        id: 1,
+    const user = await userRepository.findOne({
+        where: {
+            id: 1
+        },
+        relations: {
+            bikes: true
+        }
     });
 
-    if (userToUpdate != null) {
-        userToUpdate[property] = newValue;
-        await userRepository.save(userToUpdate);
-        console.log(`user.${property} has been saved`);
-        console.log("Updated user: ", userToUpdate);
+    if (!user) {
+        console.log('User not found');
+        return null;
     }
-}*/
+
+    return user.bikes[user.bikes.length - 1];
+}
+
+export const getUserFromDataBase = async () => {
+    const userRepository = AppDataSource.getRepository(User);
+
+    const user = await userRepository.findOneBy({
+        id: 1,
+    })
+
+    if (!user) {
+        console.log('User not found');
+    }
+
+    return user;
+}

@@ -73,7 +73,7 @@ import {
 
 import { User } from '@/entity/User';
 import AppDataSource from '@/data-sources/SqliteDataSource';
-import { updateProperty } from '@/helpers/helpersDataBase';
+import { getUserFromDataBase } from '@/helpers/helpersDataBase'
 
 const userRepository = AppDataSource.getRepository(User);
 
@@ -88,20 +88,20 @@ const thighLength = ref<HTMLDivElement>();
 const inseamLength = ref<HTMLDivElement>();
 
 type Landmark = {
-  x: number;
-  y: number;
-  z: number;
-  visibility: number;
+    x: number;
+    y: number;
+    z: number;
+    visibility: number;
 };
 
 let measuringProgress = 0;
 let shoulderHeightResult = 0.0, footLengthResult = 0.0, armLengthResult = 0.0, shankLengthResult = 0.0, thighLengthResult = 0.0, inseamLengthResult = 0.0;
 const shoulderHeightTable = new Array(60);
-const footLengthTable     = new Array(60);
-const armLengthTable      = new Array(60);
-const shankLengthTable    = new Array(60);
-const thighLengthTable    = new Array(60);
-const inseamLengthTable   = new Array(60);
+const footLengthTable = new Array(60);
+const armLengthTable = new Array(60);
+const shankLengthTable = new Array(60);
+const thighLengthTable = new Array(60);
+const inseamLengthTable = new Array(60);
 
 onMounted(async () => {
     if (video.value === undefined || canvas.value === undefined) {
@@ -121,16 +121,16 @@ const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
         if (results.poseLandmarks !== undefined) {
 
             if (areAllBodyPointsVisible(results.poseLandmarks)) {   // check if all body points are visible
-        
+
                 if (measuringProgress > 60) {
 
                     shoulderHeightResult = median(shoulderHeightTable);
                     footLengthResult = median(footLengthTable);
                     armLengthResult = median(armLengthTable);
-                    shankLengthResult  = median(shankLengthTable);
+                    shankLengthResult = median(shankLengthTable);
                     thighLengthResult = median(thighLengthTable);
                     inseamLengthResult = median(inseamLengthTable);
-                    
+
                     measureDone();
                 } else {
                     const [shoulderHeightTemp, footLengthTemp, armLengthTemp, shankLengthTemp, thighLengthTemp, inseamLengthTemp] = globalCalcMediaPipe(results);
@@ -139,15 +139,15 @@ const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
                     shoulderHeight.value.innerHTML = shoulderHeightTemp.toFixed(3);
                     shoulderHeight.value.style.color = 'white';
                     shoulderHeight.value.style.fontSize = '1rem';
-                    
+
                     footLength.value.innerHTML = footLengthTemp.toFixed(3);
                     footLength.value.style.color = 'white';
                     footLength.value.style.fontSize = '1rem';
-                    
+
                     armLength.value.innerHTML = armLengthTemp.toFixed(3);
                     armLength.value.style.color = 'white';
                     armLength.value.style.fontSize = '1rem';
-                    
+
                     shankLength.value.innerHTML = shankLengthTemp.toFixed(3);
                     shankLength.value.style.color = 'white';
                     shankLength.value.style.fontSize = '1rem';
@@ -155,87 +155,94 @@ const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
                     thighLength.value.innerHTML = thighLengthTemp.toFixed(3);
                     thighLength.value.style.color = 'white';
                     thighLength.value.style.fontSize = '1rem';
-                
+
                     inseamLength.value.innerHTML = inseamLengthTemp.toFixed(3);
                     inseamLength.value.style.color = 'white';
                     inseamLength.value.style.fontSize = '1rem';
 
                     shoulderHeightTable[measuringProgress] = shoulderHeightTemp;
-                    footLengthTable[measuringProgress]     = footLengthTemp;
-                    armLengthTable[measuringProgress]      = armLengthTemp;
-                    shankLengthTable[measuringProgress]    = shankLengthTemp;
-                    thighLengthTable[measuringProgress]    = thighLengthTemp;
-                    inseamLengthTable[measuringProgress]   = inseamLengthTemp;   
+                    footLengthTable[measuringProgress] = footLengthTemp;
+                    armLengthTable[measuringProgress] = armLengthTemp;
+                    shankLengthTable[measuringProgress] = shankLengthTemp;
+                    thighLengthTable[measuringProgress] = thighLengthTemp;
+                    inseamLengthTable[measuringProgress] = inseamLengthTemp;
                 }
                 measuringProgress++;
             } else {
-            console.log("Some body points are not visible.");
+                console.log("Some body points are not visible.");
             }
         } else {
             measuringProgress = 0;
         }
     }
-);
+    );
 
-function median(arr: number[]): number {
-  // Sort the array in ascending order
-  const sortedArr = arr.slice().sort((a, b) => a - b);
-  const middleIndex = Math.floor(sortedArr.length / 2);
+    function median(arr: number[]): number {
+        // Sort the array in ascending order
+        const sortedArr = arr.slice().sort((a, b) => a - b);
+        const middleIndex = Math.floor(sortedArr.length / 2);
 
-  // If the array has an odd number of elements, return the middle value
-  if (sortedArr.length % 2 !== 0) {
-    return sortedArr[middleIndex];
-  }
+        // If the array has an odd number of elements, return the middle value
+        if (sortedArr.length % 2 !== 0) {
+            return sortedArr[middleIndex];
+        }
 
-  // If the array has an even number of elements, return the average of the two middle values
-  const middleValue1 = sortedArr[middleIndex - 1];
-  const middleValue2 = sortedArr[middleIndex];
-  return (middleValue1 + middleValue2) / 2;
-}
+        // If the array has an even number of elements, return the average of the two middle values
+        const middleValue1 = sortedArr[middleIndex - 1];
+        const middleValue2 = sortedArr[middleIndex];
+        return (middleValue1 + middleValue2) / 2;
+    }
 
-const areAllBodyPointsVisible = (landmarks: Landmark[]) => {
-    const visibilityThreshold = 0.5;
+    const areAllBodyPointsVisible = (landmarks: Landmark[]) => {
+        const visibilityThreshold = 0.5;
 
-    for (let i = 0; i < landmarks.length; i++) 
-        if (landmarks[i].visibility < visibilityThreshold) 
-            return false;
-  return true;
-}
+        for (let i = 0; i < landmarks.length; i++)
+            if (landmarks[i].visibility < visibilityThreshold)
+                return false;
+        return true;
+    }
 
-const router = useIonRouter();
-const measureDone = async () => {
+    const router = useIonRouter();
+    const measureDone = async () => {
 
-    shoulderHeight.value.innerHTML = shoulderHeightResult.toFixed(3);
-    shoulderHeight.value.style.color = 'green';
-    await updateProperty(User, { id: 1 },'shoulderHeight', shoulderHeightResult);
-    
-    footLength.value.innerHTML = footLengthResult.toFixed(3);
-    footLength.value.style.color = 'green';
-    
-    armLength.value.innerHTML = armLengthResult.toFixed(3);
-    armLength.value.style.color = 'green';
-    await updateProperty(User, { id: 1 },'armLength', armLengthResult);
-    
-    shankLength.value.innerHTML = shankLengthResult.toFixed(3);
-    shankLength.value.style.color = 'green';
-    await updateProperty(User, { id: 1 },'shankLength', shankLengthResult);
+        shoulderHeight.value.innerHTML = shoulderHeightResult.toFixed(3);
+        shoulderHeight.value.style.color = 'green';
 
-    thighLength.value.innerHTML = thighLengthResult.toFixed(3);
-    thighLength.value.style.color = 'green';
-    await updateProperty(User, { id: 1 },'thighLength', thighLengthResult);
+        footLength.value.innerHTML = footLengthResult.toFixed(3);
+        footLength.value.style.color = 'green';
 
-    inseamLength.value.innerHTML = inseamLengthResult.toFixed(3);
-    inseamLength.value.style.color = 'green';
-    await updateProperty(User, { id: 1 },'inseamLength', inseamLengthResult);
+        armLength.value.innerHTML = armLengthResult.toFixed(3);
+        armLength.value.style.color = 'green';
 
-    const allUser = await userRepository.find();
+        shankLength.value.innerHTML = shankLengthResult.toFixed(3);
+        shankLength.value.style.color = 'green';
+
+        thighLength.value.innerHTML = thighLengthResult.toFixed(3);
+        thighLength.value.style.color = 'green';
+
+        inseamLength.value.innerHTML = inseamLengthResult.toFixed(3);
+        inseamLength.value.style.color = 'green';
+
+
+        const user = await getUserFromDataBase();
+
+        if (user != null) {
+            user.shoulderHeight = shoulderHeightResult;
+            user.armLength = armLengthResult;
+            user.shankLength = shankLengthResult;
+            user.thighLength = thighLengthResult;
+            user.inseamLength = inseamLengthResult;
+            await userRepository.save(user);
+        }
+
+        const allUser = await userRepository.find();
         console.log("All User from the db after measuring: ", allUser);
 
-    router.navigate('/pages/home', 'none', 'replace');
-}
+        router.navigate('/pages/home', 'none', 'replace');
+    }
 
     new Camera(video, {
-        onFrame: async () => {            
+        onFrame: async () => {
             await pose.send({ image: video });
         }
     }).start();

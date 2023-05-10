@@ -16,6 +16,7 @@ class bikeParams {
     type: bikeType = bikeType.City;
     style: ridingStyle = ridingStyle.Ergonomic;
     crankLength = 0; //KL, distance between the center of the crank and floor (see Maro's docs)
+    
     seatHeigth = 0;
     seatSetback = 0;
     seatLength = 0;

@@ -100,7 +100,7 @@ import StepsRadioButton from '@/components/StepsRadioButton.vue';
 import StepCard from '@/components/StepCard.vue';
 import { User } from '@/entity/User';
 import AppDataSource from '@/data-sources/SqliteDataSource';
-import { updateProperty } from '@/helpers/helpersDataBase';
+import { getUserFromDataBase } from '@/helpers/helpersDataBase'
 
 const numberOfSteps = 5; // from 0 to 6
 const currentStep = ref(0);
@@ -125,8 +125,6 @@ async function initializationDataBase() {
     //inicjalization data base
     let allUser = await userRepository.find();
 
-
-    //await userRepository.remove(allUser);
     console.log("All User from the db: before save", allUser);
 
 
@@ -140,7 +138,8 @@ async function initializationDataBase() {
 
 }
 
-async function checkWhichStepIsActual() {
+//DONT TOUCH MAYBE IS WORK IN FUTURE
+/*async function checkWhichStepIsActual() {
 
     const userToUpdate = await userRepository.findOneBy({
         id: 1,
@@ -165,7 +164,7 @@ async function checkWhichStepIsActual() {
         }
     }
 
-}
+}*/
 
 
 const nextStep = async () => {
@@ -173,7 +172,7 @@ const nextStep = async () => {
 
     if (currentStep.value == 0) {
 
-        if (newDataBase) {
+        if (await User.createQueryBuilder('user').getCount() == 0) {
             initializationDataBase();
         }
 
@@ -189,19 +188,12 @@ const nextStep = async () => {
         if (form.value.unitSystem == '') {
             return;
         }
-        else {
-
-            await updateProperty(User, { id: 1 },'unitSystem', form.value.unitSystem);
-        }
 
 
     } else if (currentStep.value == 2) {
 
         if (form.value.height == 0) {
             return;
-        }
-        else {
-            await updateProperty(User, { id: 1 },'height', form.value.height);
         }
 
 
@@ -210,9 +202,6 @@ const nextStep = async () => {
         if (form.value.rideTime == 0) {
             return;
         }
-        else {
-            await updateProperty(User, { id: 1 },'rideTime', form.value.rideTime);
-        }
 
 
     } else if (currentStep.value == 4) {
@@ -220,12 +209,26 @@ const nextStep = async () => {
             return;
         }
         else {
-            await updateProperty(User, { id: 1 },'riderStyle', form.value.rideStyle);
+
+            const user = await getUserFromDataBase();
+
+            console.log("step 5!!!!!!!!!")
+            if (user != null) {
+                user.unitSystem = form.value.unitSystem;
+                user.overallHeight = form.value.height;
+                user.rideTime = form.value.rideTime;
+                user.riderStyle = form.value.rideStyle;
+                await userRepository.save(user);
+                console.log("save user")
+            }
+            else {
+                console.log("user not found")
+            }
+
+            console.log("All User from the db: ", user);
+            console.log("await User.createQueryBuilder('user').getCount(): ", await User.createQueryBuilder('user').getCount());
         }
 
-    } else if (currentStep.value == 5) {
-        const allUser = await userRepository.find();
-        console.log("All User from the db: ", allUser);
     }
     if (currentStep.value < numberOfSteps) {
         currentStep.value++;

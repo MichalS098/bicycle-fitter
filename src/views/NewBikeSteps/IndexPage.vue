@@ -69,6 +69,7 @@ import { User } from '@/entity/User';
 import AppDataSource from '@/data-sources/SqliteDataSource';
 import { updateProperty } from '@/helpers/helpersDataBase';
 import { onMounted } from 'vue';
+import { getLastBikeOfUser } from '@/helpers/helpersDataBase';
 
 const numberOfSteps = 4;
 const currentStep = ref(1);
@@ -87,6 +88,32 @@ const form = ref({
 });
 
 
+async function checkIfUserEndOfTheInterview() {
+    const lastBike = await getLastBikeOfUser();
+
+    if (lastBike != null) {
+        if ((lastBike.type != null) &&
+            (lastBike.brand != null) &&
+            (lastBike.model != null) &&
+            (lastBike.style != null)) //&&lastBike.expectations
+        {
+
+            console.log("jestem tu 1")
+            return true;
+        }
+        else {
+            console.log("jestem tu 2")
+            return false;
+        }
+
+    }
+    else {
+        console.log("jestem tu 3")
+        return true;
+    }
+
+}
+
 
 async function initializeBikeInUser() {
     const userToUpdate = await userRepository.findOneBy({
@@ -100,29 +127,27 @@ async function initializeBikeInUser() {
 
     const bike = new Bike();
 
-    bike.brand = "test !!!!!!!!!!";
     bike.user = userToUpdate;
-
 
     await bikeRepository.save(bike);
 
     const allBike = await bikeRepository.find();
 
     console.log("allBike: ", allBike)
-    
 
-     // Sprawdź, czy użytkownik istnieje
-  if (userToUpdate) {
-    // Jeśli lista rowerów nie istnieje, zainicjuj ją jako pustą tablicę
-    if (!userToUpdate.bikes) {
-        userToUpdate.bikes = [];
+
+    // Sprawdź, czy użytkownik istnieje
+    if (userToUpdate) {
+        // Jeśli lista rowerów nie istnieje, zainicjuj ją jako pustą tablicę
+        if (!userToUpdate.bikes) {
+            userToUpdate.bikes = [];
+        }
+
+        // Dodaj nowy rower do listy rowerów użytkownika
+        userToUpdate.bikes.push(bike);
+    } else {
+        console.error('User not found');
     }
-
-    // Dodaj nowy rower do listy rowerów użytkownika
-    userToUpdate.bikes.push(bike);
-  } else {
-    console.error('User not found');
-  }
 
     await userRepository.save(userToUpdate);
 
@@ -132,47 +157,18 @@ async function initializeBikeInUser() {
 }
 
 onMounted(async () => {
-    initializeBikeInUser();
+
+    const interviewCompleted = await checkIfUserEndOfTheInterview();
+    if (interviewCompleted) {
+        initializeBikeInUser();
+    }
 });
 
-async function getLastBikeOfUser() {
-
-    const user = await userRepository.findOne({
-        where: {
-            id: 1
-        },
-        relations: {
-            bikes: true
-        }
-    });
-
-    if (!user) {
-        console.log('User not found');
-        return null;
-    }
-
-    return user.bikes[user.bikes.length - 1];
-}
-
 const nextStep = async () => {
-
-    const lastBike = await getLastBikeOfUser();
-
-    if (!lastBike) {
-        console.log('No bikes found for this user');
-        return;
-    }
 
     if (currentStep.value == 1) {
         if (form.value.bikeType == '') {
             return;
-        }
-        else {
-            //updateProperty(Bike, { id: 1 }, 'type', form.value.bikeType);
-
-
-            lastBike.type = form.value.bikeType;
-            await bikeRepository.save(lastBike);
         }
 
     } else if (currentStep.value == 2) {
@@ -183,32 +179,32 @@ const nextStep = async () => {
                 return;
             }
 
-
-            lastBike.brand = form.value.bikeCompany;
-            lastBike.model = form.value.bikeModel;
-            await bikeRepository.save(lastBike);
-
         }
     } else if (currentStep.value == 3) {
         if (form.value.bikeFittingGoal == '') {
             return;
         }
         else {
+            console.log("TEST 1")
+            const lastBike = await getLastBikeOfUser();
 
-
+            if (!lastBike) {
+                console.log('No bikes found for this user');
+                return;
+            }
+            console.log("expectations", form.value); //WE neeed to add this to structure in program, you must remember that if you ad this to structure in program, you must change function "checkIfUserEndOfTheInterview()"
+            lastBike.type = form.value.bikeType;
+            lastBike.brand = form.value.bikeCompany;
+            lastBike.model = form.value.bikeModel;
             lastBike.style = form.value.bikeFittingGoal;
-
             await bikeRepository.save(lastBike);
-
         }
+
     } else if (currentStep.value == 4) {
         if (form.value.expectations == '') {
             return;
         }
-        else {
-            //updateProperty(Bike, { id: 1 }, 'expectations', form.value.expectations);
-            console.log("expectations", form.value);
-        }
+
 
     }
     if (currentStep.value < numberOfSteps) {
@@ -224,11 +220,8 @@ const prevStep = () => {
 
 const router = useIonRouter();
 const createBike = async () => {
-    // TODO: create bike in database
     console.log("createBike", form.value);
-    /*const bikeToUpdate = await bikeRepository.findOneBy({
-                id: 1,
-            })*/
+
     const allUser = await userRepository.find();
     console.log("All User from the db after Bike Steps: ", allUser);
 

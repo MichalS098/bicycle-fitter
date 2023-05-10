@@ -16,5 +16,5 @@ export default new DataSource({
     migrations: [CreateUsersTable1682638592843, CreateBikesTable1682638602865, CreateTipsTable1682638608288],
     logging: ['error', 'query', 'schema'],
     synchronize: false,
-    migrationsRun: false,
+    migrationsRun: true,
 });
