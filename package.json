@@ -38,6 +38,7 @@
     "ionicons": "^6.0.3",
     "jeep-sqlite": "^1.4.2",
     "swiper": "^9.2.4",
+    "three": "^0.152.2",
     "typeorm": "^0.3.6",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6"

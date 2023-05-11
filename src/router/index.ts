@@ -24,6 +24,10 @@ const routes: Array<RouteRecordRaw> = [
     path: '/measure',
     component: () => import('@/views/Measure/IndexPage.vue')
   },
+   {
+    path: '/bike3d',
+    component: () => import('@/views/BikeView3D/IndexPage.vue')
+  },
   {
     path: '/pages',
     component: HomeLayout,
