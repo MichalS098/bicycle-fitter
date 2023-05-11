@@ -33,10 +33,11 @@
 
             <step-card title="Your height" sub-title="What is your height?" :this-step="2" :current-step="currentStep"
                 :number-of-steps="numberOfSteps" @prev="prevStep" @next="nextStep">
-                <!-- TODO: Test this button on mobile and fix validation -->
-                <button-input :max="form.unitSystem === 'metric' ? 250 : 100" :min="form.unitSystem === 'metric' ? 50 : 20"
-                    v-model="form.height" type="number" inputmode="numeric" placeholder="Enter your height"
+                <button-input v-model="form.height" type="number" inputmode="numeric" placeholder="Enter your height"
                     :postfix="form.unitSystem === 'metric' ? 'cm' : 'inch'" />
+                <ion-alert :is-open="form.errors.height != ''" header="Wrong height" :message="form.errors.height"
+                    :buttons="['OK']" @did-dismiss="form.errors.height = ''">
+                </ion-alert>
             </step-card>
 
             <step-card title="Your ride time" sub-title="Typically how much time per week do you spend on the bike?"
@@ -51,13 +52,13 @@
             <step-card title="Your rider level" sub-title="At what level of cycling would you define yourself?"
                 :this-step="4" :current-step="currentStep" :number-of-steps="numberOfSteps" @prev="prevStep"
                 @next="nextStep" class="overflow-y-auto">
-                <steps-radio-button @click="nextStep()" v-model="form.rideStyle" label="Casual" value="casual" />
-                <steps-radio-button @click="nextStep()" v-model="form.rideStyle" label="Recreational"
+                <steps-radio-button @click="nextStep()" v-model="form.riderStyle" label="Casual" value="casual" />
+                <steps-radio-button @click="nextStep()" v-model="form.riderStyle" label="Recreational"
                     value="recreational" />
-                <steps-radio-button @click="nextStep()" v-model="form.rideStyle" label="Avid" value="avid" />
-                <steps-radio-button @click="nextStep()" v-model="form.rideStyle" label="Weekend Warrior"
+                <steps-radio-button @click="nextStep()" v-model="form.riderStyle" label="Avid" value="avid" />
+                <steps-radio-button @click="nextStep()" v-model="form.riderStyle" label="Weekend Warrior"
                     value="weekendwarrior" />
-                <steps-radio-button @click="nextStep()" v-model="form.rideStyle" label="Racer" value="racer" />
+                <steps-radio-button @click="nextStep()" v-model="form.riderStyle" label="Racer" value="racer" />
                 <InformationCircleIcon class="mx-3 h-8 w-8 text-secondary" @click="isRiderStyleInfoVisible = true" />
             </step-card>
 
@@ -80,7 +81,7 @@
                             You can pass your photo, or we can do it live with your phone camera!
                         </p>
                     </div>
-                    <ion-button router-link="/measure" expand="block" shape="round" mode="ios" type="button"
+                    <ion-button @click="goToMeasure()" expand="block" shape="round" mode="ios" type="button"
                         color="sand-desert" class="font-bold text-lg">
                         Measure me!
                     </ion-button>
@@ -92,147 +93,89 @@
   
 <script setup lang="ts">
 import { ref } from 'vue';
-import { IonPage, IonContent, IonButton } from '@ionic/vue';
+import { IonPage, IonContent, IonButton, useIonRouter, IonAlert } from '@ionic/vue';
 import { InformationCircleIcon } from "@heroicons/vue/24/outline"
 import RiderStylesInfoModal from '@/views/FirstSteps/RiderStylesInfoModal.vue';
 import ButtonInput from '@/components/ButtonInput.vue';
 import StepsRadioButton from '@/components/StepsRadioButton.vue';
 import StepCard from '@/components/StepCard.vue';
 import { User } from '@/entity/User';
-import AppDataSource from '@/data-sources/SqliteDataSource';
-import { getUserFromDatabase } from '@/helpers/helpersDataBase'
+import { saveDbForWeb } from '@/composables/useSqliteOnWeb';
 
 const numberOfSteps = 5; // from 0 to 6
 const currentStep = ref(0);
 const isRiderStyleInfoVisible = ref(false);
-const userRepository = AppDataSource.getRepository(User);
-const newDataBase = true;
 
 const form = ref({
     unitSystem: '',
-    weight: '',
     height: 0,
-    gender: '',
     rideTime: 0,
-    rideStyle: '',
+    riderStyle: '',
+    errors: {
+        unitSystem: "",
+        height: "",
+        rideTime: "",
+        riderStyle: "",
+    }
 });
 
-
-
-
-async function initializationDataBase() {
-
-    //inicjalization data base
-    let allUser = await userRepository.find();
-
-    console.log("All User from the db: before save", allUser);
-
-
-    const user = new User();
-
-    //user.unitSystem = form.value.unitSystem;
-    await userRepository.save(user);
-
-    allUser = await userRepository.find();
-    console.log("All User from the db: after save", allUser)
-
-}
-
-//DONT TOUCH MAYBE IS WORK IN FUTURE
-/*async function checkWhichStepIsActual() {
-
-    const userToUpdate = await userRepository.findOneBy({
-        id: 1,
-    });
-
-    if (userToUpdate != null) {
-
-        if (userToUpdate.unitSystem == null) {
-            currentStep.value = 1
-        }
-        else if (userToUpdate.height == null) {
-            currentStep.value = 2
-        }
-        else if (userToUpdate.rideTime == null) {
-            currentStep.value = 3
-        }
-        else if (userToUpdate.riderStyle == null) {
-            currentStep.value = 4
-        }
-        else {
-            currentStep.value = 5
-        }
-    }
-
-}*/
-
-
-const nextStep = async () => {
-
-
-    if (currentStep.value == 0) {
-
-        if (await User.createQueryBuilder('user').getCount() == 0) {
-            initializationDataBase();
-        }
-
-        const allUser = await userRepository.find();
-        console.log("newDataBase false All User from the db:", allUser)
-
-        //checkWhichStepIsActual();
-
-    }
+const nextStep = () => {
+    form.value.errors = {
+        unitSystem: "",
+        height: "",
+        rideTime: "",
+        riderStyle: "",
+    };
 
     if (currentStep.value == 1) {
-
         if (form.value.unitSystem == '') {
+            form.value.errors.unitSystem = "Please select unit system";
             return;
         }
-
-
     } else if (currentStep.value == 2) {
-
-        if (form.value.height == 0) {
-            return;
+        if (form.value.unitSystem == 'imperial') {
+            if (form.value.height < 20 || form.value.height > 100) {
+                form.value.errors.height = "Height must be between 20 and 100 inches";
+                return;
+            }
         }
 
-
+        if (form.value.unitSystem == 'metric') {
+            if (form.value.height < 50 || form.value.height > 250) {
+                form.value.errors.height = "Height must be between 50 and 250 centimeters";
+                return;
+            }
+        }
     } else if (currentStep.value == 3) {
-
         if (form.value.rideTime == 0) {
+            form.value.errors.rideTime = "Please select ride time";
             return;
         }
-
-
     } else if (currentStep.value == 4) {
-        if (form.value.rideStyle == '') {
+        if (form.value.riderStyle == '') {
+            form.value.errors.riderStyle = "Please select ride style";
             return;
         }
-        else {
-
-            const user = await getUserFromDatabase();
-
-            console.log("step 5!!!!!!!!!")
-            if (user != null) {
-                user.unitSystem = form.value.unitSystem;
-                user.overallHeight = form.value.height;
-                user.rideTime = form.value.rideTime;
-                user.riderStyle = form.value.rideStyle;
-                await userRepository.save(user);
-                console.log("save user")
-            }
-            else {
-                console.log("user not found")
-            }
-
-            console.log("All User from the db: ", user);
-            console.log("await User.createQueryBuilder('user').getCount(): ", await User.createQueryBuilder('user').getCount());
-        }
-
     }
+
     if (currentStep.value < numberOfSteps) {
         currentStep.value++;
     }
+}
+
+const router = useIonRouter();
+
+const goToMeasure = async () => {
+    const user = new User();
+    user.id = 1;
+    user.unitSystem = form.value.unitSystem;
+    user.overallHeight = form.value.height;
+    user.rideTime = form.value.rideTime;
+    user.riderStyle = form.value.riderStyle;
+    await user.save();
+    saveDbForWeb();
+
+    router.navigate('/measure');
 }
 
 const prevStep = () => {
