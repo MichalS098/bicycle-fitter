@@ -7,3 +7,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.fitter-h1 {
+    @apply text-5xl xxs:text-6xl;
+}
+
+.fitter-h2 {
+    @apply text-2xl xxs:text-3xl font-bold;
+}

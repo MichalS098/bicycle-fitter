@@ -35,9 +35,9 @@ export function seatHeightCalc(person: humanParams, footAngle: number): number {
     const footTipX: number = KGx + (Math.sin(degToRad(90 - footAngle)) * person.footLength);
     const footTipY: number = (KGy - person.shankLength) - (Math.cos(degToRad(90 - footAngle)) * person.footLength);
 
-    const seatHeigth: number = Math.sqrt(footTipX ** 2 + footTipY ** 2)
+    const seatHeight: number = Math.sqrt(footTipX ** 2 + footTipY ** 2)
 
-    return seatHeigth
+    return seatHeight
 }
 
 // w oryginale: WysokoscSiedzenia_2 ---------------
@@ -52,7 +52,7 @@ export function stackAndReach(bike: bikeParams, person: humanParams, SW: number,
     const stemHeight = 2;
     const seatPostHeight = 12;
 
-    const seatHeightNoCrank = bike.seatHeigth - bike.crankLength;
+    const seatHeightNoCrank = bike.seatHeight - bike.crankLength;
 
     bike.stackMax = Math.cos(degToRad(alpha)) * seatHeightNoCrank +
         bike.seatDrop - bike.stemLength * Math.sin(degToRad(bike.stemAngle)) - spacing - stemHeight;
@@ -91,6 +91,9 @@ export function bicycleFunction(person: humanParams, bike: bikeParams, Sa: numbe
     let M: number;
     let H: number;
     let PS: number;
+
+    S = 0
+    SW = 0
 
     switch (bike.type) {
         case bikeType.City: {
@@ -168,7 +171,7 @@ export function bicycleFunction(person: humanParams, bike: bikeParams, Sa: numbe
     let stack = stemHeightY - supportY
 
     bike.seatDrop = drop;
-    bike.seatHeigth = seatHeight;
+    bike.seatHeight = seatHeight;
     bike.seatSetback = seatSetback;
     stackAndReach(bike, person, SW, handleX)
 
@@ -184,7 +187,7 @@ export function bicycleFunction(person: humanParams, bike: bikeParams, Sa: numbe
     bike.seatSetback = parseFloat(bike.seatSetback.toFixed(1));  //NS
     bike.seatLength = parseFloat(seatLength.toFixed(1));  //SL
     bike.seatDrop = parseFloat(bike.seatDrop.toFixed(1));
-    bike.seatHeigth = parseFloat(bike.seatHeigth.toFixed(1));
+    bike.seatHeight = parseFloat(bike.seatHeight.toFixed(1));
 
     bike.stackMin = parseFloat(bike.stackMin.toFixed(1));
     bike.reachMin = parseFloat(bike.reachMin.toFixed(1));

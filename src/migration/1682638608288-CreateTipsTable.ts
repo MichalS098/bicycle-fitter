@@ -4,17 +4,26 @@ const tips = [
     {        
         title: 'Tip 1',
         description: 'Tip 1 description',
-        content: 'Tip 1 content'
+        content: 'Tip 1 content',
+        favourite: false,
+        featured_image_path: '../assets/images/tip-test.png',
+        color: 'primary'
     },
     {
         title: 'Tip 2',
         description: 'Tip 2 description',
-        content: 'Tip 2 content'
+        content: 'Tip 2 content',
+        favourite: false,
+        featured_image_path: '../assets/images/tip-test.png',
+        color: 'secondary'
     },
     {
-        title: 'Tip 3',
+        title: 'This is my favourite!',
         description: 'Tip 3 description',
-        content: 'Tip 3 content'
+        content: 'Tip 3 content',
+        favourite: true,
+        featured_image_path: '../assets/images/tip-test.png',
+        color: 'tertiary'
     }
 ]
 
@@ -26,7 +35,10 @@ export class CreateTipsTable1682638608288 implements MigrationInterface {
                 "id" integer PRIMARY KEY AUTOINCREMENT NOT NULL,
                 "title" varchar,
                 "description" varchar,
-                "content" varchar
+                "content" varchar,
+                "favourite" boolean,
+                "featured_image_path" varchar,
+                "color" varchar        
             )
         `)        
 

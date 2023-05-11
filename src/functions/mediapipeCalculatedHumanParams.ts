@@ -9,7 +9,18 @@ import {
     NormalizedLandmark,
     Results,
 } from '@mediapipe/pose';
+import { median } from '@/helpers/mathHelpers';
 
+export class BodyParamsFromMediapipe {
+    constructor(
+        public shoulderHeight: number,
+        public footLength: number,
+        public armLength: number,
+        public shankLength: number,
+        public thighLength: number,
+        public inseamLength: number,
+    ) { }
+}
 
 
 function getDistanceBetweenPoints(point1: NormalizedLandmark, point2: NormalizedLandmark): number {
@@ -25,11 +36,10 @@ function getDistanceBetweenPoints(point1: NormalizedLandmark, point2: Normalized
 }
 
 
-function theHeightOfTheTriangle(firstSideOfTriangle: number, secondSideOfTriangle: number, thirdSideOfTriangle: number): number
-{
-    const S = (firstSideOfTriangle+secondSideOfTriangle+thirdSideOfTriangle)/2
-    const A = Math.sqrt(S*(S-firstSideOfTriangle)*(S-secondSideOfTriangle)*(S-thirdSideOfTriangle))
-    const H = (2*A)/firstSideOfTriangle
+function theHeightOfTheTriangle(firstSideOfTriangle: number, secondSideOfTriangle: number, thirdSideOfTriangle: number): number {
+    const S = (firstSideOfTriangle + secondSideOfTriangle + thirdSideOfTriangle) / 2
+    const A = Math.sqrt(S * (S - firstSideOfTriangle) * (S - secondSideOfTriangle) * (S - thirdSideOfTriangle))
+    const H = (2 * A) / firstSideOfTriangle
 
     return H
 }
@@ -45,26 +55,26 @@ function getAngleBetweenPoints(point1: NormalizedLandmark, point2: NormalizedLan
 }
 
 
-export function globalCalcMediaPipe(results: Results): [number, number, number, number, number, number] {
+export function getBodyParamsFromMediapipeResults(results: Results): BodyParamsFromMediapipe {
 
-    const left_shoulder_to_hip      = getDistanceBetweenPoints(results.poseWorldLandmarks[POSE_LANDMARKS_LEFT.LEFT_SHOULDER], results.poseWorldLandmarks[POSE_LANDMARKS_LEFT.LEFT_HIP]);
-    const right_shoulder_to_hip     = getDistanceBetweenPoints(results.poseWorldLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_SHOULDER], results.poseWorldLandmarks[POSE_LANDMARKS.RIGHT_HIP]);
-    const left_hip_to_knee          = getDistanceBetweenPoints(results.poseWorldLandmarks[POSE_LANDMARKS_LEFT.LEFT_HIP], results.poseWorldLandmarks[POSE_LANDMARKS_LEFT.LEFT_KNEE]);
-    const right_hip_to_knee         = getDistanceBetweenPoints(results.poseWorldLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_HIP], results.poseWorldLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_KNEE]);
-    const left_knee_to_ankle        = getDistanceBetweenPoints(results.poseWorldLandmarks[POSE_LANDMARKS_LEFT.LEFT_KNEE], results.poseWorldLandmarks[POSE_LANDMARKS_LEFT.LEFT_ANKLE]);
-    const right_knee_to_ankle       = getDistanceBetweenPoints(results.poseWorldLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_KNEE], results.poseWorldLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_ANKLE]);
-    const left_ankle_to_foot_index  = getDistanceBetweenPoints(results.poseWorldLandmarks[POSE_LANDMARKS_LEFT.LEFT_ANKLE], results.poseWorldLandmarks[POSE_LANDMARKS_LEFT.LEFT_FOOT_INDEX]);
+    const left_shoulder_to_hip = getDistanceBetweenPoints(results.poseWorldLandmarks[POSE_LANDMARKS_LEFT.LEFT_SHOULDER], results.poseWorldLandmarks[POSE_LANDMARKS_LEFT.LEFT_HIP]);
+    const right_shoulder_to_hip = getDistanceBetweenPoints(results.poseWorldLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_SHOULDER], results.poseWorldLandmarks[POSE_LANDMARKS.RIGHT_HIP]);
+    const left_hip_to_knee = getDistanceBetweenPoints(results.poseWorldLandmarks[POSE_LANDMARKS_LEFT.LEFT_HIP], results.poseWorldLandmarks[POSE_LANDMARKS_LEFT.LEFT_KNEE]);
+    const right_hip_to_knee = getDistanceBetweenPoints(results.poseWorldLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_HIP], results.poseWorldLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_KNEE]);
+    const left_knee_to_ankle = getDistanceBetweenPoints(results.poseWorldLandmarks[POSE_LANDMARKS_LEFT.LEFT_KNEE], results.poseWorldLandmarks[POSE_LANDMARKS_LEFT.LEFT_ANKLE]);
+    const right_knee_to_ankle = getDistanceBetweenPoints(results.poseWorldLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_KNEE], results.poseWorldLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_ANKLE]);
+    const left_ankle_to_foot_index = getDistanceBetweenPoints(results.poseWorldLandmarks[POSE_LANDMARKS_LEFT.LEFT_ANKLE], results.poseWorldLandmarks[POSE_LANDMARKS_LEFT.LEFT_FOOT_INDEX]);
     const right_ankle_to_foot_index = getDistanceBetweenPoints(results.poseWorldLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_ANKLE], results.poseWorldLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_FOOT_INDEX]);
 
-    let firstSideOfTriangle  = getDistanceBetweenPoints(results.poseWorldLandmarks[POSE_LANDMARKS_LEFT.LEFT_HEEL], results.poseWorldLandmarks[POSE_LANDMARKS_LEFT.LEFT_FOOT_INDEX]);
+    let firstSideOfTriangle = getDistanceBetweenPoints(results.poseWorldLandmarks[POSE_LANDMARKS_LEFT.LEFT_HEEL], results.poseWorldLandmarks[POSE_LANDMARKS_LEFT.LEFT_FOOT_INDEX]);
     let secondSideOfTriangle = left_ankle_to_foot_index
-    let thirdSideOfTriangle  = getDistanceBetweenPoints(results.poseWorldLandmarks[POSE_LANDMARKS_LEFT.LEFT_HEEL], results.poseWorldLandmarks[POSE_LANDMARKS_LEFT.LEFT_ANKLE]);
-    const hFootLeft          = theHeightOfTheTriangle(firstSideOfTriangle, secondSideOfTriangle, thirdSideOfTriangle)
+    let thirdSideOfTriangle = getDistanceBetweenPoints(results.poseWorldLandmarks[POSE_LANDMARKS_LEFT.LEFT_HEEL], results.poseWorldLandmarks[POSE_LANDMARKS_LEFT.LEFT_ANKLE]);
+    const hFootLeft = theHeightOfTheTriangle(firstSideOfTriangle, secondSideOfTriangle, thirdSideOfTriangle)
 
-    firstSideOfTriangle  = getDistanceBetweenPoints(results.poseWorldLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_HEEL], results.poseWorldLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_FOOT_INDEX]);
+    firstSideOfTriangle = getDistanceBetweenPoints(results.poseWorldLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_HEEL], results.poseWorldLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_FOOT_INDEX]);
     secondSideOfTriangle = right_ankle_to_foot_index
-    thirdSideOfTriangle  = getDistanceBetweenPoints(results.poseWorldLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_HEEL], results.poseWorldLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_ANKLE]);
-    const hFootRight     = theHeightOfTheTriangle(firstSideOfTriangle, secondSideOfTriangle, thirdSideOfTriangle)
+    thirdSideOfTriangle = getDistanceBetweenPoints(results.poseWorldLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_HEEL], results.poseWorldLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_ANKLE]);
+    const hFootRight = theHeightOfTheTriangle(firstSideOfTriangle, secondSideOfTriangle, thirdSideOfTriangle)
 
     const shoulderHeightTemp = shoulderHeight(left_shoulder_to_hip,
         right_shoulder_to_hip,
@@ -91,15 +101,15 @@ export function globalCalcMediaPipe(results: Results): [number, number, number, 
     const leftAnkleToLeftKnee = getDistanceBetweenPoints(results.poseWorldLandmarks[POSE_LANDMARKS_LEFT.LEFT_ANKLE], results.poseWorldLandmarks[POSE_LANDMARKS_LEFT.LEFT_KNEE]);
     const rightAnkleToRightKnee = getDistanceBetweenPoints(results.poseWorldLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_ANKLE], results.poseWorldLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_KNEE]);
 
-    const shankLengthTemp = (leftAnkleToLeftKnee + rightAnkleToRightKnee)/2
-   
+    const shankLengthTemp = (leftAnkleToLeftKnee + rightAnkleToRightKnee) / 2
+
     const leftKneeToLeftHip = getDistanceBetweenPoints(results.poseWorldLandmarks[POSE_LANDMARKS_LEFT.LEFT_KNEE], results.poseWorldLandmarks[POSE_LANDMARKS_LEFT.LEFT_HIP]);
     const rightKneeToRightHip = getDistanceBetweenPoints(results.poseWorldLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_KNEE], results.poseWorldLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_HIP]);
-    const thighLengthTemp = (leftKneeToLeftHip+ rightKneeToRightHip)/2
+    const thighLengthTemp = (leftKneeToLeftHip + rightKneeToRightHip) / 2
 
     const inseamLengthTemp = shankLengthTemp + thighLengthTemp //narazie taki szacunek inseamLength to jeszcze do uzgodnienia 
-
-    return [shoulderHeightTemp, footLengthTemp, armLengthTemp, shankLengthTemp, thighLengthTemp, inseamLengthTemp]
+    
+    return new BodyParamsFromMediapipe(shoulderHeightTemp, footLengthTemp, armLengthTemp, shankLengthTemp, thighLengthTemp, inseamLengthTemp);
 }
 
 
@@ -111,7 +121,7 @@ function shoulderHeight(left_shoulder_to_hip: number,
     right_knee_to_ankle: number,
     left_ankle_to_foot_index: number,
     right_ankle_to_foot_index: number): number {
-    
+
     const left_height = left_shoulder_to_hip + left_hip_to_knee + left_knee_to_ankle + left_ankle_to_foot_index;
     const right_height = right_shoulder_to_hip + right_hip_to_knee + right_knee_to_ankle + right_ankle_to_foot_index;
 
@@ -119,11 +129,22 @@ function shoulderHeight(left_shoulder_to_hip: number,
 }
 
 function footLength(leftFootLength: number, rightFootLength: number): number {
-  
+
     return (leftFootLength + rightFootLength) / 2;
 }
 
 function armLength(leftElbowToLeftShoulder: number, rightElbowToRightShoulder: number): number {
-  
+
     return (leftElbowToLeftShoulder + rightElbowToRightShoulder) / 2;
+}
+
+export function getBodyParamsMedian(bodyParams: BodyParamsFromMediapipe[]): BodyParamsFromMediapipe {
+    const shoulderHeight = median(bodyParams.map((bodyParam) => bodyParam.shoulderHeight));
+    const footLength = median(bodyParams.map((bodyParam) => bodyParam.footLength));
+    const armLength = median(bodyParams.map((bodyParam) => bodyParam.armLength));
+    const shankLength = median(bodyParams.map((bodyParam) => bodyParam.shankLength));
+    const thighLength = median(bodyParams.map((bodyParam) => bodyParam.thighLength));
+    const inseamLength = median(bodyParams.map((bodyParam) => bodyParam.inseamLength));
+
+    return new BodyParamsFromMediapipe(shoulderHeight, footLength, armLength, shankLength, thighLength, inseamLength);
 }

@@ -1,9 +1,9 @@
 <template>
     <ion-page>
         <ion-content class="ion-padding" :fullscreen="true">
-            <div class="flex flex-col justify-between gap-6 xxs:gap-12 pt-12">
+            <div class="flex flex-col justify-between gap-6 xxs:gap-12">
                 <div class="px-3 xxs:px-6 pt-3 xxs:pt-6">
-                    <h1 class="text-5xl xxs:text-6xl">
+                    <h1 class="fitter-h1">
                         My
                         <br>
                         Bikes
@@ -14,7 +14,7 @@
                     <new-bike-card />
                 </div>
             </div>
-            <space-for-tab-bar-menu /> 
+            <space-for-tab-bar-menu />
         </ion-content>
     </ion-page>
 </template>
@@ -29,9 +29,7 @@ import BikeCard from '@/components/BikeCard.vue';
 import NewBikeCard from '@/components/NewBikeCard.vue';
 import SpaceForTabBarMenu from '@/components/SpaceForTabBarMenu.vue';
 
-const router = useIonRouter();
 const user = ref<User | null>(null);
-
 onMounted(async () => {
     user.value = await User.findOne({
         where: {
@@ -41,6 +39,8 @@ onMounted(async () => {
             bikes: true
         }
     });
+
+    console.log(user.value);
 });
 </script>
   

@@ -22,7 +22,7 @@ module.exports = {
         'sand-desert': 'var(--ion-color-sand-desert)',
         'sand-desert-shade': 'var(--ion-color-sand-desert-shade)',
         'sand-desert-tint': 'var(--ion-color-sand-desert-tint)',
-        'dark-gray': '#8A8A8A',
+        'dark-gray': '#8A8A8A',        
       },
       fontFamily: {
         'sans': ['Lato', 'sans-serif'],

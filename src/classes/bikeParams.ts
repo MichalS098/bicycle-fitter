@@ -3,6 +3,23 @@ enum bikeType {
     City,
     Mountain,
     Road,
+    Gravel,
+    Cross,
+    Electric,
+    Mtb,
+}
+
+function bikeTypeFromStr(str: string): bikeType {
+    switch (str) {
+        case "city": return bikeType.City;
+        case "mountain": return bikeType.Mountain;
+        case "road": return bikeType.Road;
+        case "gravel": return bikeType.Gravel;
+        case "cross": return bikeType.Cross;
+        case "electric": return bikeType.Electric;
+        case "mtb": return bikeType.Mtb;        
+        default: return bikeType.City;
+    }
 }
 
 enum ridingStyle {
@@ -11,16 +28,26 @@ enum ridingStyle {
     Aerodynamic
 }
 
+function ridingStyleFromStr(str: string): ridingStyle {
+    switch (str) {
+        case "ergonomic": return ridingStyle.Ergonomic;
+        case "sport": return ridingStyle.Sport;
+        case "aerodynamic": return ridingStyle.Aerodynamic;
+        default: return ridingStyle.Ergonomic;
+    }
+}
+
 //This class is to rebuild !!!! 
 class bikeParams {
     type: bikeType = bikeType.City;
     style: ridingStyle = ridingStyle.Ergonomic;
     crankLength = 0; //KL, distance between the center of the crank and floor (see Maro's docs)
-    seatHeigth = 0;
+    
+    seatHeight = 0;
     seatSetback = 0;
     seatLength = 0;
     seatDrop = 0;
-    spacerHeigth = 0; //dl rama-siodelko
+    spacerHeight = 0; //dl rama-siodelko
     stemLength = 0; //dl. wspornika (ger. Vorbau)
     stemAngle = 0;
 
@@ -41,4 +68,4 @@ class bikeParams {
 
 }
 
-export { bikeParams, ridingStyle, bikeType }
+export { bikeParams, ridingStyle, bikeType, bikeTypeFromStr, ridingStyleFromStr };

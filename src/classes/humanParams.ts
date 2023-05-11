@@ -25,15 +25,15 @@ class humanParams {
 
 
     constructor(
-        shankLength: number = 0,
-        thighLength: number = 0,
-        shoeSize: number = 0,
-        inseamLength: number = 0,
-        shoulderHeight: number = 0,
-        armLength: number = 0,
-        armTorsoangle: number = 0,
-        overallHeight: number = 0,
-        torsoangle: number = 0
+        shankLength: number,
+        thighLength: number,
+        shoeSize: number,
+        inseamLength: number,
+        shoulderHeight: number,
+        armLength: number,
+        armTorsoangle: number,
+        overallHeight: number,
+        torsoangle: number
     ) {
         this._shankLength = shankLength;
         this._thighLength = thighLength * 0.83;
