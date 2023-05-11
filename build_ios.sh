@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Update dependencies
-npm install
+sudo npm install 
 
 # Run ionic build
 ionic build
