@@ -81,8 +81,12 @@ const measureDone = async () => {
         user.thighLength = bodyParams.value.thighLength;
         user.inseamLength = bodyParams.value.inseamLength;
         await user.save();
-    }
-    camera.value?.stop();
+    }    
+}
+
+function goToTheApp() {
+    showMeasureFinishedModal.value = false;
+    router.navigate('/pages/home', 'none');
 }
 
 onMounted(async () => {
@@ -103,7 +107,7 @@ const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
                 allBodyPointsVisible.value = true;
                 if (measuringProgress.value > 60) {
                     camera.value?.stop();
-                    bodyParams.value = getBodyParamsMedian(bodyParamsArray);
+                    bodyParams.value = getBodyParamsMedian(bodyParamsArray);                    
                     measureDone();
                 } else {
                     const bodyParams = getBodyParamsFromMediapipeResults(results);
@@ -130,11 +134,6 @@ const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
     camera.value?.start();
 }
 
-
-function goToTheApp() {
-    showMeasureFinishedModal.value = false;
-    router.navigate('/pages/home', 'forward');
-}
 </script>
 
 <style scoped>

@@ -1,9 +1,9 @@
 <template>
     <ion-page>
         <ion-content class="ion-padding" :fullscreen="true">
-            <div class="flex flex-col justify-between gap-6 xxs:gap-12 pt-12">
+            <div class="flex flex-col justify-between gap-6 xxs:gap-12">
                 <div class="px-3 xxs:px-6 pt-3 xxs:pt-6">
-                    <h1 class="text-5xl xxs:text-6xl">
+                    <h1 class="fitter-h1">
                         My
                         <br>
                         Bikes
