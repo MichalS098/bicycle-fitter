@@ -31,12 +31,17 @@
                 <steps-radio-button @click="nextStep()" v-model="form.unitSystem" label="Imperial" value="imperial" />
             </step-card>
 
-            <step-card title="Your height" sub-title="What is your height?" :this-step="2" :current-step="currentStep"
-                :number-of-steps="numberOfSteps" @prev="prevStep" @next="nextStep">
+            <step-card title="Your height and shoe size" sub-title="What is your height?" :this-step="2"
+                :current-step="currentStep" :number-of-steps="numberOfSteps" @prev="prevStep" @next="nextStep">
                 <button-input v-model="form.height" type="number" inputmode="numeric" placeholder="Enter your height"
                     :postfix="form.unitSystem === 'metric' ? 'cm' : 'inch'" />
                 <ion-alert :is-open="form.errors.height != ''" header="Wrong height" :message="form.errors.height"
                     :buttons="['OK']" @did-dismiss="form.errors.height = ''">
+                </ion-alert>
+
+                <button-input v-model="form.shoeSize" type="number" inputmode="numeric" placeholder="Enter your shoe size" postfix="EU"/>
+                <ion-alert :is-open="form.errors.shoeSize != ''" header="Wrong shoe size" :message="form.errors.shoeSize"
+                    :buttons="['OK']" @did-dismiss="form.errors.shoeSize = ''">
                 </ion-alert>
             </step-card>
 
@@ -111,11 +116,13 @@ const form = ref({
     height: 0,
     rideTime: 0,
     riderStyle: '',
+    shoeSize: 0,
     errors: {
         unitSystem: "",
         height: "",
         rideTime: "",
         riderStyle: "",
+        shoeSize: "",
     }
 });
 
@@ -125,6 +132,7 @@ const nextStep = () => {
         height: "",
         rideTime: "",
         riderStyle: "",
+        shoeSize: "",
     };
 
     if (currentStep.value == 1) {
@@ -145,6 +153,11 @@ const nextStep = () => {
                 form.value.errors.height = "Height must be between 50 and 250 centimeters";
                 return;
             }
+        }
+
+        if (form.value.shoeSize < 30 || form.value.shoeSize > 60) {
+            form.value.errors.shoeSize = "Shoe size must be between 30 and 60 EU";
+            return;
         }
     } else if (currentStep.value == 3) {
         if (form.value.rideTime == 0) {

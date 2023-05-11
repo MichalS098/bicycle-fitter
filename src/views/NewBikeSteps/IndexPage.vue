@@ -3,7 +3,7 @@
         <ion-content :fullscreen="true" :scroll-y="false">
 
             <step-card title="Your bike type" sub-title="What is your bike type?" :this-step="1" :current-step="currentStep"
-                :number-of-steps="numberOfSteps" @prev="prevStep()" @next="nextStep()" color="primary">
+                :number-of-steps="numberOfSteps" @prev="goBackHome()" @next="nextStep()" color="primary">
                 <steps-radio-button @click="nextStep()" v-model="form.bikeType" label="city" value="city" color="primary" />
                 <steps-radio-button @click="nextStep()" v-model="form.bikeType" label="road" value="road" color="primary" />
                 <steps-radio-button @click="nextStep()" v-model="form.bikeType" label="gravel" value="gravel"
@@ -36,14 +36,20 @@
             </step-card>
 
             <step-card title="Your expectations" sub-title="What do you expect from bikefitting?" :this-step="4"
-                :current-step="currentStep" :number-of-steps="numberOfSteps" @prev="prevStep()" @next="createBike()"
+                :current-step="currentStep" :number-of-steps="numberOfSteps" @prev="prevStep()" @next="nextStep()"
                 color="primary">
-                <steps-radio-button v-model="form.expectations" label="backpain" value="backpain" color="primary" />
-                <steps-radio-button v-model="form.expectations" label="buttpain" value="buttpain" color="primary" />
-                <steps-radio-button v-model="form.expectations" label="kneepain" value="kneepain" color="primary" />
-                <steps-radio-button v-model="form.expectations" label="feetpain" value="feetpain" color="primary" />
-                <steps-radio-button v-model="form.expectations" label="clickpedals" value="clickpedals" color="primary" />
-                <steps-radio-button v-model="form.expectations" label="nothing" value="nothing" color="primary" />
+                <steps-radio-button @click="nextStep()" v-model="form.expectations" label="Back pain" value="backpain"
+                    color="primary" />
+                <steps-radio-button @click="nextStep()" v-model="form.expectations" label="Butt pain" value="buttpain"
+                    color="primary" />
+                <steps-radio-button @click="nextStep()" v-model="form.expectations" label="Knee pain" value="kneepain"
+                    color="primary" />
+                <steps-radio-button @click="nextStep()" v-model="form.expectations" label="Feet pain" value="feetpain"
+                    color="primary" />
+                <steps-radio-button @click="nextStep()" v-model="form.expectations" label="Click pedals" value="clickpedals"
+                    color="primary" />
+                <steps-radio-button @click="nextStep()" v-model="form.expectations" label="Nothing" value="nothing"
+                    color="primary" />
             </step-card>
         </ion-content>
     </ion-page>
@@ -51,161 +57,50 @@
   
 <script setup lang="ts">
 import { ref } from 'vue';
-import {
-    IonPage, IonContent
-} from '@ionic/vue';
-import {
-    useIonRouter,
-    createAnimation,
-    AnimationBuilder
-} from '@ionic/vue';
-
+import { IonPage, IonContent, useIonRouter } from '@ionic/vue';
 import ButtonInput from '@/components/ButtonInput.vue';
 import StepsRadioButton from '@/components/StepsRadioButton.vue';
 import StepCard from '@/components/StepCard.vue';
-
 import { Bike } from '@/entity/Bike';
-import { User } from '@/entity/User';
-import AppDataSource from '@/data-sources/SqliteDataSource';
-import { updateProperty } from '@/helpers/helpersDataBase';
-import { onMounted } from 'vue';
-import { getLastBikeOfUser } from '@/helpers/helpersDataBase';
+import { getUserFromDatabase } from '@/helpers/helpersDataBase';
+
+import { getBikefittingParams } from '@/functions/calculatedBikeFittingParams';
+
 
 const numberOfSteps = 4;
 const currentStep = ref(1);
-
-const userRepository = AppDataSource.getRepository(User);
-const bikeRepository = AppDataSource.getRepository(Bike);
+const router = useIonRouter();
 
 const form = ref({
     bikeType: '',
     bikeCompany: '',
     bikeModel: '',
-    noBikeModel: false,
-    suggestNewBike: false,
     bikeFittingGoal: '',
     expectations: '',
-});
-
-
-async function checkIfUserEndOfTheInterview() {
-    const lastBike = await getLastBikeOfUser();
-
-    if (lastBike != null) {
-        if ((lastBike.type != null) &&
-            (lastBike.brand != null) &&
-            (lastBike.model != null) &&
-            (lastBike.style != null)) //&&lastBike.expectations
-        {
-
-            console.log("jestem tu 1")
-            return true;
-        }
-        else {
-            console.log("jestem tu 2")
-            return false;
-        }
-
-    }
-    else {
-        console.log("jestem tu 3")
-        return true;
-    }
-
-}
-
-
-async function initializeBikeInUser() {
-    const userToUpdate = await userRepository.findOneBy({
-        id: 1,
-    })
-
-    if (!userToUpdate) {
-        console.log('User not found');
-        return;
-    }
-
-    const bike = new Bike();
-
-    bike.user = userToUpdate;
-
-    await bikeRepository.save(bike);
-
-    const allBike = await bikeRepository.find();
-
-    console.log("allBike: ", allBike)
-
-
-    // Sprawdź, czy użytkownik istnieje
-    if (userToUpdate) {
-        // Jeśli lista rowerów nie istnieje, zainicjuj ją jako pustą tablicę
-        if (!userToUpdate.bikes) {
-            userToUpdate.bikes = [];
-        }
-
-        // Dodaj nowy rower do listy rowerów użytkownika
-        userToUpdate.bikes.push(bike);
-    } else {
-        console.error('User not found');
-    }
-
-    await userRepository.save(userToUpdate);
-
-    const allUser = await userRepository.find();
-    console.log("All User from the db after Bike Steps: ", allUser);
-
-}
-
-onMounted(async () => {
-
-    const interviewCompleted = await checkIfUserEndOfTheInterview();
-    if (interviewCompleted) {
-        initializeBikeInUser();
-    }
+    noBikeModel: false,
+    suggestNewBike: false,
 });
 
 const nextStep = async () => {
-
     if (currentStep.value == 1) {
         if (form.value.bikeType == '') {
             return;
         }
-
     } else if (currentStep.value == 2) {
-
-        // if bike company and model are not selected, then user can choose to suggest new bike or to not select bike model
         if (form.value.bikeCompany == '' && form.value.bikeModel == '') {
             if (form.value.suggestNewBike == false && form.value.noBikeModel == false) {
                 return;
             }
-
         }
     } else if (currentStep.value == 3) {
         if (form.value.bikeFittingGoal == '') {
             return;
         }
-        else {
-            console.log("TEST 1")
-            const lastBike = await getLastBikeOfUser();
-
-            if (!lastBike) {
-                console.log('No bikes found for this user');
-                return;
-            }
-            console.log("expectations", form.value); //WE neeed to add this to structure in program, you must remember that if you ad this to structure in program, you must change function "checkIfUserEndOfTheInterview()"
-            lastBike.type = form.value.bikeType;
-            lastBike.brand = form.value.bikeCompany;
-            lastBike.model = form.value.bikeModel;
-            lastBike.style = form.value.bikeFittingGoal;
-            await bikeRepository.save(lastBike);
-        }
-
     } else if (currentStep.value == 4) {
         if (form.value.expectations == '') {
             return;
         }
-
-
+        createBike();
     }
     if (currentStep.value < numberOfSteps) {
         currentStep.value++;
@@ -218,13 +113,37 @@ const prevStep = () => {
     }
 }
 
-const router = useIonRouter();
+const goBackHome = () => {
+    router.navigate('/pages/home', 'none', 'replace');
+}
+
 const createBike = async () => {
-    console.log("createBike", form.value);
+    const user = await getUserFromDatabase();
+    if (user == null) {
+        return;
+    }
 
-    const allUser = await userRepository.find();
-    console.log("All User from the db after Bike Steps: ", allUser);
-
-    router.navigate('/bike-measurements', 'none', 'replace');
+    // Interview bike params
+    const bike = new Bike();
+    bike.brand = form.value.bikeCompany;
+    bike.model = form.value.bikeModel;
+    bike.type = form.value.bikeType;
+    bike.style = form.value.bikeFittingGoal;
+    bike.expectations = form.value.expectations;
+    bike.user = user;
+    
+    // Calculated bike params
+    const bikeFittingParams = await getBikefittingParams(bike, user);    
+    bike.seatHeight = bikeFittingParams.seatHeight;
+    bike.seatSetback = bikeFittingParams.seatSetback;
+    bike.seatLength = bikeFittingParams.seatLength;
+    bike.seatDrop = bikeFittingParams.seatDrop;
+    bike.spacerHeight = bikeFittingParams.spacerHeight;
+    bike.stemLength = bikeFittingParams.stemLength;
+    bike.stemAngle = bikeFittingParams.stemAngle;
+    bike.crankLength = bikeFittingParams.crankLength;
+    await bike.save();    
+    
+    router.navigate('/bikes/' + bike.id, 'none', 'replace');
 }
 </script>

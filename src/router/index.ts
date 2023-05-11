@@ -58,8 +58,8 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/Measure/IndexPage.vue')
     },
     {
-        path: '/bike-measurements',
-        component: () => import('@/views/BikeMeasurements/IndexPage.vue')
+        path: '/bikes/:id',
+        component: () => import('@/views/Bikes/ShowPage.vue')
     },
     {
         path: '/pages',
@@ -94,23 +94,23 @@ const router = createRouter({
     routes
 })
 
-// router.beforeEach(async (to, from, next) => {
-//     const firstStepsIsCompleted = await firstStepsCompleted();
-//     const measureIsCompleted = await measureCompleted();
+router.beforeEach(async (to, from, next) => {
+    const firstStepsIsCompleted = await firstStepsCompleted();
+    const measureIsCompleted = await measureCompleted();
 
-//     console.log("firstStepsIsCompleted", firstStepsIsCompleted)
-//     console.log("measureIsCompleted", measureIsCompleted)
-//     console.log("number of users in DB: ", await User.createQueryBuilder('user').getCount());
+    console.log("firstStepsIsCompleted", firstStepsIsCompleted)
+    console.log("measureIsCompleted", measureIsCompleted)
+    console.log("number of users in DB: ", await User.createQueryBuilder('user').getCount());
 
-//     if ((to.path === '/first-steps' && firstStepsIsCompleted) || (to.path === '/measure' && measureIsCompleted)) {
-//         next('/pages/home');
-//     } else if (!firstStepsIsCompleted && to.path !== '/first-steps') {
-//         next('/first-steps');
-//     } else if (firstStepsIsCompleted && !measureIsCompleted && to.path !== '/measure') {
-//         next('/measure');
-//     } else {
-//         next();
-//     }
-// });
+    if ((to.path === '/first-steps' && firstStepsIsCompleted) || (to.path === '/measure' && measureIsCompleted)) {
+        next('/pages/home');
+    } else if (!firstStepsIsCompleted && to.path !== '/first-steps') {
+        next('/first-steps');
+    } else if (firstStepsIsCompleted && !measureIsCompleted && to.path !== '/measure') {
+        next('/measure');
+    } else {
+        next();
+    }
+});
 
 export default router

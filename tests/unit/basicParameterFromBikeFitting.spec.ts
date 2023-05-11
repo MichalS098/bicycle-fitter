@@ -21,11 +21,11 @@ describe('calculatedBikeFittingParams', () => {
     bike.type = bikeType.Road
     bike.style = ridingStyle.Sport
     bike.crankLength = 18
-    bike.seatHeigth = 90
+    bike.seatHeight = 90
     bike.seatSetback = 20
     bike.seatLength = 40
     bike.seatDrop = -5
-    bike.spacerHeigth = 2 //W programie matlabowym było to tak zdefiniowane 
+    bike.spacerHeight = 2 //W programie matlabowym było to tak zdefiniowane 
     bike.stemLength = 10 //VL
     bike.stemAngle = 10 //VW
 
@@ -85,7 +85,7 @@ describe('calculatedBikeFittingParams', () => {
     // Sprawdzanie czy zwrócone wartości są prawidłowe
     expect(returnedBike.seatDrop).toEqual(-12.6);
     expect(returnedBike.seatLength).toEqual(75.2);
-    expect(returnedBike.seatHeigth).toEqual(90.5);
+    expect(returnedBike.seatHeight).toEqual(90.5);
     expect(returnedBike.seatSetback).toEqual(20.1);
     expect(returnedBike.stemLength).toEqual(10);
     expect(returnedBike.stemAngle).toEqual(10);
@@ -95,7 +95,7 @@ describe('calculatedBikeFittingParams', () => {
     expect(returnedBike.stack2ReachIndex3).toEqual(0.9850427350427351);
     expect(returnedPerson.torsoangle).toEqual(37.5);
     expect(returnedPerson.armTorsoangle).toEqual(85);
-    expect(returnedBike.spacerHeigth).toEqual(2);
+    expect(returnedBike.spacerHeight).toEqual(2);
     expect(returnedBike.stackMin).toEqual(36.8);
     expect(returnedBike.stackMax).toEqual(48.8);
     expect(returnedBike.reachMin).toEqual(55.0);

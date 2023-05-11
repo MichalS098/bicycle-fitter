@@ -29,6 +29,9 @@ const createBikeAnimation: AnimationBuilder = (baseEl: any, opts?: any) => {
             .duration(1000)
             .easing('ease-in-out')
             .fill('both')
+            .beforeAddWrite(() => {
+                document.querySelector('ion-tab-bar')?.classList.add('ion-hide');
+            })
             .beforeAddClass('bike-button-animation')
             .beforeStyles({
                 'z-index': '9999',
