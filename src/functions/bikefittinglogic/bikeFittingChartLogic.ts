@@ -81,7 +81,7 @@ export function stackToReachOutput(person: humanParams, bike: bikeParams, torsoA
     bike.stackMax = Math.round(bike.stackMax)
     bike.reachMax = Math.round(bike.reachMax)
 
-    bike.seatHeigth = seatHeight;
+    bike.seatHeight = seatHeight;
     bike.seatSetback = seatSetback;
     bike.seatLength = seatLength;
     bike.seatDrop = Drop;

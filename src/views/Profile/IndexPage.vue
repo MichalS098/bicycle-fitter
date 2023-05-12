@@ -1,14 +1,14 @@
 <template>
     <ion-page>
         <ion-content class="ion-padding" :fullscreen="true">
-            <div class="flex flex-col justify-between gap-6 xxs:gap-12 pt-12">
+            <div class="flex flex-col justify-between gap-6 xxs:gap-12">
                 <div class="px-3 xxs:px-6 pt-3 xxs:pt-6">
-                    <h1 class="text-5xl xxs:text-6xl">
+                    <h1 class="fitter-h1">
                         Profile
                     </h1>
                 </div>
                 <div class="w-full flex flex-col gap-6">
-                    <h2 class="text-2xl xxs:text-3xl px-3 xxs:px-6">
+                    <h2 class="fitter-h2 px-2 xxs:px-3">
                         Statistics
                     </h2>
                     <div
@@ -27,7 +27,7 @@
                             <ChartBarIcon class="h-16 w-16 text-white" />
                         </div>
                     </div>
-                    <h2 class="text-2xl xxs:text-3xl px-3 xxs:px-6">
+                    <h2 class="fitter-h2 px-2 xxs:px-3">
                         Settings
                     </h2>
                     <ion-list lines="none" class="px-3">

@@ -12,12 +12,14 @@ export class Bike extends BaseEntity {
     @Column()
     type!: string;
     @Column()
+    expectations!: string;
+    @Column()
     style!: string;
     // Calculated parameters
     @Column()
     crankLength!: number;
     @Column()
-    seatHeigth!: number;
+    seatHeight!: number;
     @Column()
     seatSetback!: number;
     @Column()
@@ -25,7 +27,7 @@ export class Bike extends BaseEntity {
     @Column()
     seatDrop!: number;
     @Column()
-    spacerHeigth!: number;
+    spacerHeight!: number;
     @Column()
     stemLength!: number;
     @Column()

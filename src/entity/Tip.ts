@@ -10,4 +10,10 @@ export class Tip extends BaseEntity {
     description!: string;
     @Column()
     content!: string;
+    @Column()
+    favourite!: boolean;
+    @Column()
+    featured_image_path!: string;
+    @Column()
+    color!: string;
 }

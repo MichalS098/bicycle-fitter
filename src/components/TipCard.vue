@@ -1,14 +1,14 @@
 <template>
-    <div :class="colorClass" class="rounded-[10px] flex flex-col gap-3 p-3">
-        <img src="@/../resources/images/tip-test.png" class="object-cover w-full rounded-[10px] shadow-md" />
+    <div :class="colorClass" class="rounded-[10px] flex flex-col gap-3 p-3 aspect-[0.75]">
+        <img :src="tip.featured_image_path" class="object-cover w-full rounded-[10px] shadow-md" />
         <div class="flex flex-col gap-1">
             <div class="flex items-center justify-between gap-1">
-                <h2 class="text-lg text-white font-bold">
+                <h2 class="text-2xl text-white font-bold">
                     {{ tip.title ?? 'No title' }}
                 </h2>
                 <HeartIcon class="w-5 h-5 text-white" />                
             </div>
-            <p class="text-[10px] text-white leading-[10px]">
+            <p class="text-lg text-white leading-[20px]">
                 {{ tip.description ?? 'No description' }}
             </p>
         </div>
@@ -31,7 +31,7 @@ const props = defineProps({
 });
 
 let colorClass = '';
-switch (props.color) {
+switch (props.tip.color) {
     case 'primary':
         colorClass = 'bg-primary'
         break;
