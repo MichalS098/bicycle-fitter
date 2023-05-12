@@ -39,8 +39,6 @@ onMounted(async () => {
             bikes: true
         }
     });
-
-    console.log(user.value);
 });
 </script>
   

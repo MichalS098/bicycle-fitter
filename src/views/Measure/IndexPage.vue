@@ -86,7 +86,7 @@ const measureDone = async () => {
 
 function goToTheApp() {
     showMeasureFinishedModal.value = false;
-    router.navigate('/pages/home', 'none');
+    router.replace('/pages/home');
 }
 
 onMounted(async () => {

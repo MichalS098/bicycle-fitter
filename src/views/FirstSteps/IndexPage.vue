@@ -188,7 +188,7 @@ const goToMeasure = async () => {
     await user.save();
     saveDbForWeb();
 
-    router.navigate('/measure');
+    router.replace('/measure');
 }
 
 const prevStep = () => {
