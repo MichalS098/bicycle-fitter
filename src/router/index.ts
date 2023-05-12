@@ -47,7 +47,7 @@ const routes: Array<RouteRecordRaw> = [
     },
     {
         path: '/first-steps',
-        component: () => import('@/views/FirstSteps/IndexPage.vue')
+        component: () => import('@/views/BikeView3D/IndexPage.vue')
     },
     {
         path: '/new-bike-steps',
