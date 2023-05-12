@@ -22,6 +22,17 @@ export class BodyParamsFromMediapipe {
     ) { }
 }
 
+export class BodyAnglesFromMediapipe {
+    constructor(
+        public footFloorAngle: number,
+        public thighShankAngle: number,
+        public torsoFloorAngle: number,
+        public torsoBicepAngle: number,
+        public bicepForearmAngle: number,
+        public crankAngle: number
+    ) { }
+}
+
 
 function getDistanceBetweenPoints(point1: NormalizedLandmark, point2: NormalizedLandmark): number {
     const x1 = point1.x;
@@ -44,12 +55,12 @@ function theHeightOfTheTriangle(firstSideOfTriangle: number, secondSideOfTriangl
     return H
 }
 
-
+//Returns angle at point1
 function getAngleBetweenPoints(point1: NormalizedLandmark, point2: NormalizedLandmark, point3: NormalizedLandmark) {
-    const a = getDistanceBetweenPoints(point1, point2);
-    const b = getDistanceBetweenPoints(point2, point3);
-    const c = getDistanceBetweenPoints(point3, point1);
-    const angle = Math.acos((Math.pow(b, 2) + Math.pow(c, 2) - Math.pow(a, 2)) / (2 * b * c));
+    const p12 = getDistanceBetweenPoints(point1, point2); //p12
+    const p23 = getDistanceBetweenPoints(point2, point3); //p23
+    const p31 = getDistanceBetweenPoints(point3, point1); //p31
+    const angle = Math.acos((Math.pow(p12, 2) + Math.pow(p31, 2) - Math.pow(p23, 2)) / (2 * p23 * p31));
 
     return angle;
 }
@@ -147,4 +158,48 @@ export function getBodyParamsMedian(bodyParams: BodyParamsFromMediapipe[]): Body
     const inseamLength = median(bodyParams.map((bodyParam) => bodyParam.inseamLength));
 
     return new BodyParamsFromMediapipe(shoulderHeight, footLength, armLength, shankLength, thighLength, inseamLength);
+}
+
+// getBodyParamsFromMediapipeResults
+export function getBodyAnglesFromMediapipeResults(results: Results): BodyAnglesFromMediapipe{
+
+    const left_foot_floor_angle = 0; //TODO
+    const left_torso_floor_angle = 0;
+    const crank_angle = 0;
+    const left_thigh_shank_angle = getAngleBetweenPoints(results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_KNEE],
+                                                            results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_HIP],
+                                                            results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_ANKLE])
+
+    const left_torso_bicep_angle = getAngleBetweenPoints(results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_SHOULDER],
+                                                            results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_ELBOW],
+                                                            results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_HIP])
+
+    const left_bicep_forearm_angle = getAngleBetweenPoints(results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_ELBOW],
+                                                            results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_SHOULDER],
+                                                            results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_WRIST])
+
+
+    const right_foot_floor_angle = 0; //TODO
+    const right_torso_floor_angle = 0;
+    const right_angle = 0;
+    const right_thigh_shank_angle = getAngleBetweenPoints(results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_KNEE],
+                                                            results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_HIP],
+                                                            results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_ANKLE])
+
+    const right_torso_bicep_angle = getAngleBetweenPoints(results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_SHOULDER],
+                                                            results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_ELBOW],
+                                                            results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_HIP])
+
+    const right_bicep_forearm_angle = getAngleBetweenPoints(results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_ELBOW],
+                                                            results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_SHOULDER],
+                                                            results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_WRIST])
+
+                                                            
+    return new BodyAnglesFromMediapipe(left_foot_floor_angle,
+                                        left_thigh_shank_angle,
+                                        left_torso_floor_angle,
+                                        left_torso_bicep_angle,
+                                        left_bicep_forearm_angle,
+                                        crank_angle)
+
 }
