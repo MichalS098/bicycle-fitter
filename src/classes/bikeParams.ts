@@ -37,7 +37,8 @@ function ridingStyleFromStr(str: string): ridingStyle {
     }
 }
 
-//This class is to rebuild !!!! 
+
+// TODO This class is to rebuild !!!! 
 class bikeParams {
     type: bikeType = bikeType.City;
     style: ridingStyle = ridingStyle.Ergonomic;
