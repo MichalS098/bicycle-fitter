@@ -41,7 +41,8 @@ const measureCompleted = async () => {
 
 
 const routes: Array<RouteRecordRaw> = [
-
+    {
+        path: '/',
         redirect: '/pages/home'
     },
     {
