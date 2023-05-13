@@ -163,9 +163,10 @@ export function getBodyParamsMedian(bodyParams: BodyParamsFromMediapipe[]): Body
 // getBodyParamsFromMediapipeResults
 export function getBodyAnglesFromMediapipeResults(results: Results): BodyAnglesFromMediapipe{
 
+    const crank_angle = 0;
+
     const left_foot_floor_angle = 0; //TODO
     const left_torso_floor_angle = 0;
-    const crank_angle = 0;
     const left_thigh_shank_angle = getAngleBetweenPoints(results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_KNEE],
                                                             results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_HIP],
                                                             results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_ANKLE])
@@ -181,7 +182,6 @@ export function getBodyAnglesFromMediapipeResults(results: Results): BodyAnglesF
 
     const right_foot_floor_angle = 0; //TODO
     const right_torso_floor_angle = 0;
-    const right_angle = 0;
     const right_thigh_shank_angle = getAngleBetweenPoints(results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_KNEE],
                                                             results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_HIP],
                                                             results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_ANKLE])

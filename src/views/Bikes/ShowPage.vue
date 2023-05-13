@@ -32,6 +32,7 @@
                 <li>stack2ReachIndex2: {{ bike?.stack2ReachIndex2 }}</li>
                 <li>stack2ReachIndex3: {{ bike?.stack2ReachIndex3 }}</li>
             </ul>
+            <button class="absolute bottom-0 right-0 p-2 xxs:p-4" @click="goToAngles">></button>
         </ion-content>
     </ion-page>
 </template>
@@ -64,6 +65,10 @@ const router = useIonRouter();
 
 const goToHome = () => {
     router.navigate('/pages/home', 'none', 'replace');
+};
+
+const goToAngles = () => {
+    router.navigate('/angles', 'none', 'replace');
 };
 
 

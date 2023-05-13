@@ -62,6 +62,10 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/Bikes/ShowPage.vue')
     },
     {
+        path: '/angles',
+        component: () => import('@/views/Angles/IndexPage.vue')
+    },
+    {
         path: '/pages',
         component: () => import('@/views/HomeLayout.vue'),
         children: [
