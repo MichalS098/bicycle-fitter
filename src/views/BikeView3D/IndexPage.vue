@@ -19,6 +19,8 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 
+const bikeUrl = new URL('/resources/3d_models/city_bike/scene.gltf', import.meta.url);
+
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.setClearColor("#222222");
@@ -28,7 +30,7 @@ renderer.shadowMap.enabled = true;
 document.body.appendChild( renderer.domElement );
 
 const scene = new THREE. Scene();
-const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 1000 );
+const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 2000 );
 
 
 const controls = new OrbitControls( camera, renderer.domElement );
@@ -76,6 +78,32 @@ const sLightHelper = new THREE.SpotLightHelper( spotLight );
 scene.add( sLightHelper );
 
 
+scene.fog = new THREE.Fog( 0x222222, 0.1, 1000 );
+
+
+
+
+const assetLoader = new GLTFLoader();
+
+assetLoader.load(
+    bikeUrl.href,
+    (gltf) => {
+        const bikeModel = gltf.scene;
+        scene.add(bikeModel);
+        bikeModel.position.set(0, 0, 0);
+        animate();
+    },
+    (xhr) => {
+        console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+    },
+    (error) => {
+        console.log('An error occured');
+    }
+);
+
+
+
+
 
 // const gui = new dat.GUI();
 
@@ -84,8 +112,8 @@ const options = {
     wireframe: false,
     speed: 0.03,
     angle: Math.PI / 4,
-    prenumbra: 0.1,
-    intensity: 1,
+    prenumbra: 0.5,
+    intensity: 0.7,
 };
 
 // var loader = new GLTFLoader();
@@ -108,6 +136,18 @@ const options = {
 
 
 
+const mousePosition = new THREE.Vector2();
+
+window.addEventListener('click', (event) => {
+    mousePosition.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mousePosition.y = -(event.clientY / window.innerHeight) * 2 + 1;
+});
+
+const rayCaster = new THREE.Raycaster();
+
+const sphereID = sphere.id;
+
+
 let step = 0;
 
 function animate(time) {
@@ -120,6 +160,22 @@ function animate(time) {
     spotLight.intensity = options.intensity;
 
     sLightHelper.update();
+
+
+    rayCaster.setFromCamera(mousePosition, camera);
+
+    const intersects = rayCaster.intersectObjects(scene.children);
+    // console.log(intersects);
+
+    for (let i = 0; i < intersects.length; i++) {
+        if (intersects[i].object.id === sphereID) {
+            if (intersects[i].object.material.color.getHex() === 0x000000)
+                intersects[i].object.material.color.set("#000000");
+            else
+                intersects[i].object.material.color.set("#ffffff");
+        } 
+        
+    }
 
     renderer.render (scene, camera);
     
