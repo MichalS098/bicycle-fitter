@@ -18,8 +18,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
-
-const bikeUrl = new URL('/resources/3d_models/city_bike/scene.gltf', import.meta.url);
+const bikeUrl = new URL('/resources/3d_models/city_bike/bicycle.glb', import.meta.url);
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
@@ -36,23 +35,23 @@ const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.inner
 const controls = new OrbitControls( camera, renderer.domElement );
 
 
-const axesHelper = new THREE.AxesHelper(5);
-scene.add(axesHelper);
+// const axesHelper = new THREE.AxesHelper(5);
+// scene.add(axesHelper);
 
-camera.position.set(-75, 32, 50);
+camera.position.set(325, 140, -220);
 controls.update();
 
 
-const planeGeometry = new THREE.PlaneGeometry( 60, 60 );                    // Podłoga
-const planeMaterial = new THREE.MeshStandardMaterial( {color: 0xffffff, side: THREE.DoubleSide} );
+const planeGeometry = new THREE.PlaneGeometry( 6000, 6000 );                    // Podłoga
+const planeMaterial = new THREE.MeshStandardMaterial( {color: 0x000000, side: THREE.DoubleSide} );
 const plane = new THREE.Mesh( planeGeometry, planeMaterial );
 scene.add( plane );
 plane.rotation.x = -Math.PI / 2;
 plane.receiveShadow = true;
 
 
-const gridHelper = new THREE.GridHelper( 60 );
-scene.add( gridHelper );
+// const gridHelper = new THREE.GridHelper( 60 );
+// scene.add( gridHelper );
 
 
 const sphereGeometry = new THREE.SphereGeometry( 4 );
@@ -64,18 +63,30 @@ sphere.position.set(10, 10, 0);
 sphere.castShadow = true;
 
 
-const ambientLight = new THREE.AmbientLight( 0x333333, 0.5 );
+const ambientLight = new THREE.AmbientLight( 0xffffff, 0.001 );
 
 scene.add( ambientLight );
 
-const spotLight = new THREE.SpotLight( 0x478C6C, 0.8 );
-spotLight.position.set( 20, 35, 20 );
+const spotLight = new THREE.SpotLight( 0x478C6C, 1 );
+spotLight.position.set( 224, 300, 200 );
 scene.add( spotLight );
 spotLight.castShadow = true;
 spotLight.angle = Math.PI / 4;
 
 const sLightHelper = new THREE.SpotLightHelper( spotLight );
-scene.add( sLightHelper );
+// scene.add( sLightHelper );
+
+
+const spotLight2 = new THREE.SpotLight( 0xE48C56, 0.3 );
+spotLight2.position.set( -300, 270, -72 );
+scene.add( spotLight2 );
+spotLight2.castShadow = true;
+spotLight2.angle = Math.PI / 4;
+
+const sLightHelper2 = new THREE.SpotLightHelper( spotLight2 );
+// scene.add( sLightHelper2 );
+
+
 
 
 scene.fog = new THREE.Fog( 0x222222, 0.1, 1000 );
@@ -88,6 +99,7 @@ const assetLoader = new GLTFLoader();
 assetLoader.load(
     bikeUrl.href,
     (gltf) => {
+        console.log(gltf);
         const bikeModel = gltf.scene;
         scene.add(bikeModel);
         bikeModel.position.set(0, 0, 0);
@@ -97,15 +109,10 @@ assetLoader.load(
         console.log((xhr.loaded / xhr.total * 100) + '% loaded');
     },
     (error) => {
-        console.log('An error occured');
+        console.log('An error occured: ', error);
     }
 );
 
-
-
-
-
-// const gui = new dat.GUI();
 
 const options = {
     sphereColor: "#ffea00",
@@ -115,25 +122,6 @@ const options = {
     prenumbra: 0.5,
     intensity: 0.7,
 };
-
-// var loader = new GLTFLoader();
-
-// loader.load(
-//     'scene.gltf',
-// '@/../resources/3d_models/city_bike/scene.gltf',
-// "@/../resources/images/person-on-bike.png"
-//     function ( gltf ) {
-//         scene.add( gltf.scene );
-//         animate();
-//     },
-//     function ( xhr ) {
-//         console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
-//     },
-//     function ( error ) {
-//         console.log( 'An error happened' );
-//     }
-// );
-
 
 
 const mousePosition = new THREE.Vector2();
@@ -181,7 +169,7 @@ function animate(time) {
     
     
     // if (camera.position.hasChanged)
-    // console.log(camera.position);
+    console.log(camera.position);
 }
  
 
