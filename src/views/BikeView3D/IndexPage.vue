@@ -18,6 +18,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import * as TWEEN from '@tweenjs/tween.js';
 
 const bikeUrl = new URL('/resources/3d_models/city_bike/bicycle.glb', import.meta.url);
 
@@ -35,7 +36,8 @@ const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.inner
 const controls = new OrbitControls( camera, renderer.domElement );
 
 
-camera.position.set(325, 140, -220);
+// camera.position.set(325, 140, -220);
+camera.position.set(14, 80, -290);
 controls.update();
 
 
@@ -48,11 +50,11 @@ plane.rotation.x = -Math.PI / 2;
 plane.receiveShadow = true;
 
 
-const sphereGeometry = new THREE.SphereGeometry( 15, 10, 10 );                  // Sphere in the middle (seat)
+const sphereGeometry = new THREE.SphereGeometry( 5, 10, 10 );                  // Sphere in the middle (seat)
 const sphereMaterial = new THREE.MeshStandardMaterial( {color: 0xffffff, wireframe: true} );
 const sphere = new THREE.Mesh( sphereGeometry, sphereMaterial );
 scene.add( sphere );
-sphere.position.set(-28, 80, 0);
+sphere.position.set(-28, 78, -0.7);
 
 
 
@@ -132,6 +134,48 @@ assetLoader.load(
 );
 
 
+// Bike model points
+
+
+
+
+
+const bikePoint = new THREE.Vector3(36, 76, -0.7);
+camera.lookAt(bikePoint);
+
+
+const sphereGeometry2 = new THREE.SphereGeometry( 3, 10, 10 );                  // Sphere in the middle (seat)
+const sphereMaterial2 = new THREE.MeshStandardMaterial( {color: 0xffffff, wireframe: true} );
+const sphere2 = new THREE.Mesh( sphereGeometry2, sphereMaterial2 );
+scene.add( sphere2 );
+sphere2.position.set(bikePoint.x, bikePoint.y, bikePoint.z);
+
+
+
+
+
+
+
+
+
+
+
+
+
+const frontBrake = new THREE.Vector3(325, 140, -220);
+const rearBrake = new THREE.Vector3(14, 80, -290);
+
+const tween = new TWEEN.Tween(frontBrake).to(rearBrake, 3000); // 2000 ms = 2 seconds
+
+tween.onUpdate(function() {
+    camera.position.copy(frontBrake);
+    camera.lookAt(bikePoint);
+});
+
+tween.start();
+
+
+
 const mousePosition = new THREE.Vector2();
 
 window.addEventListener('click', (event) => {
@@ -150,12 +194,16 @@ function animate(time) {
 
     const intersects = rayCaster.intersectObjects(scene.children);
 
-    for (let i = 0; i < intersects.length; i++) {
-        if (intersects[i].object.id === sphereID) {
-            intersects[i].object.material.color.set("#000000");
-        } 
-    }
-    
+    // for (let i = 0; i < intersects.length; i++) {
+    //     if (intersects[i].object.id === sphereID) {
+    //         intersects[i].object.material.color.set("#000000");
+    //     } 
+    // }
+    camera.lookAt(bikePoint);
+
+    requestAnimationFrame(animate);
+    TWEEN.update(time);
+
     renderer.render (scene, camera);
     // console.log(camera.position);
 }
