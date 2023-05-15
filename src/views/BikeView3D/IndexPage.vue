@@ -36,8 +36,7 @@ const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.inner
 const controls = new OrbitControls( camera, renderer.domElement );
 
 
-// camera.position.set(325, 140, -220);
-camera.position.set(14, 80, -290);
+camera.position.set(325, 140, -220);
 controls.update();
 
 
@@ -50,14 +49,6 @@ plane.rotation.x = -Math.PI / 2;
 plane.receiveShadow = true;
 
 
-const sphereGeometry = new THREE.SphereGeometry( 5, 10, 10 );                  // Sphere in the middle (seat)
-const sphereMaterial = new THREE.MeshStandardMaterial( {color: 0xffffff, wireframe: true} );
-const sphere = new THREE.Mesh( sphereGeometry, sphereMaterial );
-scene.add( sphere );
-sphere.position.set(-28, 78, -0.7);
-
-
-
 const ambientLight = new THREE.AmbientLight( 0xffffff, 0.001 );
 
 scene.add( ambientLight );
@@ -68,22 +59,16 @@ scene.add( spotLight );
 spotLight.castShadow = true;
 spotLight.angle = Math.PI / 4;
 spotLight.penumbra = 0.5;
-spotLight.intensity = 0.7;
-
-const sLightHelper = new THREE.SpotLightHelper( spotLight );
-scene.add( sLightHelper );
+spotLight.intensity = 0.8;
 
 
-const spotLight2 = new THREE.SpotLight( 0xE48C56, 0.3 );
+const spotLight2 = new THREE.SpotLight( 0xE48C56, 0.7 );
 spotLight2.position.set( -300, 270, -72 );
 scene.add( spotLight2 );
 spotLight2.castShadow = true;
 spotLight2.angle = Math.PI / 4;
 spotLight.penumbra = 0.5;
-spotLight.intensity = 0.7;
-
-const sLightHelper2 = new THREE.SpotLightHelper( spotLight2 );
-scene.add( sLightHelper2 );
+spotLight.intensity = 1;
 
 
 const ambientLight3 = new THREE.AmbientLight( 0xffffff, 0.001 );
@@ -97,9 +82,6 @@ spotLight3.castShadow = true;
 spotLight3.angle = Math.PI / 4;
 spotLight3.penumbra = 0.5;
 spotLight3.intensity = 0.7;
-
-const sLightHelper3 = new THREE.SpotLightHelper( spotLight3 );
-scene.add( sLightHelper3 );
 
 // TODO: Dodać kolejne światła, jasne z góry, ciemniejsze kontrowe względem kamery i dostosować aktualne światła
 
@@ -136,73 +118,68 @@ assetLoader.load(
 
 // Bike model points
 
+const saddle = new THREE.Vector3(-28, 78, -0.7);
+const handleBar = new THREE.Vector3(36, 76, -0.7);
+const handleBarGrip = new THREE.Vector3(36, 76, -0.7);
+const frontWheelHub = new THREE.Vector3(63, 16, -0.7);
+const backWheelHub = new THREE.Vector3(-49, 16, -0.7);
+const crankMiddle = new THREE.Vector3(-2, 12, -0.7);
+const frontPedal = new THREE.Vector3(11, 0.7, 8);
+const backPedal = new THREE.Vector3(-16, 22, -9);
+
+
+camera.lookAt(crankMiddle);
+
+
+const sphereGeometry = new THREE.SphereGeometry( 5, 10, 10 );
+const sphereMaterial = new THREE.MeshStandardMaterial( {color: 0xffffff, wireframe: true} );
+const sphere = new THREE.Mesh( sphereGeometry, sphereMaterial );
+scene.add( sphere );
+sphere.position.set(crankMiddle.x, crankMiddle.y, crankMiddle.z);
 
 
 
+// animations:
 
-const bikePoint = new THREE.Vector3(36, 76, -0.7);
-camera.lookAt(bikePoint);
+// const frontBrake = new THREE.Vector3(325, 140, -220);
+// const rearBrake = new THREE.Vector3(14, 80, -290);
 
+// const tween = new TWEEN.Tween(frontBrake).to(rearBrake, 3000);
 
-const sphereGeometry2 = new THREE.SphereGeometry( 3, 10, 10 );                  // Sphere in the middle (seat)
-const sphereMaterial2 = new THREE.MeshStandardMaterial( {color: 0xffffff, wireframe: true} );
-const sphere2 = new THREE.Mesh( sphereGeometry2, sphereMaterial2 );
-scene.add( sphere2 );
-sphere2.position.set(bikePoint.x, bikePoint.y, bikePoint.z);
+// tween.onUpdate(function() {
+//     camera.position.copy(frontBrake);
+//     camera.lookAt(bikePoint);
+// });
 
-
-
-
-
-
-
-
-
-
-
-
-
-const frontBrake = new THREE.Vector3(325, 140, -220);
-const rearBrake = new THREE.Vector3(14, 80, -290);
-
-const tween = new TWEEN.Tween(frontBrake).to(rearBrake, 3000); // 2000 ms = 2 seconds
-
-tween.onUpdate(function() {
-    camera.position.copy(frontBrake);
-    camera.lookAt(bikePoint);
-});
-
-tween.start();
-
-
+// tween.start();
 
 const mousePosition = new THREE.Vector2();
 
 window.addEventListener('click', (event) => {
     mousePosition.x = (event.clientX / window.innerWidth) * 2 - 1;
     mousePosition.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    
+
 });
 
 const rayCaster = new THREE.Raycaster();
-
-const sphereID = sphere.id;
-
 
 function animate(time) {
 
     rayCaster.setFromCamera(mousePosition, camera);
 
-    const intersects = rayCaster.intersectObjects(scene.children);
-
+    // const intersects = rayCaster.intersectObjects(scene.children);
+    // inputs
     // for (let i = 0; i < intersects.length; i++) {
     //     if (intersects[i].object.id === sphereID) {
     //         intersects[i].object.material.color.set("#000000");
     //     } 
     // }
-    camera.lookAt(bikePoint);
+    camera.lookAt(crankMiddle);
 
-    requestAnimationFrame(animate);
-    TWEEN.update(time);
+    // requestAnimationFrame(animate);
+    // TWEEN.update(time);
 
     renderer.render (scene, camera);
     // console.log(camera.position);
