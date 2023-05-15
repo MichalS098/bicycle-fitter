@@ -9,6 +9,7 @@
         <ion-content>
             <div id="threejs-container" class="w-full h-full"></div>
         </ion-content>
+        <button class="absolute top-0 right-0 p-2 xxs:p-4" @click="goToHome">X</button>
     </ion-page>
 </template>
   
@@ -25,6 +26,7 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.setClearColor("#222222");
 renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 document.body.appendChild( renderer.domElement );
 
@@ -37,7 +39,7 @@ camera.position.set(325, 140, -220);
 controls.update();
 
 
-const planeGeometry = new THREE.PlaneGeometry( 6000, 6000 );
+const planeGeometry = new THREE.PlaneGeometry( 6000, 6000 );                    // Floor
 const planeMaterial = new THREE.MeshStandardMaterial( {color: 0x000000} );
 const plane = new THREE.Mesh( planeGeometry, planeMaterial );
 scene.add( plane );
@@ -46,13 +48,12 @@ plane.rotation.x = -Math.PI / 2;
 plane.receiveShadow = true;
 
 
-const sphereGeometry = new THREE.SphereGeometry( 15, 10, 10 );
+const sphereGeometry = new THREE.SphereGeometry( 15, 10, 10 );                  // Sphere in the middle (seat)
 const sphereMaterial = new THREE.MeshStandardMaterial( {color: 0xffffff, wireframe: true} );
 const sphere = new THREE.Mesh( sphereGeometry, sphereMaterial );
 scene.add( sphere );
-
 sphere.position.set(-28, 80, 0);
-// sphere.castShadow = true;
+
 
 
 const ambientLight = new THREE.AmbientLight( 0xffffff, 0.001 );
@@ -82,6 +83,22 @@ spotLight.intensity = 0.7;
 const sLightHelper2 = new THREE.SpotLightHelper( spotLight2 );
 scene.add( sLightHelper2 );
 
+
+const ambientLight3 = new THREE.AmbientLight( 0xffffff, 0.001 );
+
+scene.add( ambientLight3 );
+
+const spotLight3 = new THREE.SpotLight( 0xffffff, 1 );
+spotLight3.position.set( 100, 300, 50 );
+scene.add( spotLight3 );
+spotLight3.castShadow = true;
+spotLight3.angle = Math.PI / 4;
+spotLight3.penumbra = 0.5;
+spotLight3.intensity = 0.7;
+
+const sLightHelper3 = new THREE.SpotLightHelper( spotLight3 );
+scene.add( sLightHelper3 );
+
 // TODO: Dodać kolejne światła, jasne z góry, ciemniejsze kontrowe względem kamery i dostosować aktualne światła
 
 scene.fog = new THREE.Fog( 0x222222, 0.1, 1000 );
@@ -92,10 +109,18 @@ const assetLoader = new GLTFLoader();
 assetLoader.load(
     bikeUrl.href,
     (gltf) => {
+
         const bikeModel = gltf.scene;
+        gltf.scene.traverse(function(node) {        // for shadow casting
+        if (node.isMesh) { 
+            node.castShadow = true;
+            if (node.material.type !== 'MeshBasicMaterial') 
+                node.material.transparent = false;
+        }
+        });
+
         scene.add(bikeModel);
         bikeModel.position.set(0, -20, 0);
-        bikeModel.castShadow = true;            // TODO: Ustawić cień roweru
         animate();
     },
     (xhr) => {
@@ -134,7 +159,6 @@ function animate(time) {
     renderer.render (scene, camera);
     // console.log(camera.position);
 }
- 
 
 renderer.setAnimationLoop(animate);
 
