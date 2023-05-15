@@ -9,7 +9,12 @@ export class CreateBikesTable1682638602865 implements MigrationInterface {
                 "brand" varchar,
                 "model" varchar,                
                 "type" varchar,
-                "expectations" varchar,
+                "expectationsBackOrNeckPain" boolean,
+                "expectationsButPain" boolean,
+                "expectationsKneePain" boolean,
+                "expectationsFeetPain" boolean,
+                "expectationsClickPedals" number,
+                "expectationsNothing" boolean,
                 "style" varchar,
                 "crankLength" integer,
                 "seatHeight" integer,
@@ -27,7 +32,12 @@ export class CreateBikesTable1682638602865 implements MigrationInterface {
                 "reachMax" integer,
                 "stack2ReachIndex1" integer,
                 "stack2ReachIndex2" integer,
-                "stack2ReachIndex3" integer,            
+                "stack2ReachIndex3" integer,          
+                "messageFromFlexibilitySurvey" varchar,
+                "messageFromNeckOrBackPain" varchar,
+                "messageFromButPain" varchar,
+                "messageFromFeetPain" varchar,
+                "messageFromKneePain" varchar,  
                 "userId" integer, CONSTRAINT "FK_Bike_User" FOREIGN KEY ("userId") REFERENCES "user" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION
             )
         `)

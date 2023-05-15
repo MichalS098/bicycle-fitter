@@ -2,43 +2,34 @@ import { calculatedBikeFittingParams } from '@/functions/calculatedBikeFittingPa
 import { seatHeightCalc, sind, cosd } from '@/functions/bikefittinglogic/bikeFittingParamsLogic';
 import { bikeParams, bikeType, ridingStyle } from '@/classes/bikeParams';
 import { humanParams } from '@/classes/humanParams';
+import { bikeExpectations } from '@/classes/bikeExpectations';
 
 
 describe('calculatedBikeFittingParams', () => {
   it('should return correct bike and person parameters', () => {
 
     // Przykładowe wartości wejściowe
+    const person = new humanParams(47, 42, 42, 81, 145, 70, 85, 190,0); //static write 
+    //const person = new humanParams(0.3818923337112611, 0.33762064071644726, 44, 0.7888170281086873, 1.3059663404411772, 0.48638949800378456, 85, 180, 45); //dynamic write from mediapipe 
     const clickPedals = 1;
     const neckOrBackPain = 2;
     const butPain = 2;
     const feetPain = 2;
     const kneePain = 2;
     const choiceFlexibilitySurvey = 1;
-    const person = new humanParams(47, 42, 42, 81, 145, 70, 85, 190,0);
-    const bike = new bikeParams();
 
-    // Ustawienie wartości dla bike
-    bike.type = bikeType.Road
-    bike.style = ridingStyle.Sport
-    bike.crankLength = 18
-    bike.seatHeight = 90
-    bike.seatSetback = 20
-    bike.seatLength = 40
-    bike.seatDrop = -5
-    bike.spacerHeight = 2 //W programie matlabowym było to tak zdefiniowane 
-    bike.stemLength = 10 //VL
-    bike.stemAngle = 10 //VW
+    const bikeExpectationsTemp = new bikeExpectations(false,
+      false,
+      false,
+      false,
+      1, false);
 
-     // Wywołanie funkcji z przykładowymi wartościami wejściowymi
-     const [returnedBike, returnedPerson] = calculatedBikeFittingParams(
-      clickPedals,
-      neckOrBackPain,
-      butPain,
-      feetPain,
-      kneePain,
-      choiceFlexibilitySurvey,
+    const newBikeParams = new bikeParams(bikeType.Road,ridingStyle.Sport, 18, 10, 10, bikeExpectationsTemp, 1);
+
+    // Wywołanie funkcji z przykładowymi wartościami wejściowymi
+    const [returnedBike, returnedPerson] = calculatedBikeFittingParams(
       person,
-      bike
+      newBikeParams
     );
 
     const footAngle = 13;
@@ -47,8 +38,8 @@ describe('calculatedBikeFittingParams', () => {
     const supportY = 0;
     const S = 150
 
-    const pelvisX = supportX - (cosd(74) * (seatHeight - bike.crankLength))
-    const pelvisY = supportY + (sind(74) * (seatHeight - bike.crankLength))
+    const pelvisX = supportX - (cosd(74) * (seatHeight - newBikeParams.crankLength))
+    const pelvisY = supportY + (sind(74) * (seatHeight - newBikeParams.crankLength))
 
     const H = 37.5
     const armX = pelvisX + cosd(H) * person.torsoHeight
@@ -64,17 +55,31 @@ describe('calculatedBikeFittingParams', () => {
     const spY = kgY - person.shankLength
     const footTipX = spX + sind(90 - footAngle) * person.footLength
 
-    const stemX = handleX - bike.stemLength * cosd(bike.stemAngle)
-    const stemY = handleY - bike.stemLength * sind(bike.stemAngle)
-    
+    const stemX = handleX - newBikeParams.stemLength * cosd(newBikeParams.stemAngle)
+    const stemY = handleY - newBikeParams.stemLength * sind(newBikeParams.stemAngle)
 
-    
+
+    // console.log("seatHeight: ", returnedBike.seatHeight);
+    // console.log("seatSetback: ", returnedBike.seatSetback);
+    // console.log("seatLength: ", returnedBike.seatLength);
+    // console.log("seatDrop: ", returnedBike.seatDrop);
+    // console.log("spacerHeight: ", returnedBike.spacerHeight);
+    // console.log("stemLength: ", returnedBike.stemLength);
+    // console.log("stemAngle: ", returnedBike.stemAngle);
+    // console.log("stackMin: ", returnedBike.stackMin);
+    // console.log("reachMin: ", returnedBike.reachMin);
+    // console.log("stackMax: ", returnedBike.stackMax);
+    // console.log("reachMax: ", returnedBike.reachMax);
+    // console.log("stack2ReachIndex1: ", returnedBike.stack2ReachIndex1);
+    // console.log("stack2ReachIndex2: ", returnedBike.stack2ReachIndex2);
+    // console.log("stack2ReachIndex3: ", returnedBike.stack2ReachIndex3);
+
     //expect(Math.round(drop)).toEqual(-2.51)
     expect(stemX).toEqual(76.84677206817196);
     expect(stemY).toEqual(50.064119427841284);
     expect(handleX).toEqual(86.69484959829404);
     expect(handleY).toEqual(51.800601204510585);
-    expect(bike.crankLength).toEqual(18);
+    expect(newBikeParams.crankLength).toEqual(18);
     expect(seatHeight).toEqual(85.03382177554003);
     expect(cosd(74)).toEqual(0.27563735581699916);
     expect(pelvisX).toEqual(11.522974615482166);
@@ -95,15 +100,14 @@ describe('calculatedBikeFittingParams', () => {
     expect(returnedBike.stack2ReachIndex3).toEqual(0.9850427350427351);
     expect(returnedPerson.torsoangle).toEqual(37.5);
     expect(returnedPerson.armTorsoangle).toEqual(85);
-    expect(returnedBike.spacerHeight).toEqual(2);
     expect(returnedBike.stackMin).toEqual(36.8);
     expect(returnedBike.stackMax).toEqual(48.8);
     expect(returnedBike.reachMin).toEqual(55.0);
     expect(returnedBike.reachMax).toEqual(64.8);
-    
-    
-    
-    
-  
+
+
+
+
+
   });
 });

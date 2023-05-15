@@ -181,10 +181,12 @@ const router = useIonRouter();
 const goToMeasure = async () => {
     const user = new User();
     user.id = 1;
+    // TODO We must add to logic program consideration unit System
     user.unitSystem = form.value.unitSystem;
     user.overallHeight = form.value.height;
     user.rideTime = form.value.rideTime;
     user.riderStyle = form.value.riderStyle;
+    user.shoeSize = form.value.shoeSize;
     await user.save();
     saveDbForWeb();
 

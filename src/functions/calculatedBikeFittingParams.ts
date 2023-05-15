@@ -3,76 +3,23 @@
 /**
  * Here we will have all the functions imported from MATLAB app
  */
-import { calcFrameHeight, flexibilitySurvey, bicycleFunction, seatSize } from '@/functions/bikefittinglogic/bikeFittingParamsLogic';
+import { calcFrameHeight, flexibilitySurvey, bicycleFunction, seatSize, additionalSurvey } from '@/functions/bikefittinglogic/bikeFittingParamsLogic';
 import { bikeParams, bikeType, bikeTypeFromStr, ridingStyle, ridingStyleFromStr } from '@/classes/bikeParams';
 import { humanParams } from '@/classes/humanParams';
 import { User } from '@/entity/User';
 import { Bike } from '@/entity/Bike';
+import { bikeExpectations } from '@/classes/bikeExpectations';
 
 
-export function calculatedBikeFittingParams(clickPedals: number, neckOrBackPain: number, butPain: number, feetPain: number, kneePain: number, choiceFlexibilitySurvey: number, person: humanParams, bike: bikeParams): [bikeParams, humanParams] {
+export function calculatedBikeFittingParams(person: humanParams, bike: bikeParams): [bikeParams, humanParams] {
 
-    //KLIK od "Clickk Peals?"
-    if (clickPedals == 1) {
-        clickPedals = 2.3
-    }
-    else {
-        clickPedals = 1
-    }
-
-    //Neck or Back Pain?
-    let SWa = 0
-
-    let messageFromNeckOrBackPain = ''
-
-    if (neckOrBackPain == 1) {
-        messageFromNeckOrBackPain = 'pozycja siodełka zbyt agresywna'
-        SWa = 5
-    }
-    else {
-        messageFromNeckOrBackPain = ''
-    }
-
-    //But Pain?
-    let messageFromButPain = ''
-
-    if (butPain == 1) {
-        messageFromButPain = 'siodełko nieoptymalne'
-    }
-    else {
-        messageFromButPain = ''
-    }
-
-    //Feet Pain?
-    let messageFromFeetPain = ''
-
-    if (feetPain == 1) {
-        messageFromFeetPain = 'potrzebujesz wkładek do butów rowerowych'
-    }
-    else {
-        messageFromFeetPain = ''
-    }
-
-    //Knee Pain?
-    let messageFromKneePain = ''
-    let Sa
-    let NSa
-
-    if (kneePain == 1) {
-        messageFromKneePain = 'skonsultuj się z rowerowym dopasowaniem'
-        Sa = -5
-        NSa = 1
-    }
-    else {
-        messageFromKneePain = ''
-        Sa = 0
-        NSa = 0
-    }
-
+    const [SWa, Sa, NSa] = additionalSurvey(bike);
 
     [person, bike] = calcFrameHeight(person, bike);
 
-    const [SWnew, messageFromFlexibilitySurvey] = flexibilitySurvey(SWa, neckOrBackPain, choiceFlexibilitySurvey)
+    const [SWnew, messageFromFlexibilitySurvey] = flexibilitySurvey(SWa, bike.bikeExpectationsParms.backOrNeckPain, bike.choiceFlexibilitySurvey)
+
+    bike.messageFromFlexibilitySurvey = messageFromFlexibilitySurvey;
 
     let S2R
     let M
@@ -90,7 +37,7 @@ export function calculatedBikeFittingParams(clickPedals: number, neckOrBackPain:
 
     //RE2 = Math.round(RE2) / 10
 
-    bike.seatHeight = clickPedals + bike.seatHeight
+    bike.seatHeight = bike.bikeExpectationsParms.clickPedal + bike.seatHeight
 
     //console.log("person", person)
     //console.log("bike", bike)
@@ -99,35 +46,34 @@ export function calculatedBikeFittingParams(clickPedals: number, neckOrBackPain:
 
 
 export async function getBikefittingParams(bike: Bike, user: User): Promise<bikeParams> {
-    const person = new humanParams(user.shankLength, user.thighLength, user.shoeSize, user.inseamLength, user.shoulderHeight, user.armLength, 85, user.overallHeight, 37.5);
-    const clickPedals = 1;
-    const neckOrBackPain = 2;
-    const butPain = 2;
-    const feetPain = 2;
-    const kneePain = 2;
-    const choiceFlexibilitySurvey = 1;
+    const shankLength = user.shankLength;
+    const thighLength = user.thighLength;
+    const shoeSize = user.shoeSize //this input must add to interview
+    const inseamLength = user.inseamLength;
+    const shoulderHeight = user.shoulderHeight;
+    const armLength = user.armLength;
+    const overallHeight = user.overallHeight;
+    const person = new humanParams(shankLength, thighLength, shoeSize, inseamLength, shoulderHeight, armLength, 0, overallHeight, 37.5);
+    //const person = new humanParams(user.shankLength, user.thighLength, user.shoeSize, user.inseamLength, user.shoulderHeight, user.armLength, 85, user.overallHeight, 37.5);
 
-    const newBikeParams = new bikeParams();
-    newBikeParams.type = bikeTypeFromStr(bike.type);
-    newBikeParams.style = ridingStyleFromStr(bike.style);
-    newBikeParams.crankLength = 18 //it we must know before bikefitting, we must add this to interview bike 
-    newBikeParams.seatHeight = 90
-    newBikeParams.seatSetback = 20
-    newBikeParams.seatLength = 40
-    newBikeParams.seatDrop = -5
-    newBikeParams.spacerHeight = 2 //W programie matlabowym było to tak zdefiniowane 
-    newBikeParams.stemLength = 10 //VL
-    newBikeParams.stemAngle = 10 //VW
+    const bikeExpectationsTemp = new bikeExpectations(bike.expectationsBackOrNeckPain,
+        bike.expectationsButPain,
+        bike.expectationsKneePain,
+        bike.expectationsFeetPain,
+        bike.expectationsClickPedals, bike.expectationsNothing);
+
+    const newBikeParams = new bikeParams(bikeTypeFromStr(bike.type), ridingStyleFromStr(bike.style), 18, 10, 10, bikeExpectationsTemp, 1);
+
+    console.log("humanParams to bike fitting calculated: ", person)
+    console.log("bikeParams to bike fitting calculated: ", newBikeParams)
+
     const [returnedBike, returnedPerson] = calculatedBikeFittingParams(
-        clickPedals,
-        neckOrBackPain,
-        butPain,
-        feetPain,
-        kneePain,
-        choiceFlexibilitySurvey,
         person,
         newBikeParams
     );
+
+    console.log("returnedBike after bike fitting calculated: ", returnedBike)
+    console.log("returnedPerson after bike fitting calculated: ", returnedPerson)
 
     return returnedBike;
 }

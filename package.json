@@ -9,7 +9,7 @@
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
     "test": "jest",
-    "typeorm": "typeorm-ts-node-esm"    
+    "typeorm": "typeorm-ts-node-esm"
   },
   "dependencies": {
     "@capacitor-community/camera-preview": "4.0.0",
@@ -24,6 +24,8 @@
     "@capacitor/preferences": "^4.0.2",
     "@capacitor/status-bar": "4.1.1",
     "@heroicons/vue": "^2.0.17",
+    "@ionic-native/android-permissions": "^5.36.0",
+    "@ionic-native/file": "^5.36.0",
     "@ionic/pwa-elements": "^3.1.1",
     "@ionic/storage": "^3.0.6",
     "@ionic/vue": "^7.0.4",
@@ -34,6 +36,8 @@
     "@mediapipe/drawing_utils": "^0.3.1675466124",
     "@mediapipe/pose": "^0.5.1675469404",
     "@tailwindcss/forms": "^0.5.3",
+    "cordova-plugin-android-permissions": "^1.1.5",
+    "cordova-plugin-file": "^7.0.0",
     "core-js": "^3.6.5",
     "ionicons": "^6.0.3",
     "jeep-sqlite": "^1.4.2",
