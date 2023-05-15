@@ -34,8 +34,13 @@ const scene = new THREE. Scene();
 const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 2000 );
 const controls = new OrbitControls( camera, renderer.domElement );
 
-camera.position.set(325, 140, -220);
+const defaultCameraPosition = new THREE.Vector3(290, 70, -170);
+const defaultCameraLookAt = new THREE.Vector3(40, 30, -0.7);
+
+camera.position.set(defaultCameraPosition.x, defaultCameraPosition.y, defaultCameraPosition.z);
+
 controls.update();
+camera.lookAt(defaultCameraLookAt.x, defaultCameraLookAt.y, defaultCameraLookAt.z);
 
 const planeGeometry = new THREE.PlaneGeometry( 6000, 6000 );
 const planeMaterial = new THREE.MeshStandardMaterial( {color: 0x000000} );
@@ -159,9 +164,10 @@ window.addEventListener('click', (event) => {
 
     const intersects = raycaster.intersectObjects(spheres);
 
-    if (intersects.length > 0) {
+    if (intersects.length > 0)
         camera.lookAt(intersects[0].object.position);
-    }
+    else 
+        camera.lookAt(defaultCameraLookAt.x, defaultCameraLookAt.y, defaultCameraLookAt.z);
 });
 
 const rayCaster = new THREE.Raycaster();
@@ -174,7 +180,7 @@ function animate(time) {
     // TWEEN.update(time);
 
     renderer.render (scene, camera);
-    // console.log(camera.position);
+    console.log(camera.position);
 }
 
 renderer.setAnimationLoop(animate);
