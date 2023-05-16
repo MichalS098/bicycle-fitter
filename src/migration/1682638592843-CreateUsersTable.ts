@@ -10,6 +10,7 @@ export class CreateUsersTable1682638592843 implements MigrationInterface {
                 "height" integer,
                 "rideTime" varchar,
                 "riderStyle" varchar,
+                "nameOfUser" varchar,
                 "shankLength" integer,
                 "thighLength" integer,
                 "shoeSize" integer,

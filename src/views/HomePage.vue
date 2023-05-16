@@ -17,6 +17,10 @@
                         class="font-bold text-lg">
                         Delete Data Base
                     </ion-button>
+                    <ion-button @click="saveFile()" expand="block" shape="round" color="primary" mode="ios" type="button"
+                        class="font-bold text-lg">
+                        Save media pipe measure
+                    </ion-button>
             </div>
             <space-for-tab-bar-menu />
         </ion-content>
@@ -33,6 +37,8 @@ import BikeCard from '@/components/BikeCard.vue';
 import NewBikeCard from '@/components/NewBikeCard.vue';
 import SpaceForTabBarMenu from '@/components/SpaceForTabBarMenu.vue';
 import { getUserFromDatabase, dropDatabase } from '@/helpers/helpersDataBase';
+
+import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
 
 
 const user = ref<User | null>(null);
@@ -54,6 +60,7 @@ const deleteDataBaseAndReturnFirstSteps = async () => {
 
     const userTemp  = await getUserFromDatabase();
     
+    console.log("userTemp before delete: ", userTemp)
 
     if(userTemp != null){
         await User.remove(userTemp);
@@ -69,6 +76,49 @@ const deleteDataBaseAndReturnFirstSteps = async () => {
     
     
 }
+
+const saveFile = async () => {
+
+    const userTemp  = await getUserFromDatabase();
+
+    if(userTemp == null){
+        console.log("USer not found")
+        return;
+    }
+    /*
+      private _shankLength; //podudzie, piszczel
+    private _thighLength; //udo
+    inseamLength; //wewnątrznoga
+    private _shoulderHeight; //floor-shoulder height
+    armLength;
+    */
+    const shankLength = userTemp.shankLength;
+    const thighLength = userTemp.thighLength;
+    const inseamLength = userTemp.inseamLength;
+    const shoulderHeight = userTemp.shoulderHeight;
+    const armLength = userTemp.armLength;
+
+
+    const fileName = userTemp.nameOfUser;
+      const fileContent = `shankLength(podudzie): ${shankLength}   \nthighLength(udo): ${thighLength}   \ninseamLength(wewnątrz noga): ${inseamLength}   \nshoulderHeight(wysokość ramion): ${shoulderHeight}    \n armLength: ${armLength}`;
+      console.log("fileName: ", fileName)
+      console.log("fileContent:  ", fileContent)
+
+      try {
+        const result = await Filesystem.writeFile({
+          path: fileName,
+          data: fileContent,
+          directory: Directory.Documents,
+          encoding: Encoding.UTF8
+        });
+        console.log('File saved at ', result.uri);
+      } catch (error) {
+        console.error('Unable to write file', error);
+      }
+    }
+
+
+
 
 </script>
   

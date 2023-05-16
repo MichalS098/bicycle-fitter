@@ -5,12 +5,13 @@
 class humanParams {
     private _shankLength; //podudzie, piszczel
     private _thighLength; //udo
-    private _legLength;
-    private _shoeSize; //EU
-    private _footLength; //stopa, nie rozmiar buta, a fizyczna dulgosc
     inseamLength; //wewnątrznoga
     private _shoulderHeight; //floor-shoulder height
     armLength;
+
+    private _legLength;
+    private _shoeSize; //EU
+    private _footLength; //stopa, nie rozmiar buta, a fizyczna dulgosc
     /*OPIS DZIALANIA Arm-Torsoangle
     Suwak steruje wartoscia AR(Arm-Torsoangle) w zakresie 50(min) do 90(max)*/
     armTorsoangle; //AR - armrumpf

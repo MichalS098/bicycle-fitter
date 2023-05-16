@@ -14,6 +14,8 @@ export class User extends BaseEntity {
     rideTime!: number;
     @Column()
     riderStyle!: string;
+    @Column()
+    nameOfUser!: string;
     // Human body parameters
     @Column()
     shankLength!: number;
