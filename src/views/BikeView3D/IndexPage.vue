@@ -49,7 +49,7 @@ camera.lookAt(defaultCameraLookAt.x, defaultCameraLookAt.y, defaultCameraLookAt.
 const controls = new OrbitControls( camera, renderer.domElement );
 controls.target.set(defaultCameraLookAt.x, defaultCameraLookAt.y, defaultCameraLookAt.z);
 controls.update();
-controls.addEventListener('change', function() { if (camera.position.y < 0) camera.position.y = 0; });
+
 
 
 // Lights
@@ -81,7 +81,24 @@ spotLight3.angle = Math.PI / 4;
 spotLight3.penumbra = 0.5;
 spotLight3.intensity = 0.7;
 
+const spotLight4 = new THREE.SpotLight( 0xffffff, 1 );
+spotLight4.position.set( camera.position.x, camera.position.y, camera.position.z );
+scene.add( spotLight4 );
+spotLight4.angle = Math.PI / 4;
+spotLight4.penumbra = 0.5;
+spotLight4.intensity = 0.7;
+
 scene.fog = new THREE.Fog( 0x111111, 0.1, 1000 );
+
+controls.addEventListener('change', function() { 
+    if (camera.position.y < 0)      camera.position.y =    0; 
+    if (camera.position.y > 400)    camera.position.y =  400;
+    if (camera.position.x < -400)   camera.position.x = -400;
+    if (camera.position.x > 400)    camera.position.x =  400;
+    if (camera.position.z < -400)   camera.position.z = -400;
+    if (camera.position.z > 400)    camera.position.z =  400;
+    spotLight.position.set( camera.position.x, camera.position.y, camera.position.z );
+});
 
 
 // Objects
@@ -158,7 +175,7 @@ function createCameraPositionTween(camera, fromPoint, toPoint, duration, easing)
     const dir = new THREE.Vector3().subVectors(camera.position, midPoint);
     const lineDir = new THREE.Vector3().subVectors(toPoint, fromPoint).normalize();
     const normal = new THREE.Vector3().crossVectors(lineDir, dir).cross(lineDir).normalize();
-    const newCameraPosition = new THREE.Vector3().addVectors(midPoint, normal.multiplyScalar(dir.length()));
+    const newCameraPosition = new THREE.Vector3().addVectors(midPoint, normal.multiplyScalar(dir.length() * 0.7));
 
     return new TWEEN.Tween(camera.position)
         .to(newCameraPosition, duration)
@@ -185,7 +202,6 @@ function createCameraLookAtTween(camera, startLookAt, fromPoint, toPoint, durati
             controls.update();
         });
 }
-
 const tween1 = createCameraPositionTween(camera, bikeModelPoints.saddle, bikeModelPoints.handleBar, 2000, TWEEN.Easing.Quadratic.Out);
 const lookAtTween1 = createCameraLookAtTween(camera, defaultCameraLookAt, bikeModelPoints.saddle, bikeModelPoints.handleBar, 2000, TWEEN.Easing.Quadratic.Out);
 const tween2 = createCameraPositionTween(camera, bikeModelPoints.saddle, bikeModelPoints.crankMiddle, 1000, TWEEN.Easing.Quadratic.Out);
