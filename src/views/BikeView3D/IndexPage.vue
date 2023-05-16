@@ -156,30 +156,48 @@ for (const key in bikeModelPoints) {
 // Animation
 
 
-function createTween(camera, fromPoint, toPoint, duration, easing) {
-  const midPoint = new THREE.Vector3().addVectors(fromPoint, toPoint).multiplyScalar(0.5);
-  const dir = new THREE.Vector3().subVectors(camera.position, midPoint);
-  const lineDir = new THREE.Vector3().subVectors(toPoint, fromPoint).normalize();
-  const normal = new THREE.Vector3().crossVectors(lineDir, dir).cross(lineDir).normalize();
-  const newCameraPosition = new THREE.Vector3().addVectors(midPoint, normal.multiplyScalar(dir.length()));
+function createCameraPositionTween(camera, fromPoint, toPoint, duration, easing) {
+    const midPoint = new THREE.Vector3().addVectors(fromPoint, toPoint).multiplyScalar(0.5);
+    const dir = new THREE.Vector3().subVectors(camera.position, midPoint);
+    const lineDir = new THREE.Vector3().subVectors(toPoint, fromPoint).normalize();
+    const normal = new THREE.Vector3().crossVectors(lineDir, dir).cross(lineDir).normalize();
+    const newCameraPosition = new THREE.Vector3().addVectors(midPoint, normal.multiplyScalar(dir.length()));
 
-  return new TWEEN.Tween(camera.position)
-    .to(newCameraPosition, duration)
-    .easing(easing)
-    .onUpdate(() => {
-      camera.lookAt(midPoint);
-    });
+    return new TWEEN.Tween(camera.position)
+        .to(newCameraPosition, duration)
+        .easing(easing);
+}
+
+function createCameraLookAtTween(camera, fromPoint, toPoint, startLookAt, duration, easing) {
+    // const startLookAt = camera.getWorldDirection(new THREE.Vector3()).clone(); 
+    const endLookAt = new THREE.Vector3().addVectors(fromPoint, toPoint).multiplyScalar(0.5);
+
+    const tweenLookAt = {x: startLookAt.x, y: startLookAt.y, z: startLookAt.z};
+
+    return new TWEEN.Tween(tweenLookAt)
+        .to({x: endLookAt.x, y: endLookAt.y, z: endLookAt.z}, duration)
+        .easing(easing)
+        .onUpdate(() => {
+        camera.lookAt(new THREE.Vector3(tweenLookAt.x, tweenLookAt.y, tweenLookAt.z));
+        });
 }
 
 
-const tween1 = createTween(camera, bikeModelPoints.saddle, bikeModelPoints.handleBar, 3000, TWEEN.Easing.Quadratic.Out);
-const tween2 = createTween(camera, bikeModelPoints.handleBar, bikeModelPoints.handleBarGrip, 3000, TWEEN.Easing.Quadratic.Out);
-const tween3 = createTween(camera, bikeModelPoints.handleBarGrip, bikeModelPoints.frontWheelHub, 3000, TWEEN.Easing.Quadratic.Out);
+const tween1 = createCameraPositionTween(camera, bikeModelPoints.saddle, bikeModelPoints.handleBar, 3000, TWEEN.Easing.Quadratic.Out);
+const lookAtTween1 = createCameraLookAtTween(camera, bikeModelPoints.saddle, bikeModelPoints.handleBar, camera.getWorldDirection(new THREE.Vector3()).clone(), 3000, TWEEN.Easing.Quadratic.Out);
+const tween2 = createCameraPositionTween(camera, bikeModelPoints.handleBar, bikeModelPoints.handleBarGrip, 3000, TWEEN.Easing.Quadratic.Out);
+const lookAtTween2 = createCameraLookAtTween(camera, 
+                                             bikeModelPoints.handleBar, 
+                                             bikeModelPoints.handleBarGrip,
+                                             new THREE.Vector3().addVectors(bikeModelPoints.saddle, bikeModelPoints.handleBar).multiplyScalar(0.5), 
+                                             3000, 
+                                             TWEEN.Easing.Quadratic.Out);
 
-tween1.onComplete(() => tween2.start());
-tween2.onComplete(() => tween3.start());
+tween1.chain(tween2);
+lookAtTween1.chain(lookAtTween2);
 
-tween1.start(); // Rozpocznij pierwszą animację
+tween1.start();
+lookAtTween1.start();
 
 
 
@@ -226,7 +244,8 @@ function animate(time) {
     TWEEN.update(time);
 
     renderer.render (scene, camera);
-    // console.log(camera.position);
+    // console.log("position: ", camera.position);
+    // console.log("lookAt: ", camera.lookAt);
 }
 
 renderer.setAnimationLoop(animate);
