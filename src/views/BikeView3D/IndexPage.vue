@@ -34,7 +34,10 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 document.body.appendChild( renderer.domElement );
 
-const scene = new THREE. Scene();
+
+// Camera setup
+
+const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 2000 );
 
 const defaultCameraPosition = new THREE.Vector3(290, 70, -170);
@@ -46,25 +49,12 @@ camera.lookAt(defaultCameraLookAt.x, defaultCameraLookAt.y, defaultCameraLookAt.
 const controls = new OrbitControls( camera, renderer.domElement );
 controls.target.set(defaultCameraLookAt.x, defaultCameraLookAt.y, defaultCameraLookAt.z);
 controls.update();
-
-controls.addEventListener('change', function() {
-    if (camera.position.y < 0) { // if camera is beneath the ground
-        camera.position.y = 0; // restrict it to ground level
-    }
-});
+controls.addEventListener('change', function() { if (camera.position.y < 0) camera.position.y = 0; });
 
 
-const planeGeometry = new THREE.PlaneGeometry( 6000, 6000 );
-const planeMaterial = new THREE.MeshStandardMaterial( {color: 0x000000} );
-const plane = new THREE.Mesh( planeGeometry, planeMaterial );
-scene.add( plane );
-plane.position.set(0, -20, 0);
-plane.rotation.x = -Math.PI / 2;
-plane.receiveShadow = true;
-
+// Lights
 
 const ambientLight = new THREE.AmbientLight( 0xffffff, 0.2 );
-
 scene.add( ambientLight );
 
 const spotLight = new THREE.SpotLight( 0x478C6C, 1 );
@@ -75,7 +65,6 @@ spotLight.angle = Math.PI / 4;
 spotLight.penumbra = 0.5;
 spotLight.intensity = 0.8;
 
-
 const spotLight2 = new THREE.SpotLight( 0xE48C56, 0.7 );
 spotLight2.position.set( -300, 270, -72 );
 scene.add( spotLight2 );
@@ -83,11 +72,6 @@ spotLight2.castShadow = true;
 spotLight2.angle = Math.PI / 4;
 spotLight.penumbra = 0.5;
 spotLight.intensity = 1;
-
-
-const ambientLight3 = new THREE.AmbientLight( 0xffffff, 0.001 );
-
-scene.add( ambientLight3 );
 
 const spotLight3 = new THREE.SpotLight( 0xffffff, 1 );
 spotLight3.position.set( 100, 300, 50 );
@@ -100,12 +84,22 @@ spotLight3.intensity = 0.7;
 scene.fog = new THREE.Fog( 0x111111, 0.1, 1000 );
 
 
+// Objects
+
+const planeGeometry = new THREE.PlaneGeometry( 6000, 6000 );
+const planeMaterial = new THREE.MeshStandardMaterial( {color: 0x000000} );
+const plane = new THREE.Mesh( planeGeometry, planeMaterial );
+scene.add( plane );
+plane.position.set(0, -20, 0);
+plane.rotation.x = -Math.PI / 2;
+plane.receiveShadow = true;
+
+
 const assetLoader = new GLTFLoader();
 
-assetLoader.load(
+assetLoader.load(  // Bike model
     bikeUrl.href,
     (gltf) => {
-
         const bikeModel = gltf.scene;
         gltf.scene.traverse(function(node) {        // for shadow casting
         if (node.isMesh) { 
@@ -209,9 +203,7 @@ lookAtTween1.start();
 const rayCaster = new THREE.Raycaster();
 const mousePosition = new THREE.Vector2();
 
-
 if (touchInputs) {
-
     window.addEventListener('click', (event) => {
         mousePosition.x = (event.clientX / window.innerWidth) * 2 - 1;
         mousePosition.y = -(event.clientY / window.innerHeight) * 2 + 1;
@@ -225,9 +217,8 @@ if (touchInputs) {
         else 
             camera.lookAt(defaultCameraLookAt.x, defaultCameraLookAt.y, defaultCameraLookAt.z);
     });
-
-    
 }
+
 
 function animate(time) {
     if (touchInputs)
@@ -239,6 +230,7 @@ function animate(time) {
     renderer.render (scene, camera);
     // console.log("position: ", camera.position);
 }
+
 
 renderer.setAnimationFrame(animate);
 
