@@ -128,9 +128,9 @@ assetLoader.load(
 // Bike model points
 
 const bikeModelPoints = {
-  saddle: new THREE.Vector3(-28, 78, -0.7),
+  saddle: new THREE.Vector3(-27, 78, -0.7),
   handleBar: new THREE.Vector3(36, 76, -0.7),
-  handleBarGrip: new THREE.Vector3(36, 76, -0.7),
+  handleBarGrip: new THREE.Vector3(45, 81, -0.7),
   frontWheelHub: new THREE.Vector3(63, 16, -0.7),
   backWheelHub: new THREE.Vector3(-49, 16, -0.7),
   crankMiddle: new THREE.Vector3(-2, 12, -0.7),
@@ -148,23 +148,57 @@ for (const key in bikeModelPoints) {
 
     const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
     sphere.position.copy(position);
-    scene.add(sphere);
+    // scene.add(sphere);
     spheres.push(sphere);
 }
 
 
-// animations:
+// Animation
 
-// const frontBrake = new THREE.Vector3(325, 140, -220);
-// const rearBrake = new THREE.Vector3(14, 80, -290);
+
+function createTween(camera, fromPoint, toPoint, duration, easing) {
+  const midPoint = new THREE.Vector3().addVectors(fromPoint, toPoint).multiplyScalar(0.5);
+  const dir = new THREE.Vector3().subVectors(camera.position, midPoint);
+  const lineDir = new THREE.Vector3().subVectors(toPoint, fromPoint).normalize();
+  const normal = new THREE.Vector3().crossVectors(lineDir, dir).cross(lineDir).normalize();
+  const newCameraPosition = new THREE.Vector3().addVectors(midPoint, normal.multiplyScalar(dir.length()));
+
+  return new TWEEN.Tween(camera.position)
+    .to(newCameraPosition, duration)
+    .easing(easing)
+    .onUpdate(() => {
+      camera.lookAt(midPoint);
+    });
+}
+
+
+const tween1 = createTween(camera, bikeModelPoints.saddle, bikeModelPoints.handleBar, 3000, TWEEN.Easing.Quadratic.Out);
+const tween2 = createTween(camera, bikeModelPoints.handleBar, bikeModelPoints.handleBarGrip, 3000, TWEEN.Easing.Quadratic.Out);
+const tween3 = createTween(camera, bikeModelPoints.handleBarGrip, bikeModelPoints.frontWheelHub, 3000, TWEEN.Easing.Quadratic.Out);
+
+tween1.onComplete(() => tween2.start());
+tween2.onComplete(() => tween3.start());
+
+tween1.start(); // Rozpocznij pierwszą animację
+
+
+
+
+
+
+// const frontBrake = calculateMidpoint(bikeModelPoints.saddle, bikeModelPoints.handleBar);
+// const rearBrake = bikeModelPoints.saddle;
 
 // const tween = new TWEEN.Tween(frontBrake).to(defaultCameraPosition, 3000);
 
 // tween.onUpdate(function() {
-//     camera.position.copy(frontBrake);
+//     camera.lookAt(frontBrake);
 // });
 
 // tween.start();
+
+// Inputs
+
 const raycaster = new THREE.Raycaster();
 const mousePosition = new THREE.Vector2();
 
@@ -188,8 +222,8 @@ function animate(time) {
 
     rayCaster.setFromCamera(mousePosition, camera);
 
-    // requestAnimationFrame(animate);
-    // TWEEN.update(time);
+    requestAnimationFrame(animate);
+    TWEEN.update(time);
 
     renderer.render (scene, camera);
     // console.log(camera.position);
