@@ -127,27 +127,30 @@ assetLoader.load(
 
 // Bike model points
 
-const saddle = new THREE.Vector3(-28, 78, -0.7);
-const handleBar = new THREE.Vector3(36, 76, -0.7);
-const handleBarGrip = new THREE.Vector3(36, 76, -0.7);
-const frontWheelHub = new THREE.Vector3(63, 16, -0.7);
-const backWheelHub = new THREE.Vector3(-49, 16, -0.7);
-const crankMiddle = new THREE.Vector3(-2, 12, -0.7);
-const frontPedal = new THREE.Vector3(11, 0.7, 8);
-const backPedal = new THREE.Vector3(-16, 22, -9);
+const bikeModelPoints = {
+  saddle: new THREE.Vector3(-28, 78, -0.7),
+  handleBar: new THREE.Vector3(36, 76, -0.7),
+  handleBarGrip: new THREE.Vector3(36, 76, -0.7),
+  frontWheelHub: new THREE.Vector3(63, 16, -0.7),
+  backWheelHub: new THREE.Vector3(-49, 16, -0.7),
+  crankMiddle: new THREE.Vector3(-2, 12, -0.7),
+  frontPedal: new THREE.Vector3(11, 0.7, 8),
+  backPedal: new THREE.Vector3(-16, 22, -9)
+};
 
-
-const points = [saddle, handleBar, handleBarGrip, frontWheelHub, backWheelHub, crankMiddle, frontPedal, backPedal];
 const spheres = [];
 const sphereGeometry = new THREE.SphereGeometry(5, 10, 10);
 const sphereMaterial = new THREE.MeshStandardMaterial({color: 0xffffff, wireframe: true});
 
-points.forEach((point) => {
+
+for (const key in bikeModelPoints) {
+    const position = bikeModelPoints[key];
+
     const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+    sphere.position.copy(position);
     scene.add(sphere);
-    sphere.position.set(point.x, point.y, point.z);
     spheres.push(sphere);
-});
+}
 
 
 // animations:
