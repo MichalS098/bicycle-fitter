@@ -43,7 +43,7 @@
                 <ion-alert :is-open="form.errors.shoeSize != ''" header="Wrong shoe size" :message="form.errors.shoeSize"
                     :buttons="['OK']" @did-dismiss="form.errors.shoeSize = ''">
                 </ion-alert>
-                <button-input v-model="form.nameOfUser" type="text" inputmode="text" placeholder="Enter your name" postfix="EU"/>
+                <button-input v-model="form.nameOfUser" type="text" inputmode="text" placeholder="Enter your name" postfix=""/>
             </step-card>
 
             <step-card title="Your ride time" sub-title="Typically how much time per week do you spend on the bike?"
