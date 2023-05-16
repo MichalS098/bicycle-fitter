@@ -70,8 +70,8 @@ spotLight2.position.set( -300, 270, -72 );
 scene.add( spotLight2 );
 spotLight2.castShadow = true;
 spotLight2.angle = Math.PI / 4;
-spotLight.penumbra = 0.5;
-spotLight.intensity = 1;
+spotLight2.penumbra = 0.5;
+spotLight2.intensity = 1;
 
 const spotLight3 = new THREE.SpotLight( 0xffffff, 1 );
 spotLight3.position.set( 100, 300, 50 );
@@ -97,7 +97,7 @@ controls.addEventListener('change', function() {
     if (camera.position.x > 400)    camera.position.x =  400;
     if (camera.position.z < -400)   camera.position.z = -400;
     if (camera.position.z > 400)    camera.position.z =  400;
-    spotLight.position.set( camera.position.x, camera.position.y, camera.position.z );
+    // spotLight4.position.set( camera.position.x, camera.position.y, camera.position.z );
 });
 
 
@@ -202,13 +202,20 @@ function createCameraLookAtTween(camera, startLookAt, fromPoint, toPoint, durati
             controls.update();
         });
 }
-const tween1 = createCameraPositionTween(camera, bikeModelPoints.saddle, bikeModelPoints.handleBar, 2000, TWEEN.Easing.Quadratic.Out);
-const lookAtTween1 = createCameraLookAtTween(camera, defaultCameraLookAt, bikeModelPoints.saddle, bikeModelPoints.handleBar, 2000, TWEEN.Easing.Quadratic.Out);
-const tween2 = createCameraPositionTween(camera, bikeModelPoints.saddle, bikeModelPoints.crankMiddle, 1000, TWEEN.Easing.Quadratic.Out);
-const lookAtTween2 = createCameraLookAtTween(camera, new THREE.Vector3().addVectors(bikeModelPoints.saddle, bikeModelPoints.handleBar).multiplyScalar(0.5), bikeModelPoints.saddle, bikeModelPoints.crankMiddle,  1000, TWEEN.Easing.Quadratic.Out);
 
-tween1.chain(tween2);
-lookAtTween1.chain(lookAtTween2);
+const easing = TWEEN.Easing.Exponential.InOut;
+
+const tween1 = createCameraPositionTween(camera, bikeModelPoints.saddle, bikeModelPoints.handleBar, 2000, easing);
+const lookAtTween1 = createCameraLookAtTween(camera, defaultCameraLookAt, bikeModelPoints.saddle, bikeModelPoints.handleBar, 2000, easing);
+const tween2 = createCameraPositionTween(camera, bikeModelPoints.saddle, bikeModelPoints.crankMiddle, 1500, easing);
+const lookAtTween2 = createCameraLookAtTween(camera, new THREE.Vector3().addVectors(bikeModelPoints.saddle, bikeModelPoints.handleBar).multiplyScalar(0.5), bikeModelPoints.saddle, bikeModelPoints.crankMiddle,  1500, easing);
+
+const tween3 = createCameraPositionTween(camera, bikeModelPoints.handleBar, bikeModelPoints.frontWheelHub, 1500, easing);
+const lookAtTween3 = createCameraLookAtTween(camera, new THREE.Vector3().addVectors(bikeModelPoints.saddle, bikeModelPoints.crankMiddle).multiplyScalar(0.5), bikeModelPoints.handleBar, bikeModelPoints.frontWheelHub,  1500, easing);
+
+
+tween1.chain(tween2.chain(tween3));
+lookAtTween1.chain(lookAtTween2.chain(lookAtTween3));
 
 tween1.start();
 lookAtTween1.start();
