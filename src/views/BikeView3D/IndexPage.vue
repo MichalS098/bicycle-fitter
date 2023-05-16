@@ -12,7 +12,7 @@
         <button class="absolute top-0 right-0 p-2 xxs:p-4" @click="goToHome">X</button>
     </ion-page>
 </template>
-  
+
 <script>
 
 import * as THREE from 'three';
@@ -21,6 +21,9 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import * as TWEEN from '@tweenjs/tween.js';
 
 const bikeUrl = new URL('/resources/3d_models/city_bike/bicycle.glb', import.meta.url);
+
+
+const orbitControlsAnabled = true;
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
@@ -32,14 +35,21 @@ document.body.appendChild( renderer.domElement );
 
 const scene = new THREE. Scene();
 const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 2000 );
-const controls = new OrbitControls( camera, renderer.domElement );
+if (orbitControlsAnabled) {
+    const controls = new OrbitControls( camera, renderer.domElement );
+    controls.update();
+}
+// const controls = new OrbitControls( camera, renderer.domElement );
+
 
 const defaultCameraPosition = new THREE.Vector3(290, 70, -170);
 const defaultCameraLookAt = new THREE.Vector3(40, 30, -0.7);
 
+
 camera.position.set(defaultCameraPosition.x, defaultCameraPosition.y, defaultCameraPosition.z);
 
-controls.update();
+
+// controls.update();
 camera.lookAt(defaultCameraLookAt.x, defaultCameraLookAt.y, defaultCameraLookAt.z);
 
 const planeGeometry = new THREE.PlaneGeometry( 6000, 6000 );
@@ -145,11 +155,10 @@ points.forEach((point) => {
 // const frontBrake = new THREE.Vector3(325, 140, -220);
 // const rearBrake = new THREE.Vector3(14, 80, -290);
 
-// const tween = new TWEEN.Tween(frontBrake).to(rearBrake, 3000);
+// const tween = new TWEEN.Tween(frontBrake).to(defaultCameraPosition, 3000);
 
 // tween.onUpdate(function() {
 //     camera.position.copy(frontBrake);
-//     camera.lookAt(bikePoint);
 // });
 
 // tween.start();
@@ -180,7 +189,7 @@ function animate(time) {
     // TWEEN.update(time);
 
     renderer.render (scene, camera);
-    console.log(camera.position);
+    // console.log(camera.position);
 }
 
 renderer.setAnimationLoop(animate);
