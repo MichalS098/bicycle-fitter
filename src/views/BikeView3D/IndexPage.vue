@@ -44,8 +44,14 @@ camera.position.set(defaultCameraPosition.x, defaultCameraPosition.y, defaultCam
 camera.lookAt(defaultCameraLookAt.x, defaultCameraLookAt.y, defaultCameraLookAt.z);
 
 const controls = new OrbitControls( camera, renderer.domElement );
-// controls.target.set(defaultCameraLookAt);
+controls.target.set(defaultCameraLookAt.x, defaultCameraLookAt.y, defaultCameraLookAt.z);
 controls.update();
+
+controls.addEventListener('change', function() {
+    if (camera.position.y < 0) { // if camera is beneath the ground
+        camera.position.y = 0; // restrict it to ground level
+    }
+});
 
 
 const planeGeometry = new THREE.PlaneGeometry( 6000, 6000 );
@@ -57,7 +63,7 @@ plane.rotation.x = -Math.PI / 2;
 plane.receiveShadow = true;
 
 
-const ambientLight = new THREE.AmbientLight( 0xffffff, 0.1 );
+const ambientLight = new THREE.AmbientLight( 0xffffff, 0.2 );
 
 scene.add( ambientLight );
 
@@ -150,8 +156,8 @@ if (drawSpheres) {
     }
 }
 
-// Animation
 
+// Animation
 
 function createCameraPositionTween(camera, fromPoint, toPoint, duration, easing) {
     const midPoint = new THREE.Vector3().addVectors(fromPoint, toPoint).multiplyScalar(0.5);
@@ -164,7 +170,7 @@ function createCameraPositionTween(camera, fromPoint, toPoint, duration, easing)
         .to(newCameraPosition, duration)
         .easing(easing)
         .onComplete(() => {
-        console.log('Animation Camera Position completed!');
+            camera.position.set(newCameraPosition.x, newCameraPosition.y, newCameraPosition.z);
         });
 }
 
@@ -181,8 +187,8 @@ function createCameraLookAtTween(camera, startLookAt, fromPoint, toPoint, durati
         camera.lookAt(new THREE.Vector3(tweenLookAt.x, tweenLookAt.y, tweenLookAt.z));
         })
         .onComplete(() => {
-            // controls.target.set(endLookAt);
-            // controls.update();
+            controls.target.set(endLookAt.x, endLookAt.y, endLookAt.z);
+            controls.update();
         });
 }
 
@@ -197,21 +203,6 @@ lookAtTween1.chain(lookAtTween2);
 tween1.start();
 lookAtTween1.start();
 
-
-
-
-
-
-// const frontBrake = calculateMidpoint(bikeModelPoints.saddle, bikeModelPoints.handleBar);
-// const rearBrake = bikeModelPoints.saddle;
-
-// const tween = new TWEEN.Tween(frontBrake).to(defaultCameraPosition, 3000);
-
-// tween.onUpdate(function() {
-//     camera.lookAt(frontBrake);
-// });
-
-// tween.start();
 
 // Inputs
 
