@@ -14,7 +14,7 @@
 </template>
 
 <script>
-
+import { onMounted, ref } from "vue";
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -23,13 +23,12 @@ import * as TWEEN from '@tweenjs/tween.js';
 const bikeUrl = new URL('/resources/3d_models/city_bike/bicycle.glb', import.meta.url);
 
 
-const orbitControlsAnabled = true;
 const drawSpheres = false;
 const touchInputs = false;
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
-renderer.setClearColor("#222222");
+renderer.setClearColor("#111111");
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
@@ -37,19 +36,17 @@ document.body.appendChild( renderer.domElement );
 
 const scene = new THREE. Scene();
 const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 2000 );
-if (orbitControlsAnabled) {
-    const controls = new OrbitControls( camera, renderer.domElement );
-    controls.update();
-}
-
 
 const defaultCameraPosition = new THREE.Vector3(290, 70, -170);
 const defaultCameraLookAt = new THREE.Vector3(40, 30, -0.7);
 
-
 camera.position.set(defaultCameraPosition.x, defaultCameraPosition.y, defaultCameraPosition.z);
-
 camera.lookAt(defaultCameraLookAt.x, defaultCameraLookAt.y, defaultCameraLookAt.z);
+
+const controls = new OrbitControls( camera, renderer.domElement );
+// controls.target.set(defaultCameraLookAt);
+controls.update();
+
 
 const planeGeometry = new THREE.PlaneGeometry( 6000, 6000 );
 const planeMaterial = new THREE.MeshStandardMaterial( {color: 0x000000} );
@@ -60,7 +57,7 @@ plane.rotation.x = -Math.PI / 2;
 plane.receiveShadow = true;
 
 
-const ambientLight = new THREE.AmbientLight( 0xffffff, 0.001 );
+const ambientLight = new THREE.AmbientLight( 0xffffff, 0.1 );
 
 scene.add( ambientLight );
 
@@ -94,7 +91,7 @@ spotLight3.angle = Math.PI / 4;
 spotLight3.penumbra = 0.5;
 spotLight3.intensity = 0.7;
 
-scene.fog = new THREE.Fog( 0x222222, 0.1, 1000 );
+scene.fog = new THREE.Fog( 0x111111, 0.1, 1000 );
 
 
 const assetLoader = new GLTFLoader();
@@ -165,7 +162,10 @@ function createCameraPositionTween(camera, fromPoint, toPoint, duration, easing)
 
     return new TWEEN.Tween(camera.position)
         .to(newCameraPosition, duration)
-        .easing(easing);
+        .easing(easing)
+        .onComplete(() => {
+        console.log('Animation Camera Position completed!');
+        });
 }
 
 function createCameraLookAtTween(camera, startLookAt, fromPoint, toPoint, duration, easing) {
@@ -179,9 +179,12 @@ function createCameraLookAtTween(camera, startLookAt, fromPoint, toPoint, durati
         .easing(easing)
         .onUpdate(() => {
         camera.lookAt(new THREE.Vector3(tweenLookAt.x, tweenLookAt.y, tweenLookAt.z));
+        })
+        .onComplete(() => {
+            // controls.target.set(endLookAt);
+            // controls.update();
         });
 }
-
 
 const tween1 = createCameraPositionTween(camera, bikeModelPoints.saddle, bikeModelPoints.handleBar, 2000, TWEEN.Easing.Quadratic.Out);
 const lookAtTween1 = createCameraLookAtTween(camera, defaultCameraLookAt, bikeModelPoints.saddle, bikeModelPoints.handleBar, 2000, TWEEN.Easing.Quadratic.Out);
@@ -244,7 +247,6 @@ function animate(time) {
 
     renderer.render (scene, camera);
     // console.log("position: ", camera.position);
-    // console.log("lookAt: ", camera.lookAt);
 }
 
 renderer.setAnimationFrame(animate);
