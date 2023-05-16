@@ -5,6 +5,10 @@
                 style="position: absolute; z-index: -1;"></video>
             <canvas class="absolute inset-0 w-full my-auto pd-15" ref="canvas"></canvas>
 
+            <div class="fixed w-full h-full top-0 left-0 bg-transparent">
+                <div class="absolute top-3/4 text-center text-base">Imagine this is a bike</div>
+            </div>
+            
             <transition>
                 <div v-show="!allBodyPointsVisible"
                     class="absolute top-6 left-3 right-3 rounded-2xl bg-[#1f1f1f] border-gray-900 p-3 flex gap-3 items-start shadow-lg overflow-hidden">
@@ -20,16 +24,39 @@
                 </div>
             </transition>
 
+            <!--5s coundownd-->
+            <transition>
+                <div v-show="allBodyPointsVisible && counter > 0"
+                    class="absolute bottom-6 left-3 right-3 rounded-2xl bg-secondary border-gray-900 p-3 flex gap-3 items-start shadow-lg overflow-hidden">
+                    <ion-icon :icon="hourglassOutline" class="text-white h-8 w-16"></ion-icon>
+                    <div class="text-4xl">
+                        {{counter}}
+                    </div>
+                </div>
+            </transition>
+
+            <transition>
+                <div v-show="allBodyPointsVisible && counter == 0"
+                    class="absolute bottom-6 left-3 right-3 h-10 rounded-2xl bg-secondary border-gray-900 p-3 flex gap-3 items-start shadow-lg overflow-hidden">
+                    <ion-progress-bar :value="measuringProgress / (60*5)" class="w-full h-full" color="light"></ion-progress-bar>
+                </div>
+            </transition>
+
+            <!--attempt at a vertical progress bar-->
+            <!-- <div class=" rotate-90 absolute top-96 -right-40 rounded-2xl bg-primary w-96 p-3">
+                <ion-progress-bar color="light" type="indeterminate"></ion-progress-bar>
+            </div> -->
+
         </ion-content>
     </ion-page>
 </template>
 
 <script lang="ts" setup>
 import { IonPage, IonContent, IonIcon, IonProgressBar } from '@ionic/vue';
-import { ref, onMounted, Transition } from "vue";
+import { ref, onMounted, Transition, watch, WatchOptions } from "vue";
 import useMediapipe from '@/composables/useMediapipe';
 import { Camera } from '@mediapipe/camera_utils';
-import { alertCircleOutline, hourglassOutline } from 'ionicons/icons';
+import { alertCircleOutline, hourglassOutline, options } from 'ionicons/icons';
 import { getBodyAnglesFromMediapipeResults, BodyAnglesFromMediapipe, getBodyParamsMedian } from '@/functions/mediapipeCalculatedHumanParams';
 import { useIonRouter } from '@ionic/vue';
 import { getUserFromDatabase } from '@/helpers/helpersDataBase'
@@ -41,6 +68,11 @@ const video = ref<HTMLVideoElement>();
 const canvas = ref<HTMLCanvasElement>();
 const camera = ref<Camera>();
 
+const measuringDone = ref(false);
+const allBodyPointsVisible = ref(false);
+const measuringProgress = ref(0);
+const counter = ref(5);
+
 const bodyAngles = ref<BodyAnglesFromMediapipe>({
     footFloorAngle: 0,
     thighShankAngle: 0,
@@ -50,10 +82,6 @@ const bodyAngles = ref<BodyAnglesFromMediapipe>({
     crankAngle: 0
 });
 const bodyAnglesArray: BodyAnglesFromMediapipe[] = new Array(60);
-
-const measuringDone = ref(false);
-const allBodyPointsVisible = ref(false);
-const measuringProgress = ref(0);
 
 
 onMounted(async () => {
@@ -70,20 +98,27 @@ const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
     pose.onResults((results) => {
         drawResults(results, canvas);
 
-        if (results.poseLandmarks !== undefined) {
+        if (results.poseLandmarks !== undefined){
             if (areAllBodyPointsVisible(results.poseLandmarks)) {
-                if (measuringProgress.value > 60){
-                    measuringDone.value = true
-                    camera.value?.stop()
-                } else {
-                    bodyAnglesArray[measuringProgress.value] = getBodyAnglesFromMediapipeResults(results)
+                allBodyPointsVisible.value = true;
+
+                if (counter.value == 0){
+                    if (measuringProgress.value > 60*5){
+                        measuringDone.value = true
+                        // camera.value?.stop()
+                    } 
+                    else{
+                        bodyAnglesArray[measuringProgress.value] = getBodyAnglesFromMediapipeResults(results)
+                    }
+                    measuringProgress.value++
                 }
-                measuringProgress.value++
-            } else {
+            } 
+            else {
                 allBodyPointsVisible.value = false;
                 measuringProgress.value = 0;
             }
-        } else {
+        }
+        else {
             allBodyPointsVisible.value = false;
             measuringProgress.value = 0;
         }
@@ -97,5 +132,41 @@ const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
     })
     camera.value?.start();
 }
+
+let timer = 0;
+//cur = current
+watch( [allBodyPointsVisible, counter], function([curVis, curCounter], [oldVis, oldCounter]){
+    if (timer != 0) clearTimeout(timer);
+    if (curVis && curCounter > 0){
+        timer = setTimeout(() => {
+            counter.value--;
+        }, 1000);
+    }
+    else if (!curVis){
+        counter.value = 5;
+    }
+})
+
+// let timer = 0;
+// function countDown(): void{
+//     if (timer != 0) clearTimeout(timer);
+//     if (counter.value > 0) {
+//         timer = setTimeout(() => {
+//             counter.value--;
+//             countDown()
+//         }, 1000)
+//     }
+// }
+// watch( allBodyPointsVisible, function(curVis, oldVis){
+//     if (curVis){
+//         countDown()
+//     }
+//     else if (!curVis){
+//         counter.value = 5;
+//     }
+// })
+
+
+
 
 </script>

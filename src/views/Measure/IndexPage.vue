@@ -33,6 +33,9 @@
                 </div>
             </transition>
 
+            <!--THIS IS A DEBUG FEATURE, REMOVE IN PRODUCTION-->
+            <button class=" absolute bottom-0 right-0 text-lg" @click="skip()" >SKIP</button>
+
             <measure-finished-modal :isOpen="showMeasureFinishedModal" @close="goToTheApp()" :bodyParams="bodyParams" />
         </ion-content>
     </ion-page>
@@ -87,6 +90,19 @@ const measureDone = async () => {
 function goToTheApp() {
     showMeasureFinishedModal.value = false;
     router.replace('/pages/home');
+}
+
+function skip(){
+    camera.value?.stop()
+    bodyParams.value = {
+        shoulderHeight: 150,
+        footLength: 40,
+        armLength: 80,
+        shankLength: 50,
+        thighLength: 50,
+        inseamLength: 40,
+    }
+    measureDone()
 }
 
 onMounted(async () => {
