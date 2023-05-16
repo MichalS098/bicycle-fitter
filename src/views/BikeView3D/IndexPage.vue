@@ -24,6 +24,8 @@ const bikeUrl = new URL('/resources/3d_models/city_bike/bicycle.glb', import.met
 
 
 const orbitControlsAnabled = true;
+const drawSpheres = false;
+const touchInputs = false;
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
@@ -39,7 +41,6 @@ if (orbitControlsAnabled) {
     const controls = new OrbitControls( camera, renderer.domElement );
     controls.update();
 }
-// const controls = new OrbitControls( camera, renderer.domElement );
 
 
 const defaultCameraPosition = new THREE.Vector3(290, 70, -170);
@@ -48,8 +49,6 @@ const defaultCameraLookAt = new THREE.Vector3(40, 30, -0.7);
 
 camera.position.set(defaultCameraPosition.x, defaultCameraPosition.y, defaultCameraPosition.z);
 
-
-// controls.update();
 camera.lookAt(defaultCameraLookAt.x, defaultCameraLookAt.y, defaultCameraLookAt.z);
 
 const planeGeometry = new THREE.PlaneGeometry( 6000, 6000 );
@@ -128,30 +127,31 @@ assetLoader.load(
 // Bike model points
 
 const bikeModelPoints = {
-  saddle: new THREE.Vector3(-27, 78, -0.7),
-  handleBar: new THREE.Vector3(36, 76, -0.7),
-  handleBarGrip: new THREE.Vector3(45, 81, -0.7),
-  frontWheelHub: new THREE.Vector3(63, 16, -0.7),
-  backWheelHub: new THREE.Vector3(-49, 16, -0.7),
-  crankMiddle: new THREE.Vector3(-2, 12, -0.7),
-  frontPedal: new THREE.Vector3(11, 0.7, 8),
-  backPedal: new THREE.Vector3(-16, 22, -9)
+    saddle: new THREE.Vector3(-27, 78, -0.7),
+    handleBar: new THREE.Vector3(36, 76, -0.7),
+    handleBarGrip: new THREE.Vector3(45, 81, -0.7),
+    frontWheelHub: new THREE.Vector3(63, 16, -0.7),
+    backWheelHub: new THREE.Vector3(-49, 16, -0.7),
+    crankMiddle: new THREE.Vector3(-2, 12, -0.7),
+    frontPedal: new THREE.Vector3(11, 0.7, 8),
+    backPedal: new THREE.Vector3(-16, 22, -9)
 };
 
 const spheres = [];
-const sphereGeometry = new THREE.SphereGeometry(5, 10, 10);
-const sphereMaterial = new THREE.MeshStandardMaterial({color: 0xffffff, wireframe: true});
 
+if (drawSpheres) {
+    const sphereGeometry = new THREE.SphereGeometry(3, 10, 10);
+    const sphereMaterial = new THREE.MeshStandardMaterial({color: 0xffffff, wireframe: true});
 
-for (const key in bikeModelPoints) {
-    const position = bikeModelPoints[key];
+    for (const key in bikeModelPoints) {
+        const position = bikeModelPoints[key];
 
-    const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-    sphere.position.copy(position);
-    // scene.add(sphere);
-    spheres.push(sphere);
+        const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+        sphere.position.copy(position);
+        scene.add(sphere);
+        spheres.push(sphere);
+    }
 }
-
 
 // Animation
 
@@ -168,7 +168,7 @@ function createCameraPositionTween(camera, fromPoint, toPoint, duration, easing)
         .easing(easing);
 }
 
-function createCameraLookAtTween(camera, fromPoint, toPoint, startLookAt, duration, easing) {
+function createCameraLookAtTween(camera, startLookAt, fromPoint, toPoint, duration, easing) {
     // const startLookAt = camera.getWorldDirection(new THREE.Vector3()).clone(); 
     const endLookAt = new THREE.Vector3().addVectors(fromPoint, toPoint).multiplyScalar(0.5);
 
@@ -183,15 +183,10 @@ function createCameraLookAtTween(camera, fromPoint, toPoint, startLookAt, durati
 }
 
 
-const tween1 = createCameraPositionTween(camera, bikeModelPoints.saddle, bikeModelPoints.handleBar, 3000, TWEEN.Easing.Quadratic.Out);
-const lookAtTween1 = createCameraLookAtTween(camera, bikeModelPoints.saddle, bikeModelPoints.handleBar, camera.getWorldDirection(new THREE.Vector3()).clone(), 3000, TWEEN.Easing.Quadratic.Out);
-const tween2 = createCameraPositionTween(camera, bikeModelPoints.handleBar, bikeModelPoints.handleBarGrip, 3000, TWEEN.Easing.Quadratic.Out);
-const lookAtTween2 = createCameraLookAtTween(camera, 
-                                             bikeModelPoints.handleBar, 
-                                             bikeModelPoints.handleBarGrip,
-                                             new THREE.Vector3().addVectors(bikeModelPoints.saddle, bikeModelPoints.handleBar).multiplyScalar(0.5), 
-                                             3000, 
-                                             TWEEN.Easing.Quadratic.Out);
+const tween1 = createCameraPositionTween(camera, bikeModelPoints.saddle, bikeModelPoints.handleBar, 2000, TWEEN.Easing.Quadratic.Out);
+const lookAtTween1 = createCameraLookAtTween(camera, defaultCameraLookAt, bikeModelPoints.saddle, bikeModelPoints.handleBar, 2000, TWEEN.Easing.Quadratic.Out);
+const tween2 = createCameraPositionTween(camera, bikeModelPoints.saddle, bikeModelPoints.crankMiddle, 1000, TWEEN.Easing.Quadratic.Out);
+const lookAtTween2 = createCameraLookAtTween(camera, new THREE.Vector3().addVectors(bikeModelPoints.saddle, bikeModelPoints.handleBar).multiplyScalar(0.5), bikeModelPoints.saddle, bikeModelPoints.crankMiddle,  1000, TWEEN.Easing.Quadratic.Out);
 
 tween1.chain(tween2);
 lookAtTween1.chain(lookAtTween2);
@@ -217,28 +212,32 @@ lookAtTween1.start();
 
 // Inputs
 
-const raycaster = new THREE.Raycaster();
+const rayCaster = new THREE.Raycaster();
 const mousePosition = new THREE.Vector2();
 
-window.addEventListener('click', (event) => {
-    mousePosition.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mousePosition.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
-    raycaster.setFromCamera(mousePosition, camera);
+if (touchInputs) {
 
-    const intersects = raycaster.intersectObjects(spheres);
+    window.addEventListener('click', (event) => {
+        mousePosition.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mousePosition.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
-    if (intersects.length > 0)
-        camera.lookAt(intersects[0].object.position);
-    else 
-        camera.lookAt(defaultCameraLookAt.x, defaultCameraLookAt.y, defaultCameraLookAt.z);
-});
+        rayCaster.setFromCamera(mousePosition, camera);
 
-const rayCaster = new THREE.Raycaster();
+        const intersects = rayCaster.intersectObjects(spheres);
+
+        if (intersects.length > 0)
+            camera.lookAt(intersects[0].object.position);
+        else 
+            camera.lookAt(defaultCameraLookAt.x, defaultCameraLookAt.y, defaultCameraLookAt.z);
+    });
+
+    
+}
 
 function animate(time) {
-
-    rayCaster.setFromCamera(mousePosition, camera);
+    if (touchInputs)
+        rayCaster.setFromCamera(mousePosition, camera);
 
     requestAnimationFrame(animate);
     TWEEN.update(time);
@@ -248,6 +247,6 @@ function animate(time) {
     // console.log("lookAt: ", camera.lookAt);
 }
 
-renderer.setAnimationLoop(animate);
+renderer.setAnimationFrame(animate);
 
 </script>
