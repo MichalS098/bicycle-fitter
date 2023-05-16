@@ -12,6 +12,7 @@
                     class="font-bold text-lg">
                     Go to the app!
                 </ion-button>
+                
             </div>
         </ion-content>
     </ion-modal>
@@ -19,8 +20,10 @@
 
 <script lang="ts" setup>
 import { defineProps, defineEmits } from 'vue';
-import { IonModal, IonButton, IonContent, IonList, IonItem, IonLabel } from '@ionic/vue';
+import { IonModal, IonButton, IonContent, IonList, IonItem, IonLabel, useIonRouter } from '@ionic/vue';
 import { BodyParamsFromMediapipe } from '@/functions/mediapipeCalculatedHumanParams';
+import { getUserFromDatabase, dropDatabase } from '@/helpers/helpersDataBase';
+import { User } from '@/entity/User';
 
 const emits = defineEmits(['close']);
 
@@ -38,4 +41,6 @@ const props = defineProps({
 const closeModal = () => {
     emits('close');
 }
+
+
 </script>

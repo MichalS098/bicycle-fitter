@@ -123,7 +123,7 @@ const measureDone = async () => {
     measuringDone.value = true;
     showMeasureFinishedModal.value = true;
 
-    if (Platform.is('android')) {
+   /* if (Platform.is('android')) {
       // Sprawdzanie uprawnień
 const { status } = await Permissions.request({ name: 'storage' });
 
@@ -137,7 +137,7 @@ if (status === 'granted') {
 
     console.log('File written', result);
 }
-    }
+    }*/
 
 
     const user = await getUserFromDatabase();

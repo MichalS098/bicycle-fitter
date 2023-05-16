@@ -13,6 +13,10 @@
                     <bike-card v-for="bike in user?.bikes" :key="bike.id" :bike="bike" />
                     <new-bike-card />
                 </div>
+                <ion-button @click="deleteDataBaseAndReturnFirstSteps()" expand="block" shape="round" color="primary" mode="ios" type="button"
+                        class="font-bold text-lg">
+                        Delete Data Base
+                    </ion-button>
             </div>
             <space-for-tab-bar-menu />
         </ion-content>
@@ -28,6 +32,8 @@ import { onMounted, ref } from 'vue';
 import BikeCard from '@/components/BikeCard.vue';
 import NewBikeCard from '@/components/NewBikeCard.vue';
 import SpaceForTabBarMenu from '@/components/SpaceForTabBarMenu.vue';
+import { getUserFromDatabase, dropDatabase } from '@/helpers/helpersDataBase';
+
 
 const user = ref<User | null>(null);
 onMounted(async () => {
@@ -39,6 +45,30 @@ onMounted(async () => {
             bikes: true
         }
     });
+
 });
+const router = useIonRouter();
+
+const deleteDataBaseAndReturnFirstSteps = async () => {
+
+
+    const userTemp  = await getUserFromDatabase();
+    
+
+    if(userTemp != null){
+        await User.remove(userTemp);
+    }
+    else{
+        console.log("USer not found")
+    }
+
+    //dropDatabase();
+
+
+    router.replace('/first-steps');
+    
+    
+}
+
 </script>
   
