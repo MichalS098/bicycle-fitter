@@ -49,7 +49,14 @@ camera.lookAt(defaultCameraLookAt.x, defaultCameraLookAt.y, defaultCameraLookAt.
 const controls = new OrbitControls( camera, renderer.domElement );
 controls.target.set(defaultCameraLookAt.x, defaultCameraLookAt.y, defaultCameraLookAt.z);
 controls.update();
-
+controls.addEventListener('change', function() { 
+    if (camera.position.y < 0)      camera.position.y =    0; 
+    if (camera.position.y > 400)    camera.position.y =  400;
+    if (camera.position.x < -400)   camera.position.x = -400;
+    if (camera.position.x > 400)    camera.position.x =  400;
+    if (camera.position.z < -400)   camera.position.z = -400;
+    if (camera.position.z > 400)    camera.position.z =  400;
+});
 
 
 // Lights
@@ -89,15 +96,6 @@ spotLight4.penumbra = 0.5;
 spotLight4.intensity = 0.7;
 
 scene.fog = new THREE.Fog( 0x111111, 0.1, 1000 );
-
-controls.addEventListener('change', function() { 
-    if (camera.position.y < 0)      camera.position.y =    0; 
-    if (camera.position.y > 400)    camera.position.y =  400;
-    if (camera.position.x < -400)   camera.position.x = -400;
-    if (camera.position.x > 400)    camera.position.x =  400;
-    if (camera.position.z < -400)   camera.position.z = -400;
-    if (camera.position.z > 400)    camera.position.z =  400;
-});
 
 
 // Objects
