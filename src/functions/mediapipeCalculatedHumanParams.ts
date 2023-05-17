@@ -33,6 +33,21 @@ export class BodyAnglesFromMediapipe {
     ) { }
 }
 
+export class BodyAnglesMaxMin {
+    constructor(
+        public footFloorAngleMax: number,
+        public footFloorAngleMin: number,
+        public thighShankAngleMax: number,
+        public thighShankAngleMin: number,
+        public torsoFloorAngleMax: number,
+        public torsoFloorAngleMin: number,
+        public torsoBicepAngleMax: number,
+        public torsoBicepAngleMin: number,
+        public bicepForearmAngleMax: number,
+        public bicepForearmAngleMin: number,
+    ){}
+}
+
 
 function getDistanceBetweenPoints(point1: NormalizedLandmark, point2: NormalizedLandmark): number {
     const x1 = point1.x;
@@ -60,9 +75,10 @@ function getAngleBetweenPoints(point1: NormalizedLandmark, point2: NormalizedLan
     const p12 = getDistanceBetweenPoints(point1, point2); //p12
     const p23 = getDistanceBetweenPoints(point2, point3); //p23
     const p31 = getDistanceBetweenPoints(point3, point1); //p31
+    // returns in radians?
     const angle = Math.acos((Math.pow(p12, 2) + Math.pow(p31, 2) - Math.pow(p23, 2)) / (2 * p23 * p31));
 
-    return angle;
+    return angle * (180.0 / 3.14159);
 }
 
 
@@ -161,45 +177,97 @@ export function getBodyParamsMedian(bodyParams: BodyParamsFromMediapipe[]): Body
 }
 
 // getBodyParamsFromMediapipeResults
-export function getBodyAnglesFromMediapipeResults(results: Results): BodyAnglesFromMediapipe{
+export function getBodyAnglesFromMediapipeResults(results: Results, side: string): BodyAnglesFromMediapipe{
 
-    const crank_angle = 0;
+    let footFloorAngle = 0
+    let thighShankAngle = 0
+    let torsoFloorAngle = 0 
+    let torsoBicepAngle = 0
+    let bicepForearmAngle = 0
+    const crankAngle = 0
 
-    const left_foot_floor_angle = 0; //TODO
-    const left_torso_floor_angle = 0;
-    const left_thigh_shank_angle = getAngleBetweenPoints(results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_KNEE],
-                                                            results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_HIP],
-                                                            results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_ANKLE])
+    if (side == "right"){
+        footFloorAngle = 0;
+        torsoFloorAngle = 0
+        thighShankAngle = getAngleBetweenPoints(results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_KNEE],
+                                                results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_HIP],
+                                                results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_ANKLE])
 
-    const left_torso_bicep_angle = getAngleBetweenPoints(results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_SHOULDER],
-                                                            results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_ELBOW],
-                                                            results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_HIP])
+        torsoBicepAngle = getAngleBetweenPoints(results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_SHOULDER],
+                                                results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_ELBOW],
+                                                results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_HIP])
 
-    const left_bicep_forearm_angle = getAngleBetweenPoints(results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_ELBOW],
-                                                            results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_SHOULDER],
-                                                            results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_WRIST])
+        bicepForearmAngle = getAngleBetweenPoints(results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_ELBOW],
+                                                  results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_SHOULDER],
+                                                  results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_WRIST])
+    }
+    else if (side == "left"){
+        footFloorAngle = 0; //TODO
+        torsoFloorAngle = 0;
+        thighShankAngle = getAngleBetweenPoints(results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_KNEE],
+                                                results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_HIP],
+                                                results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_ANKLE])
+    
+        torsoBicepAngle = getAngleBetweenPoints(results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_SHOULDER],
+                                                results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_ELBOW],
+                                                results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_HIP])
+    
+        bicepForearmAngle = getAngleBetweenPoints(results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_ELBOW],
+                                                results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_SHOULDER],
+                                                results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_WRIST])
+    }
+                                                     
+    return new BodyAnglesFromMediapipe(footFloorAngle,
+                                        thighShankAngle,
+                                        torsoFloorAngle,
+                                        torsoBicepAngle,
+                                        bicepForearmAngle,
+                                        crankAngle)
 
+}
 
-    const right_foot_floor_angle = 0; //TODO
-    const right_torso_floor_angle = 0;
-    const right_thigh_shank_angle = getAngleBetweenPoints(results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_KNEE],
-                                                            results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_HIP],
-                                                            results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_ANKLE])
+export function getMaxMinEveryAngle(measurements: BodyAnglesFromMediapipe[]){
+    let current = measurements[0]
+    let footFloorAngleMax = current.footFloorAngle
+    let footFloorAngleMin = current.footFloorAngle
+    let thighShankAngleMax = current.thighShankAngle
+    let thighShankAngleMin = current.thighShankAngle
+    let torsoFloorAngleMax = current.torsoFloorAngle
+    let torsoFloorAngleMin = current.torsoFloorAngle
+    let torsoBicepAngleMax = current.torsoBicepAngle
+    let torsoBicepAngleMin = current.torsoBicepAngle
+    let bicepForearmAngleMax = current.bicepForearmAngle
+    let bicepForearmAngleMin = current.bicepForearmAngle
 
-    const right_torso_bicep_angle = getAngleBetweenPoints(results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_SHOULDER],
-                                                            results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_ELBOW],
-                                                            results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_HIP])
+    for (let i=1; i<measurements.length; ++i){
+        current = measurements[i];
+        if (current.footFloorAngle < footFloorAngleMin) footFloorAngleMin = current.footFloorAngle
+        if (current.footFloorAngle > footFloorAngleMax) footFloorAngleMax = current.footFloorAngle
 
-    const right_bicep_forearm_angle = getAngleBetweenPoints(results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_ELBOW],
-                                                            results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_SHOULDER],
-                                                            results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_WRIST])
+        //works
+        if (current.thighShankAngle < thighShankAngleMin) thighShankAngleMin = current.thighShankAngle
+        if (current.thighShankAngle > thighShankAngleMax) thighShankAngleMax = current.thighShankAngle
 
-                                                            
-    return new BodyAnglesFromMediapipe(left_foot_floor_angle,
-                                        left_thigh_shank_angle,
-                                        left_torso_floor_angle,
-                                        left_torso_bicep_angle,
-                                        left_bicep_forearm_angle,
-                                        crank_angle)
+        if (current.torsoFloorAngle < torsoFloorAngleMin) torsoFloorAngleMin = current.torsoFloorAngle
+        if (current.torsoFloorAngle > torsoFloorAngleMax) torsoFloorAngleMax = current.torsoFloorAngle
 
+        //doesnt
+        if (current.torsoBicepAngle < torsoBicepAngleMin) torsoBicepAngleMin = current.torsoBicepAngle
+        if (current.torsoBicepAngle > torsoBicepAngleMax) torsoBicepAngleMax = current.torsoBicepAngle
+        
+        //doesnt
+        if (current.bicepForearmAngle < bicepForearmAngleMin) bicepForearmAngleMin = current.bicepForearmAngle
+        if (current.bicepForearmAngle > bicepForearmAngleMax) bicepForearmAngleMax = current.bicepForearmAngle
+    }
+
+    return new BodyAnglesMaxMin(footFloorAngleMax,
+         footFloorAngleMin,
+          thighShankAngleMax,
+           thighShankAngleMin,
+            torsoFloorAngleMax,
+             torsoFloorAngleMin,
+              torsoBicepAngleMax,
+               torsoBicepAngleMin,
+                bicepForearmAngleMax,
+                 bicepForearmAngleMin)
 }

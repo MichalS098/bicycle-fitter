@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, Relation, BaseEntity } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, Relation, BaseEntity, OneToMany } from "typeorm";
 import { User } from "@/entity/User";
+import { Angles } from "@/entity/Angles";
 
 @Entity('bike')
 export class Bike extends BaseEntity {
@@ -55,4 +56,9 @@ export class Bike extends BaseEntity {
         cascade: ['insert']
     })
     user!: Relation<User>;
+
+    @OneToMany(type => Angles, angles => angles.bike, {
+        cascade: ['insert']
+    })
+    angles!: Relation<Angles>
 }

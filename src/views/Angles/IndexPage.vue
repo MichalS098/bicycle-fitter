@@ -38,7 +38,7 @@
             <transition>
                 <div v-show="allBodyPointsVisible && counter == 0"
                     class="absolute bottom-6 left-3 right-3 h-10 rounded-2xl bg-secondary border-gray-900 p-3 flex gap-3 items-start shadow-lg overflow-hidden">
-                    <ion-progress-bar :value="measuringProgress / (60*5)" class="w-full h-full" color="light"></ion-progress-bar>
+                    <ion-progress-bar :value="measuringProgress / (samples)" class="w-full h-full" color="light"></ion-progress-bar>
                 </div>
             </transition>
 
@@ -57,11 +57,14 @@ import { ref, onMounted, Transition, watch, WatchOptions } from "vue";
 import useMediapipe from '@/composables/useMediapipe';
 import { Camera } from '@mediapipe/camera_utils';
 import { alertCircleOutline, hourglassOutline, options } from 'ionicons/icons';
-import { getBodyAnglesFromMediapipeResults, BodyAnglesFromMediapipe, getBodyParamsMedian } from '@/functions/mediapipeCalculatedHumanParams';
+import { getBodyAnglesFromMediapipeResults, BodyAnglesFromMediapipe, BodyAnglesMaxMin, getMaxMinEveryAngle } from '@/functions/mediapipeCalculatedHumanParams';
 import { useIonRouter } from '@ionic/vue';
 import { getUserFromDatabase } from '@/helpers/helpersDataBase'
-import { areAllBodyPointsVisible } from '@/helpers/mediapipeHelpers';
+import { areAllBodyPointsVisible, areAllLeftBodyPointsVisible, areAllRightBodyPointsVisible } from '@/helpers/mediapipeHelpers';
 import MeasureFinishedModal from './MeasureFinishedModal.vue';
+import { useRoute } from 'vue-router';
+import { Bike } from '@/entity/Bike';
+import { Angles } from '@/entity/Angles';
 
 const router = useIonRouter();
 const video = ref<HTMLVideoElement>();
@@ -73,15 +76,25 @@ const allBodyPointsVisible = ref(false);
 const measuringProgress = ref(0);
 const counter = ref(5);
 
-const bodyAngles = ref<BodyAnglesFromMediapipe>({
-    footFloorAngle: 0,
-    thighShankAngle: 0,
-    torsoFloorAngle: 0,
-    torsoBicepAngle: 0,
-    bicepForearmAngle: 0,
-    crankAngle: 0
+const route = useRoute(); //shouldnt we use IonicRouter?
+const bike_id = Number(route.params.id);
+const bike = ref<Bike | null>();
+
+const samples = 60*5;
+
+const bodyAngles = ref<BodyAnglesMaxMin>({
+    footFloorAngleMax: 0,
+    footFloorAngleMin: 0,
+    thighShankAngleMax: 0,
+    thighShankAngleMin: 0,
+    torsoFloorAngleMax: 0,
+    torsoFloorAngleMin: 0,
+    torsoBicepAngleMax: 0,
+    torsoBicepAngleMin: 0,
+    bicepForearmAngleMax: 0,
+    bicepForearmAngleMin: 0,
 });
-const bodyAnglesArray: BodyAnglesFromMediapipe[] = new Array(60);
+const bodyAnglesArray: BodyAnglesFromMediapipe[] = new Array(samples);
 
 
 onMounted(async () => {
@@ -91,6 +104,43 @@ onMounted(async () => {
     setupMediaPipe(video.value, canvas.value);
 });
 
+const measureDone = async () => {
+    measuringDone.value = true;
+    const angles = new Angles();
+
+    bike.value = await Bike.findOneBy({
+        id: bike_id
+    })
+    console.log("bike: ", bike.value);
+
+    console.log("footFlootMaxAngle: ", angles.footFloorAngleMax = bodyAngles.value.footFloorAngleMax)
+    console.log("footFloorAngleMin: ", angles.footFloorAngleMin = bodyAngles.value.footFloorAngleMin)
+    console.log("torsoFloorAngleMax: ", angles.torsoFloorAngleMax = bodyAngles.value.torsoFloorAngleMax)
+    console.log("torsoFloorAngleMin: ", angles.torsoFloorAngleMin = bodyAngles.value.torsoFloorAngleMin)
+    console.log("thighShankAngleMax: ", angles.thighShankAngleMax = bodyAngles.value.thighShankAngleMax) //works
+    console.log("thighShankAngleMin: ", angles.thighShankAngleMin = bodyAngles.value.thighShankAngleMin) //works
+    console.log("torsoBicepAngleMax: ", angles.torsoBicepAngleMax = bodyAngles.value.torsoBicepAngleMax)
+    console.log("torsoBicepAngleMin: ", angles.torsoBicepAngleMin = bodyAngles.value.torsoBicepAngleMin)
+    console.log("bicepForearmAngleMax: ", angles.bicepForearmAngleMax = bodyAngles.value.bicepForearmAngleMax)
+    console.log("bicepForearmAngleMin: ", angles.bicepForearmAngleMin = bodyAngles.value.bicepForearmAngleMin)
+
+    if (bike.value != null){
+        angles.footFloorAngleMax = bodyAngles.value.footFloorAngleMax
+        angles.footFloorAngleMin = bodyAngles.value.footFloorAngleMin
+        angles.thighShankAngleMax = bodyAngles.value.thighShankAngleMax
+        angles.thighShankAngleMin = bodyAngles.value.thighShankAngleMin
+        angles.torsoFloorAngleMax = bodyAngles.value.torsoFloorAngleMax
+        angles.torsoFloorAngleMin = bodyAngles.value.torsoFloorAngleMin
+        angles.torsoBicepAngleMax = bodyAngles.value.torsoBicepAngleMax
+        angles.torsoBicepAngleMin = bodyAngles.value.torsoBicepAngleMin
+        angles.bicepForearmAngleMax = bodyAngles.value.bicepForearmAngleMax
+        angles.bicepForearmAngleMin = bodyAngles.value.bicepForearmAngleMin
+        angles.crankAngle = 0 // TODO: It doesnt make sense to track the minimum and maximum angle of the crank
+        // getMaxMinEveryAngle() doesnt calculate it either, remove later.
+        angles.bike = bike.value
+        await angles.save();
+    }
+}
 
 const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
     const { pose, drawResults } = useMediapipe();
@@ -99,16 +149,18 @@ const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
         drawResults(results, canvas);
 
         if (results.poseLandmarks !== undefined){
-            if (areAllBodyPointsVisible(results.poseLandmarks)) {
+            if (areAllLeftBodyPointsVisible(results.poseLandmarks)) { //HARDCODED
                 allBodyPointsVisible.value = true;
 
                 if (counter.value == 0){
-                    if (measuringProgress.value > 60*5){
+                    if (measuringProgress.value > samples){
                         measuringDone.value = true
-                        // camera.value?.stop()
+                        camera.value?.stop()
+                        bodyAngles.value = getMaxMinEveryAngle(bodyAnglesArray)
+                        measureDone()
                     } 
                     else{
-                        bodyAnglesArray[measuringProgress.value] = getBodyAnglesFromMediapipeResults(results)
+                        bodyAnglesArray[measuringProgress.value] = getBodyAnglesFromMediapipeResults(results, "left")
                     }
                     measuringProgress.value++
                 }

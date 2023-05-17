@@ -62,7 +62,7 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/Bikes/ShowPage.vue')
     },
     {
-        path: '/angles',
+        path: '/angles/:id',
         component: () => import('@/views/Angles/IndexPage.vue')
     },
     {

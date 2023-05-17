@@ -68,7 +68,12 @@ const goToHome = () => {
 };
 
 const goToAngles = () => {
-    router.navigate('/angles', 'none', 'replace');
+    // router.navigate('/angles', 'none', 'replace');
+    if (bike.value != null)
+        router.navigate('/angles/' + bike.value.id, 'none', 'replace');
+    else {
+        console.log("goToAngles(): bike entity is null")
+    }
 };
 
 
