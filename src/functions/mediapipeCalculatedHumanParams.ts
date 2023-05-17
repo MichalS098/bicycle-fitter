@@ -10,6 +10,7 @@ import {
     Results,
 } from '@mediapipe/pose';
 import { median } from '@/helpers/mathHelpers';
+import { getUserFromDatabase } from '@/helpers/helpersDataBase'
 
 export class BodyParamsFromMediapipe {
     constructor(
@@ -55,7 +56,7 @@ function getAngleBetweenPoints(point1: NormalizedLandmark, point2: NormalizedLan
 }
 
 
-export function getBodyParamsFromMediapipeResults(results: Results): BodyParamsFromMediapipe {
+export async function getBodyParamsFromMediapipeResults(results: Results): Promise<BodyParamsFromMediapipe> {
 
     const left_shoulder_to_hip = getDistanceBetweenPoints(results.poseWorldLandmarks[POSE_LANDMARKS_LEFT.LEFT_SHOULDER], results.poseWorldLandmarks[POSE_LANDMARKS_LEFT.LEFT_HIP]);
     const right_shoulder_to_hip = getDistanceBetweenPoints(results.poseWorldLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_SHOULDER], results.poseWorldLandmarks[POSE_LANDMARKS.RIGHT_HIP]);
@@ -76,7 +77,7 @@ export function getBodyParamsFromMediapipeResults(results: Results): BodyParamsF
     thirdSideOfTriangle = getDistanceBetweenPoints(results.poseWorldLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_HEEL], results.poseWorldLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_ANKLE]);
     const hFootRight = theHeightOfTheTriangle(firstSideOfTriangle, secondSideOfTriangle, thirdSideOfTriangle)
 
-    const shoulderHeightTemp = shoulderHeight(left_shoulder_to_hip,
+    const shoulderHeightTemp = await shoulderHeight(left_shoulder_to_hip,
         right_shoulder_to_hip,
         left_hip_to_knee,
         right_hip_to_knee,
@@ -96,6 +97,16 @@ export function getBodyParamsFromMediapipeResults(results: Results): BodyParamsF
     const leftElbowToLeftWrist = getDistanceBetweenPoints(results.poseWorldLandmarks[POSE_LANDMARKS_LEFT.LEFT_ELBOW], results.poseWorldLandmarks[POSE_LANDMARKS_LEFT.LEFT_WRIST]);
     const rightElbowToRightWrist = getDistanceBetweenPoints(results.poseWorldLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_ELBOW], results.poseWorldLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_WRIST]);
 
+    const user = await getUserFromDatabase();
+    if (user != null) {
+        user.leftElbowToLeftShoulder = leftElbowToLeftShoulder;
+        user.rightElbowToRightShoulder = rightElbowToRightShoulder;
+        user.leftElbowToLeftWrist = leftElbowToLeftWrist;
+        user.rightElbowToRightWrist = rightElbowToRightWrist;
+
+        await user.save();
+    }
+
     const armLengthTemp = armLength(leftElbowToLeftShoulder + leftElbowToLeftWrist, rightElbowToRightShoulder + rightElbowToRightWrist);
 
     const leftAnkleToLeftKnee = getDistanceBetweenPoints(results.poseWorldLandmarks[POSE_LANDMARKS_LEFT.LEFT_ANKLE], results.poseWorldLandmarks[POSE_LANDMARKS_LEFT.LEFT_KNEE]);
@@ -113,17 +124,47 @@ export function getBodyParamsFromMediapipeResults(results: Results): BodyParamsF
 }
 
 
-function shoulderHeight(left_shoulder_to_hip: number,
+async function shoulderHeight(left_shoulder_to_hip: number,
     right_shoulder_to_hip: number,
     left_hip_to_knee: number,
     right_hip_to_knee: number,
     left_knee_to_ankle: number,
     right_knee_to_ankle: number,
     left_ankle_to_foot_index: number,
-    right_ankle_to_foot_index: number): number {
+    right_ankle_to_foot_index: number): Promise<number> {
 
     const left_height = left_shoulder_to_hip + left_hip_to_knee + left_knee_to_ankle + left_ankle_to_foot_index;
     const right_height = right_shoulder_to_hip + right_hip_to_knee + right_knee_to_ankle + right_ankle_to_foot_index;
+
+    console.log("left_height: ", left_height)
+    console.log("left_shoulder_to_hip: ", left_shoulder_to_hip)
+    console.log("left_hip_to_knee: ", left_hip_to_knee)
+    console.log("left_knee_to_ankle: ", left_knee_to_ankle)
+    console.log("left_ankle_to_foot_index: ", left_ankle_to_foot_index)
+
+
+    console.log("right_height: ", right_height)
+    console.log("right_shoulder_to_hip: ", right_shoulder_to_hip)
+    console.log("right_hip_to_knee: ", right_hip_to_knee)
+    console.log("right_knee_to_ankle: ", right_knee_to_ankle)
+    console.log("right_ankle_to_foot_index: ", right_ankle_to_foot_index)
+
+
+    const user = await getUserFromDatabase();
+    if (user != null) {
+        user.left_ankle_to_foot_index = left_ankle_to_foot_index;
+        user.left_hip_to_knee = left_hip_to_knee;
+        user.left_knee_to_ankle = left_knee_to_ankle;
+        user.left_shoulder_to_hip = left_shoulder_to_hip;
+
+        user.right_ankle_to_foot_index = right_ankle_to_foot_index;
+        user.right_hip_to_knee = right_hip_to_knee;
+        user.right_knee_to_ankle = right_knee_to_ankle;
+        user.right_shoulder_to_hip = right_shoulder_to_hip;
+        await user.save();
+    }
+
+
 
     return (left_height + right_height) / 2;
 }

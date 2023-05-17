@@ -16,6 +16,30 @@ export class User extends BaseEntity {
     riderStyle!: string;
     @Column()
     nameOfUser!: string;
+    @Column()
+    left_shoulder_to_hip!: number;
+    @Column()
+    left_hip_to_knee!: number;
+    @Column()
+    left_knee_to_ankle!: number;
+    @Column()
+    left_ankle_to_foot_index!: number;
+    @Column()
+    right_shoulder_to_hip!: number;
+    @Column()
+    right_hip_to_knee!: number;
+    @Column()
+    right_knee_to_ankle!: number;
+    @Column()
+    right_ankle_to_foot_index!: number;
+    @Column()
+    leftElbowToLeftShoulder!: number;
+    @Column()
+    rightElbowToRightShoulder!: number;
+    @Column()
+    leftElbowToLeftWrist!: number;
+    @Column()
+    rightElbowToRightWrist!: number;
     // Human body parameters
     @Column()
     shankLength!: number;

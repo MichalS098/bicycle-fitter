@@ -25,11 +25,25 @@
             <ul>
                 <li>name: {{ user?.nameOfUser }}</li>
                 <li>overallHeight: {{ user?.overallHeight }}</li>
-                <li>shankLength: {{ user?.shankLength }}</li>
-                <li>thighLength: {{ user?.thighLength }}</li>
-                <li>inseamLength: {{ user?.inseamLength }}</li>
-                <li>shoulderHeight: {{ user?.shoulderHeight }}</li>
-                <li>armLength: {{ user?.armLength }}</li>
+                <li>shankLength: {{ user?.shankLength.toFixed(2) }}</li>
+                <li>thighLength: {{ user?.thighLength.toFixed(2) }}</li>
+                <li>inseamLength: {{ user?.inseamLength.toFixed(2) }}</li>
+                <li>shoulderHeight: {{ user?.shoulderHeight.toFixed(2) }}</li>
+                <li>armLength: {{ user?.armLength.toFixed(2) }}</li>
+
+                <li>left_shoulder_to_hip: {{ user?.left_shoulder_to_hip.toFixed(2) }}</li>
+                <li>left_hip_to_knee: {{ user?.left_hip_to_knee.toFixed(2) }}</li>
+                <li>left_knee_to_ankle: {{ user?.left_knee_to_ankle.toFixed(2) }}</li>
+                <li>left_ankle_to_foot_index: {{ user?.left_ankle_to_foot_index.toFixed(2) }}</li>
+                <li>right_shoulder_to_hip: {{ user?.right_shoulder_to_hip.toFixed(2) }}</li>
+                <li>right_hip_to_knee: {{ user?.right_hip_to_knee.toFixed(2) }}</li>
+                <li>right_knee_to_ankle: {{ user?.right_knee_to_ankle.toFixed(2) }}</li>
+                <li>right_ankle_to_foot_index: {{ user?.right_ankle_to_foot_index.toFixed(2) }}</li>
+
+                <li>leftElbowToLeftShoulder: {{ user?.right_shoulder_to_hip.toFixed(2) }}</li>
+                <li>rightElbowToRightShoulder: {{ user?.right_hip_to_knee.toFixed(2) }}</li>
+                <li>leftElbowToLeftWrist: {{ user?.right_knee_to_ankle.toFixed(2) }}</li>
+                <li>rightElbowToRightWrist: {{ user?.right_ankle_to_foot_index.toFixed(2) }}</li>
             </ul>
             <space-for-tab-bar-menu />
         </ion-content>
@@ -37,15 +51,44 @@
 </template>
   
 <script setup lang="ts">
+/*
+ @Column()
+    left_shoulder_to_hip!: number;
+    @Column()
+    left_hip_to_knee!: number;
+    @Column()
+    left_knee_to_ankle!: number;
+    @Column()
+    left_ankle_to_foot_index!: number;
+    @Column()
+    right_shoulder_to_hip!: number;
+    @Column()
+    right_hip_to_knee!: number;
+    @Column()
+    right_knee_to_ankle!: number;
+    @Column()
+    right_ankle_to_foot_index!: number;
+    @Column()
+
+
+    leftElbowToLeftShoulder!: number;
+    @Column()
+    rightElbowToRightShoulder!: number;
+    @Column()
+    leftElbowToLeftWrist!: number;
+    @Column()
+    rightElbowToRightWrist!: number;
+*/
 import {
     IonPage, IonContent, useIonRouter
 } from '@ionic/vue';
 import { User } from '@/entity/User';
+import { Bike } from '@/entity/Bike';
 import { onMounted, ref } from 'vue';
 import BikeCard from '@/components/BikeCard.vue';
 import NewBikeCard from '@/components/NewBikeCard.vue';
 import SpaceForTabBarMenu from '@/components/SpaceForTabBarMenu.vue';
-import { getUserFromDatabase, dropDatabase } from '@/helpers/helpersDataBase';
+import { getUserFromDatabase, dropDatabase, getLastBikeOfUser } from '@/helpers/helpersDataBase';
 
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
 
@@ -76,6 +119,16 @@ const deleteDataBaseAndReturnFirstSteps = async () => {
     else{
         console.log("USer not found")
     }
+
+    const bikeTemp = await getLastBikeOfUser();
+
+    if(bikeTemp != null){
+        await Bike.remove(bikeTemp);
+    }
+    else{
+        console.log("Last Bike not found")
+    }
+
 
     router.replace('/first-steps');
     

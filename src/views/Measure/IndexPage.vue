@@ -164,9 +164,9 @@ onMounted(async () => {
     setupMediaPipe(video.value, canvas.value);
 });
 
-const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
+const  setupMediaPipe  =  (video: HTMLVideoElement, canvas: HTMLCanvasElement)   => {
     const { pose, drawResults } = useMediapipe();
-    pose.onResults((results) => {
+    pose.onResults(async(results) => {
         drawResults(results, canvas);
 
         if (results.poseLandmarks !== undefined) {
@@ -177,7 +177,7 @@ const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
                     bodyParams.value = getBodyParamsMedian(bodyParamsArray);
                     measureDone();
                 } else {
-                    const bodyParams = getBodyParamsFromMediapipeResults(results);
+                    const bodyParams = await getBodyParamsFromMediapipeResults(results);
                     bodyParamsArray[measuringProgress.value] = bodyParams;
                 }
                 measuringProgress.value++;
