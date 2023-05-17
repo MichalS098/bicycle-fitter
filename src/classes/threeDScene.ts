@@ -6,14 +6,13 @@ import * as TWEEN from '@tweenjs/tween.js';
 
 export class threeDScene {
 
-    private _drawSpheres: boolean;
+    private _bikeUrl: URL =  new URL('/resources/3d_models/city_bike/bicycle.glb', import.meta.url);
 
-    private _bikeUrl: URL = new URL('assets/models/bike.glb', window.location.href);
     
     private _scene!: THREE.Scene;
     private _camera!:   THREE.PerspectiveCamera;
     private _controls!: OrbitControls;
-    private _renderer: THREE.WebGLRenderer;
+    _renderer: THREE.WebGLRenderer;
 
     
     private _defaultCameraPosition: THREE.Vector3 =  new THREE.Vector3(290, 70, -170);
@@ -32,9 +31,7 @@ export class threeDScene {
     };
 
 
-    constructor(drawSpheres: boolean) {
-        
-        this._drawSpheres = drawSpheres;
+    constructor() {
         
         this._renderer = new THREE.WebGLRenderer();
         this._renderer.setSize( window.innerWidth, window.innerHeight );
@@ -48,7 +45,6 @@ export class threeDScene {
         this.lightSetup();
         this.addObjectsToScene();
         this.createAnimations();
-        // this._renderer.setAnimationFrame(this.animate);
     }
 
     cameraSetup() {
@@ -63,14 +59,14 @@ export class threeDScene {
         this._controls.target.set(this._defaultCameraLookAt.x, this._defaultCameraLookAt.y, this._defaultCameraLookAt.z);
         this._controls.update();
 
-        // this._controls.addEventListener('change', function() { 
-        //     if (this._camera.position.y < 0)      this._camera.position.y =    0; 
-        //     if (this._camera.position.y > 400)    this._camera.position.y =  400;
-        //     if (this._camera.position.x < -400)   this._camera.position.x = -400;
-        //     if (this._camera.position.x > 400)    this._camera.position.x =  400;
-        //     if (this._camera.position.z < -400)   this._camera.position.z = -400;
-        //     if (this._camera.position.z > 400)    this._camera.position.z =  400;
-        // });
+        this._controls.addEventListener('change', () => { 
+            if (this._camera.position.y < 0)      this._camera.position.y =    0; 
+            if (this._camera.position.y > 400)    this._camera.position.y =  400;
+            if (this._camera.position.x < -400)   this._camera.position.x = -400;
+            if (this._camera.position.x > 400)    this._camera.position.x =  400;
+            if (this._camera.position.z < -400)   this._camera.position.z = -400;
+            if (this._camera.position.z > 400)    this._camera.position.z =  400;
+        });
     }
 
     lightSetup() {
@@ -148,22 +144,6 @@ export class threeDScene {
                 console.log('An error occured: ', error);
             }
         );
-        
-        
-        
-        // if (this._drawSpheres) {
-        //     const sphereGeometry = new THREE.SphereGeometry(3, 10, 10);
-        //     const sphereMaterial = new THREE.MeshStandardMaterial({color: 0xffffff, wireframe: true});
-        
-        //     for (const key in this._bikeModelPoints) {
-        //         const position = this._bikeModelPoints[key];
-        
-        //         const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-        //         sphere.position.copy(position);
-        //         this._scene.add(sphere);
-        //     }
-        // }
-        // TODO: draw connection lines between points
     }
 
     createCameraPositionTween(camera: { position: THREE.Vector3; }, fromPoint: THREE.Vector3, toPoint: THREE.Vector3, duration: number | undefined, easing: ((amount: number) => number) | undefined) {
@@ -178,6 +158,7 @@ export class threeDScene {
             .easing(easing)
             .onComplete(() => {
                 camera.position.set(newCameraPosition.x, newCameraPosition.y, newCameraPosition.z);
+                console.log('camera position tween complete')
             });
     }
 
@@ -254,14 +235,20 @@ export class threeDScene {
         tween1.start();
         lookAtTween1.start();
     }
+
+    // drawLinesBetweenPoints() {
+    // }
+
+    // createAnimation(camera, startPoint, endPoint, duration, easing) {
+    // }
+
+
     animate(time?: number) {
 
-        requestAnimationFrame(this.animate);
+        requestAnimationFrame(this.animate.bind(this));
         TWEEN.update(time);
     
         this._renderer.render(this._scene, this._camera);
         // console.log("position: ", camera.position);
     }
-
-
 }
