@@ -97,7 +97,6 @@ controls.addEventListener('change', function() {
     if (camera.position.x > 400)    camera.position.x =  400;
     if (camera.position.z < -400)   camera.position.z = -400;
     if (camera.position.z > 400)    camera.position.z =  400;
-    // spotLight4.position.set( camera.position.x, camera.position.y, camera.position.z );
 });
 
 
@@ -150,7 +149,7 @@ const bikeModelPoints = {
     frontPedal: new THREE.Vector3(11, 0.7, 8),
     backPedal: new THREE.Vector3(-16, 22, -9)
 };
-
+// TODO: draw connection lines between points
 const spheres = [];
 
 if (drawSpheres) {
@@ -169,6 +168,8 @@ if (drawSpheres) {
 
 
 // Animation
+
+// TODO: refactor all this animation code
 
 function createCameraPositionTween(camera, fromPoint, toPoint, duration, easing) {
     const midPoint = new THREE.Vector3().addVectors(fromPoint, toPoint).multiplyScalar(0.5);
@@ -221,31 +222,7 @@ tween1.start();
 lookAtTween1.start();
 
 
-// Inputs
-
-const rayCaster = new THREE.Raycaster();
-const mousePosition = new THREE.Vector2();
-
-if (touchInputs) {
-    window.addEventListener('click', (event) => {
-        mousePosition.x = (event.clientX / window.innerWidth) * 2 - 1;
-        mousePosition.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-        rayCaster.setFromCamera(mousePosition, camera);
-
-        const intersects = rayCaster.intersectObjects(spheres);
-
-        if (intersects.length > 0)
-            camera.lookAt(intersects[0].object.position);
-        else 
-            camera.lookAt(defaultCameraLookAt.x, defaultCameraLookAt.y, defaultCameraLookAt.z);
-    });
-}
-
-
 function animate(time) {
-    if (touchInputs)
-        rayCaster.setFromCamera(mousePosition, camera);
 
     requestAnimationFrame(animate);
     TWEEN.update(time);
