@@ -15,19 +15,14 @@
 
 <script>
 import { onMounted, ref } from "vue";
-import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import * as TWEEN from '@tweenjs/tween.js';
-
-// import { getBodyParamsFromMediapipeResults, BodyParamsFromMediapipe, getBodyParamsMedian } from '@/functions/mediapipeCalculatedHumanParams';
 import { threeDScene } from '@/classes/threeDScene';
-
 
 const threeDS = new threeDScene();
 
 threeDS._renderer.setAnimationFrame(threeDS.animate);
 
+threeDS.drawLinesBetweenPoints(threeDS._bikeModelPoints.saddle, threeDS._bikeModelPoints.handleBar);
+// threeDS.createSetAnimations();
 
 
 

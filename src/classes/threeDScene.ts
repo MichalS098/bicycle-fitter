@@ -7,7 +7,6 @@ import * as TWEEN from '@tweenjs/tween.js';
 export class threeDScene {
 
     private _bikeUrl: URL =  new URL('/resources/3d_models/city_bike/bicycle.glb', import.meta.url);
-
     
     private _scene!: THREE.Scene;
     private _camera!:   THREE.PerspectiveCamera;
@@ -17,6 +16,9 @@ export class threeDScene {
     
     private _defaultCameraPosition: THREE.Vector3 =  new THREE.Vector3(290, 70, -170);
     private _defaultCameraLookAt:   THREE.Vector3 =  new THREE.Vector3(40, 30, -0.7);
+
+    actualCameraPosition: THREE.Vector3;
+    actualCameraLookAt:   THREE.Vector3;
 
 
     _bikeModelPoints = {
@@ -42,22 +44,23 @@ export class threeDScene {
         document.body.appendChild( this._renderer.domElement );             // TO JEST DO ZMIANY ŻEBY SCENA NIE BYŁA NA GÓRZE STRONY 
 
         this.cameraSetup();
+
+        this.actualCameraPosition = this._defaultCameraPosition;
+        this.actualCameraLookAt   = this._defaultCameraLookAt;
+
         this.lightSetup();
         this.addObjectsToScene();
-        this.createAnimations();
+        this.createSetAnimations();
     }
 
     cameraSetup() {
 
         this._scene = new THREE.Scene();
         this._camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 2000 );
-
-        this._camera.position.set(this._defaultCameraPosition.x, this._defaultCameraPosition.y, this._defaultCameraPosition.z);
-        this._camera.lookAt(this._defaultCameraLookAt.x, this._defaultCameraLookAt.y, this._defaultCameraLookAt.z);
-
         this._controls = new OrbitControls( this._camera, this._renderer.domElement );
-        this._controls.target.set(this._defaultCameraLookAt.x, this._defaultCameraLookAt.y, this._defaultCameraLookAt.z);
-        this._controls.update();
+
+        this.setCameraPosition(this._defaultCameraPosition);
+        this.setCameraLookAt(this._defaultCameraLookAt);
 
         this._controls.addEventListener('change', () => { 
             if (this._camera.position.y < 0)      this._camera.position.y =    0; 
@@ -66,6 +69,8 @@ export class threeDScene {
             if (this._camera.position.x > 400)    this._camera.position.x =  400;
             if (this._camera.position.z < -400)   this._camera.position.z = -400;
             if (this._camera.position.z > 400)    this._camera.position.z =  400;
+            this.setCameraPosition(this._camera.position);
+            // this.setCameraLookAt(this._controls.target);             // we need this!!
         });
     }
 
@@ -146,6 +151,18 @@ export class threeDScene {
         );
     }
 
+    setCameraPosition(position: THREE.Vector3) {
+        this._camera.position.set(position.x, position.y, position.z);
+        this.actualCameraPosition = position;
+    }
+
+    setCameraLookAt(position: THREE.Vector3) {
+        this._camera.lookAt(position.x, position.y, position.z);
+        this._controls.target.set(position.x, position.y, position.z);
+        this._controls.update();
+        this.actualCameraLookAt = position;
+    }
+
     createCameraPositionTween(camera: { position: THREE.Vector3; }, fromPoint: THREE.Vector3, toPoint: THREE.Vector3, duration: number | undefined, easing: ((amount: number) => number) | undefined) {
         const midPoint = new THREE.Vector3().addVectors(fromPoint, toPoint).multiplyScalar(0.5);
         const dir = new THREE.Vector3().subVectors(camera.position, midPoint);
@@ -157,17 +174,14 @@ export class threeDScene {
             .to(newCameraPosition, duration)
             .easing(easing)
             .onComplete(() => {
-                camera.position.set(newCameraPosition.x, newCameraPosition.y, newCameraPosition.z);
-                console.log('camera position tween complete')
+                this.setCameraPosition(newCameraPosition);
             });
     }
 
-    createCameraLookAtTween(camera: { lookAt: (arg0: THREE.Vector3) => void; }, startLookAt: { x: any; y: any; z: any; }, fromPoint: THREE.Vector3, toPoint: THREE.Vector3, duration: number | undefined, easing: ((amount: number) => number) | undefined) {
-        // const startLookAt = camera.getWorldDirection(new THREE.Vector3()).clone(); 
+    createCameraLookAtTween(camera: { lookAt: (arg0: THREE.Vector3) => void; }, fromPoint: THREE.Vector3, toPoint: THREE.Vector3, duration: number | undefined, easing: ((amount: number) => number) | undefined) {
         const endLookAt = new THREE.Vector3().addVectors(fromPoint, toPoint).multiplyScalar(0.5);
-    
-        const tweenLookAt = {x: startLookAt.x, y: startLookAt.y, z: startLookAt.z};
-    
+        const tweenLookAt = this.actualCameraLookAt;
+
         return new TWEEN.Tween(tweenLookAt)
             .to({x: endLookAt.x, y: endLookAt.y, z: endLookAt.z}, duration)
             .easing(easing)
@@ -175,12 +189,11 @@ export class threeDScene {
             camera.lookAt(new THREE.Vector3(tweenLookAt.x, tweenLookAt.y, tweenLookAt.z));
             })
             .onComplete(() => {
-                this._controls.target.set(endLookAt.x, endLookAt.y, endLookAt.z);
-                this._controls.update();
+                this.setCameraLookAt(endLookAt);
             });
     }
 
-    createAnimations() {
+    createSetAnimations() {
 
         const easing = TWEEN.Easing.Exponential.InOut;
 
@@ -192,8 +205,7 @@ export class threeDScene {
             easing);
 
         const lookAtTween1 = this.createCameraLookAtTween(
-            this._camera,                    
-            this._defaultCameraLookAt,                 
+            this._camera,                                
             this._bikeModelPoints.saddle,           
             this._bikeModelPoints.handleBar,                                           
             2000,                                        
@@ -207,8 +219,7 @@ export class threeDScene {
             easing);
 
         const lookAtTween2 = this.createCameraLookAtTween(
-            this._camera,                 
-            new THREE.Vector3().addVectors(this._bikeModelPoints.saddle, this._bikeModelPoints.handleBar).multiplyScalar(0.5),                 
+            this._camera,                      
             this._bikeModelPoints.saddle,           
             this._bikeModelPoints.crankMiddle,                                          
             1500,                                 
@@ -222,8 +233,7 @@ export class threeDScene {
             easing);
 
         const lookAtTween3 = this.createCameraLookAtTween(
-            this._camera,                                               
-            new THREE.Vector3().addVectors(this._bikeModelPoints.saddle, this._bikeModelPoints.crankMiddle).multiplyScalar(0.5),                                               
+            this._camera,                                                                                  
             this._bikeModelPoints.handleBar,                                               
             this._bikeModelPoints.frontWheelHub,                                                
             1500,                                               
@@ -236,11 +246,40 @@ export class threeDScene {
         lookAtTween1.start();
     }
 
-    // drawLinesBetweenPoints() {
-    // }
+    drawLinesBetweenPoints(fromPoint: THREE.Vector3, toPoint: THREE.Vector3) {      // Do wyjebania
 
-    // createAnimation(camera, startPoint, endPoint, duration, easing) {
-    // }
+        const material = new THREE.LineBasicMaterial({
+            color: 0x0000ff
+        });
+
+        const points = [];
+        points.push(fromPoint);
+        points.push(toPoint);
+
+        const geometry = new THREE.BufferGeometry().setFromPoints(points);
+
+        const line = new THREE.Line(geometry, material);
+        this._scene.add(line);
+    }
+
+    createAnimation(camera: { position: THREE.Vector3; }, fromPoint: THREE.Vector3, toPoint: THREE.Vector3, duration: number | undefined, easing: ((amount: number) => number) | undefined) {
+
+        const tween1 = this.createCameraPositionTween(
+            this._camera, 
+            fromPoint, 
+            toPoint, 
+            duration,   
+            easing);
+
+        const lookAtTween1 = this.createCameraLookAtTween(
+            this._camera,                                   
+            this._bikeModelPoints.saddle,           
+            this._bikeModelPoints.handleBar,                                           
+            2000,                                        
+            easing);
+
+
+    }
 
 
     animate(time?: number) {
