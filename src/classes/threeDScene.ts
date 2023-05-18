@@ -33,15 +33,20 @@ export class threeDScene {
     };
 
 
-    constructor() {
+    constructor(elementSelector: string) {
         
         this._renderer = new THREE.WebGLRenderer();
         this._renderer.setSize( window.innerWidth, window.innerHeight );
         this._renderer.setClearColor("#111111");
         this._renderer.shadowMap.enabled = true;
         this._renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
-        document.body.appendChild( this._renderer.domElement );             // TO JEST DO ZMIANY ŻEBY SCENA NIE BYŁA NA GÓRZE STRONY 
+        
+        const element = document.querySelector(elementSelector);
+        if (element) {
+            element.appendChild( this._renderer.domElement );             // TO JEST DO ZMIANY ŻEBY SCENA NIE BYŁA NA GÓRZE STRONY 
+        } else {
+            console.error(`Element ${elementSelector} not found`);
+        }
 
         this.cameraSetup();
 

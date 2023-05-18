@@ -2,7 +2,8 @@
     <ion-page>
         <div class="h-screen w-screen bg-black relative">
             <!-- IMITATION OF THREE.JS -->
-            <svg viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+            <div id="threejs-container" class="w-full h-full"></div>
+            <!-- <svg viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                 class="absolute top-0 left-0 w-full h-full z-0">
                 <defs>
                     <radialGradient id="myGradient">
@@ -11,7 +12,7 @@
                     </radialGradient>
                 </defs>
                 <circle cx="8" cy="2" r="9" fill="url('#myGradient')" />
-            </svg>
+            </svg> -->
 
             <div class="absolute top-0 left-0 right-0 w-full px-6 pt-24 z-[10] flex justify-between">
                 <div>
@@ -111,6 +112,7 @@ import { Bike } from '@/entity/Bike';
 import { Tip } from '@/entity/Tip';
 import { useRoute } from 'vue-router';
 import TipsSwiper from '@/components/TipsSwiper.vue';
+import { threeDScene } from '@/classes/threeDScene';
 
 // get router params props
 const route = useRoute();
@@ -130,6 +132,12 @@ onMounted(async () => {
     })
     tips.value = await Tip.find();
 
+    const threeDS = new threeDScene('#threejs-container');
+    // //@ts-ignore
+    // threeDS._renderer.setAnimationFrame(threeDS.animate);
+    threeDS.drawLinesBetweenPoints(threeDS._bikeModelPoints.saddle, threeDS._bikeModelPoints.handleBar);
+
+
     // TODO: Remove this in production
     // if (!bike.value) {
     //     console.log('No bike found');    
@@ -143,6 +151,7 @@ const startY = ref<number>(0)
 const endY = ref<number>(0)
 const isExpanded = ref<boolean>(false)
 const isFullyExpanded = ref<boolean>(false)
+const swipeLength = 80 // this value must be between 50-100
 
 function touchStart(e: TouchEvent) {
     console.log('touchStart');
@@ -156,22 +165,22 @@ function touchEnd() {
     console.log('touchEnd');
     const diffY = Number(endY.value) - Number(startY.value);
 
-    if (!isFullyExpanded.value && !isExpanded.value && diffY < -100) {
+    if (!isFullyExpanded.value && !isExpanded.value && diffY < -swipeLength) {
         isExpanded.value = true;
         return;
     }
 
-    if (!isFullyExpanded.value && isExpanded.value && diffY > 100) {
+    if (!isFullyExpanded.value && isExpanded.value && diffY > swipeLength) {
         isExpanded.value = false;
         return;
     }
 
-    if (!isFullyExpanded.value && isExpanded.value && diffY < -100) {
+    if (!isFullyExpanded.value && isExpanded.value && diffY < -swipeLength) {
         isFullyExpanded.value = true;
         return;
     }
 
-    if (isFullyExpanded.value && isExpanded.value && diffY > 100 && startY.value < 100) {
+    if (isFullyExpanded.value && isExpanded.value && diffY > swipeLength && startY.value < 100) {
         isFullyExpanded.value = false;
         isExpanded.value = false;
         return;
