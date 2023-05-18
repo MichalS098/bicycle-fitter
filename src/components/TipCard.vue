@@ -1,14 +1,16 @@
 <template>
     <div :class="colorClass" class="rounded-[10px] flex flex-col gap-3 p-3 aspect-[0.75]">
-        <img :src="tip.featured_image_path" class="object-cover w-full rounded-[10px] shadow-md aspect-[1.28]" />
+        <ion-img :src="tip.featured_image_path" class="tip-ion-img"></ion-img>
         <div class="flex flex-col gap-1">
             <div class="flex items-center justify-between gap-1">
-                <h2 class="text-2xl text-white font-bold">
+                <h2 class="text-xl text-white font-bold leading-6 line-clamp-2">
                     {{ tip.title ?? 'No title' }}
                 </h2>
-                <HeartIcon class="w-5 h-5 text-white" />                
+
+                <HeartSolidIcon v-if="tip.favourite" class="w-5 h-5 text-white shrink-0" />
+                <HeartIcon v-else class="w-5 h-5 text-white shrink-0" />
             </div>
-            <p class="text-lg text-white leading-[20px]">
+            <p class="text-sm text-white leading-4 line-clamp-2">
                 {{ tip.description ?? 'No description' }}
             </p>
         </div>
@@ -18,6 +20,8 @@
 import { Tip } from '@/entity/Tip';
 import { defineProps } from 'vue';
 import { HeartIcon } from '@heroicons/vue/24/outline';
+import { IonImg } from '@ionic/vue';
+import { HeartIcon as HeartSolidIcon } from '@heroicons/vue/24/solid';
 
 const props = defineProps({
     tip: {
@@ -55,3 +59,13 @@ switch (props.tip.color) {
         break;
 }
 </script>
+
+<style>
+.tip-ion-img::part(image) {
+    object-fit: cover;
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    aspect-ratio: 1.28;
+}
+</style>
