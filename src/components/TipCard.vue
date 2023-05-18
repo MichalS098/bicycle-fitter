@@ -1,6 +1,6 @@
 <template>
     <div :class="colorClass" class="rounded-[10px] flex flex-col gap-3 p-3 aspect-[0.75]">
-        <img :src="tip.featured_image_path" class="object-cover w-full rounded-[10px] shadow-md" />
+        <img :src="tip.featured_image_path" class="object-cover w-full rounded-[10px] shadow-md aspect-[1.28]" />
         <div class="flex flex-col gap-1">
             <div class="flex items-center justify-between gap-1">
                 <h2 class="text-2xl text-white font-bold">

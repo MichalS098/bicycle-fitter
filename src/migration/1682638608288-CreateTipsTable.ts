@@ -6,7 +6,7 @@ const tips = [
         description: 'Tip 1 description',
         content: 'Tip 1 content',
         favourite: false,
-        featured_image_path: '../assets/images/tip-test.png',
+        featured_image_path: '@/../resources/images/tip-test.png',
         color: 'primary'
     },
     {
@@ -14,7 +14,7 @@ const tips = [
         description: 'Tip 2 description',
         content: 'Tip 2 content',
         favourite: false,
-        featured_image_path: '../assets/images/tip-test.png',
+        featured_image_path: '@/../resources/images/tip-test.png',
         color: 'secondary'
     },
     {
@@ -22,7 +22,7 @@ const tips = [
         description: 'Tip 3 description',
         content: 'Tip 3 content',
         favourite: true,
-        featured_image_path: '../assets/images/tip-test.png',
+        featured_image_path: '@/../resources/images/tip-test.png',
         color: 'tertiary'
     }
 ]
