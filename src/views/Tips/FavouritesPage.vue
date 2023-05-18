@@ -30,6 +30,6 @@ import SpaceForTabBarMenu from '@/components/SpaceForTabBarMenu.vue';
 const tips = ref<Tip[]>([]);
 
 onMounted(async () => {
-    tips.value = await Tip.find();
+    tips.value = await Tip.findBy({ favourite: true });
 });
 </script>

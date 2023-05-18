@@ -94,23 +94,25 @@ const router = createRouter({
     routes
 })
 
-router.beforeEach(async (to, from, next) => {
-    const firstStepsIsCompleted = await firstStepsCompleted();
-    const measureIsCompleted = await measureCompleted();
+// TODO: Remove this in production
 
-    console.log("firstStepsIsCompleted", firstStepsIsCompleted)
-    console.log("measureIsCompleted", measureIsCompleted)
-    console.log("number of users in DB: ", await User.createQueryBuilder('user').getCount());
+// router.beforeEach(async (to, from, next) => {
+//     const firstStepsIsCompleted = await firstStepsCompleted();
+//     const measureIsCompleted = await measureCompleted();
 
-    if ((to.path === '/first-steps' && firstStepsIsCompleted) || (to.path === '/measure' && measureIsCompleted)) {
-        next('/pages/home');
-    } else if (!firstStepsIsCompleted && to.path !== '/first-steps') {
-        next('/first-steps');
-    } else if (firstStepsIsCompleted && !measureIsCompleted && to.path !== '/measure') {
-        next('/measure');
-    } else {
-        next();
-    }
-});
+//     console.log("firstStepsIsCompleted", firstStepsIsCompleted)
+//     console.log("measureIsCompleted", measureIsCompleted)
+//     console.log("number of users in DB: ", await User.createQueryBuilder('user').getCount());
+
+//     if ((to.path === '/first-steps' && firstStepsIsCompleted) || (to.path === '/measure' && measureIsCompleted)) {
+//         next('/pages/home');
+//     } else if (!firstStepsIsCompleted && to.path !== '/first-steps') {
+//         next('/first-steps');
+//     } else if (firstStepsIsCompleted && !measureIsCompleted && to.path !== '/measure') {
+//         next('/measure');
+//     } else {
+//         next();
+//     }
+// });
 
 export default router
