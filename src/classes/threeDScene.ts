@@ -29,11 +29,14 @@ export class threeDScene {
         backWheelHub:   new THREE.Vector3(-49, 16, -0.7),
         crankMiddle:    new THREE.Vector3(-2, 12, -0.7),
         frontPedal:     new THREE.Vector3(11, 0.7, 8),
-        backPedal:      new THREE.Vector3(-16, 22, -9)
+        backPedal:      new THREE.Vector3(-16, 22, -9),
+        floorUnderCrank: new THREE.Vector3(10, -20, -0.7)
     };
 
+    _lengthFromMeasuredPointToCamera = 0.8;
     _animationEasing = TWEEN.Easing.Quadratic.InOut;
 
+    private _line: THREE.Line | null = null;
 
     constructor(elementSelector: string) {
         
@@ -175,13 +178,16 @@ export class threeDScene {
         const dir = new THREE.Vector3().subVectors(camera.position, midPoint);
         const lineDir = new THREE.Vector3().subVectors(toPoint, fromPoint).normalize();
         const normal = new THREE.Vector3().crossVectors(lineDir, dir).cross(lineDir).normalize();
-        const newCameraPosition = new THREE.Vector3().addVectors(midPoint, normal.multiplyScalar(dir.length() * 0.7));
+        const newCameraPosition = new THREE.Vector3().addVectors(midPoint, normal.multiplyScalar(dir.length() * this._lengthFromMeasuredPointToCamera));
     
         return new TWEEN.Tween(camera.position)
             .to(newCameraPosition, duration)
             .easing(easing)
             .onComplete(() => {
                 this.setCameraPosition(newCameraPosition);
+                if (this._line)
+                    this._scene.remove(this._line);
+                this.drawLinesBetweenPoints(fromPoint, toPoint, 0xff0000 );
             });
     }
 
@@ -221,14 +227,14 @@ export class threeDScene {
         const tween2 = this.createCameraPositionTween(    
             this._camera,             
             this._bikeModelPoints.saddle,        
-            this._bikeModelPoints.crankMiddle,                                     
+            this._bikeModelPoints.floorUnderCrank,                                     
             1500, 
             easing);
 
         const lookAtTween2 = this.createCameraLookAtTween(
             this._camera,                      
             this._bikeModelPoints.saddle,           
-            this._bikeModelPoints.crankMiddle,                                          
+            this._bikeModelPoints.floorUnderCrank,                                          
             1500,                                 
             easing);
         
@@ -253,20 +259,18 @@ export class threeDScene {
         lookAtTween1.start();
     }
 
-    drawLinesBetweenPoints(fromPoint: THREE.Vector3, toPoint: THREE.Vector3) {      // Do wyjebania
+    drawLinesBetweenPoints(fromPoint: THREE.Vector3, toPoint: THREE.Vector3, color: number) {
 
-        const material = new THREE.LineBasicMaterial({
-            color: 0x0000ff
-        });
-
+        const material = new THREE.LineBasicMaterial({ color: color });
+    
         const points = [];
         points.push(fromPoint);
         points.push(toPoint);
-
+    
         const geometry = new THREE.BufferGeometry().setFromPoints(points);
-
-        const line = new THREE.Line(geometry, material);
-        this._scene.add(line);
+    
+        this._line = new THREE.Line(geometry, material);
+        this._scene.add(this._line);
     }
 
     createAnimation( fromPoint: THREE.Vector3, toPoint: THREE.Vector3, duration: number | undefined) {

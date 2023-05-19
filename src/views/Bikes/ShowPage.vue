@@ -58,14 +58,14 @@
 
 
                 <div>
-                    <h2 class="fitter-h2 mt-3 mb-6">
+                    <h2 class="fitter-h2 mt-3 mb-6 text-white">
                         Tips for you
                     </h2>
                     <tips-swiper :tips="tips" />                    
                 </div>
 
                 <div>
-                    <h2 class="fitter-h2 mt-3 mb-6">
+                    <h2 class="fitter-h2 mt-3 mb-6 text-white">
                         Your bike fit
                     </h2>
 
@@ -133,9 +133,6 @@ onMounted(async () => {
     tips.value = await Tip.find();
 
     const threeDS = new threeDScene('#threejs-container');
-    // //@ts-ignore
-    // threeDS._renderer.setAnimationFrame(threeDS.animate);
-    threeDS.drawLinesBetweenPoints(threeDS._bikeModelPoints.saddle, threeDS._bikeModelPoints.handleBar);
 
 
 
@@ -146,7 +143,9 @@ onMounted(async () => {
 
 
 
-    
+
+
+
 
     // TODO: Remove this in production
     // if (!bike.value) {
