@@ -47,7 +47,7 @@ const routes: Array<RouteRecordRaw> = [
     },
     {
         path: '/first-steps',
-        component: () => import('@/views/BikeView3D/IndexPage.vue')
+        component: () => import('@/views/FirstSteps/IndexPage.vue')
     },
     {
         path: '/new-bike-steps',
@@ -94,25 +94,23 @@ const router = createRouter({
     routes
 })
 
-// TODO: Remove this in production
+router.beforeEach(async (to, from, next) => {
+    const firstStepsIsCompleted = await firstStepsCompleted();
+    const measureIsCompleted = await measureCompleted();
 
-// router.beforeEach(async (to, from, next) => {
-//     const firstStepsIsCompleted = await firstStepsCompleted();
-//     const measureIsCompleted = await measureCompleted();
+    console.log("firstStepsIsCompleted", firstStepsIsCompleted)
+    console.log("measureIsCompleted", measureIsCompleted)
+    console.log("number of users in DB: ", await User.createQueryBuilder('user').getCount());
 
-//     console.log("firstStepsIsCompleted", firstStepsIsCompleted)
-//     console.log("measureIsCompleted", measureIsCompleted)
-//     console.log("number of users in DB: ", await User.createQueryBuilder('user').getCount());
-
-//     if ((to.path === '/first-steps' && firstStepsIsCompleted) || (to.path === '/measure' && measureIsCompleted)) {
-//         next('/pages/home');
-//     } else if (!firstStepsIsCompleted && to.path !== '/first-steps') {
-//         next('/first-steps');
-//     } else if (firstStepsIsCompleted && !measureIsCompleted && to.path !== '/measure') {
-//         next('/measure');
-//     } else {
-//         next();
-//     }
-// });
+    if ((to.path === '/first-steps' && firstStepsIsCompleted) || (to.path === '/measure' && measureIsCompleted)) {
+        next('/pages/home');
+    } else if (!firstStepsIsCompleted && to.path !== '/first-steps') {
+        next('/first-steps');
+    } else if (firstStepsIsCompleted && !measureIsCompleted && to.path !== '/measure') {
+        next('/measure');
+    } else {
+        next();
+    }
+});
 
 export default router
