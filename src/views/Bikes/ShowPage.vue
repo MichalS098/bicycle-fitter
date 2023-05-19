@@ -138,6 +138,16 @@ onMounted(async () => {
     threeDS.drawLinesBetweenPoints(threeDS._bikeModelPoints.saddle, threeDS._bikeModelPoints.handleBar);
 
 
+
+
+
+
+
+
+
+
+    
+
     // TODO: Remove this in production
     // if (!bike.value) {
     //     console.log('No bike found');    

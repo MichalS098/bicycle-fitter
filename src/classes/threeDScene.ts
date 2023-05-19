@@ -32,6 +32,8 @@ export class threeDScene {
         backPedal:      new THREE.Vector3(-16, 22, -9)
     };
 
+    _animationEasing = TWEEN.Easing.Quadratic.InOut;
+
 
     constructor(elementSelector: string) {
         
@@ -267,21 +269,11 @@ export class threeDScene {
         this._scene.add(line);
     }
 
-    createAnimation(camera: { position: THREE.Vector3; }, fromPoint: THREE.Vector3, toPoint: THREE.Vector3, duration: number | undefined, easing: ((amount: number) => number) | undefined) {
+    createAnimation( fromPoint: THREE.Vector3, toPoint: THREE.Vector3, duration: number | undefined) {
 
-        const tween1 = this.createCameraPositionTween(
-            this._camera, 
-            fromPoint, 
-            toPoint, 
-            duration,   
-            easing);
+        const tween1 = this.createCameraPositionTween(this._camera, fromPoint, toPoint, duration,   this._animationEasing);
 
-        const lookAtTween1 = this.createCameraLookAtTween(
-            this._camera,                                   
-            this._bikeModelPoints.saddle,           
-            this._bikeModelPoints.handleBar,                                           
-            2000,                                        
-            easing);
+        const lookAtTween1 = this.createCameraLookAtTween( this._camera, fromPoint, toPoint, duration, this._animationEasing);
 
 
     }
