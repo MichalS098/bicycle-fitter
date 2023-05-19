@@ -1,5 +1,5 @@
 {
-    "appId": "com.bike.fitter.app.project.app.bike3d",
+    "appId": "com.bike.fitter.app.project.app",
     "appName": "BicycleFitter",
     "webDir": "dist",
     "bundledWebRuntime": false,
@@ -24,4 +24,3 @@
       }
     }
   }
-   // TODO: Change app id on main branch
