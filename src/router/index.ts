@@ -59,11 +59,22 @@ const routes: Array<RouteRecordRaw> = [
     },
     {
         path: '/bikes/:id',
-        component: () => import('@/views/Bikes/ShowPage.vue')
-    },
-    {
-        path: '/angles/:id',
-        component: () => import('@/views/Angles/IndexPage.vue')
+        component: () => import('@/views/Bikes/BikeLayout.vue'),
+        children: [
+            {
+                path: '',
+                component: () => import('@/views/Bikes/ShowPage.vue')
+            },
+            {
+                path: 'measure',
+                component: () => import('@/views/Bikes/AngleMeasurePage.vue')
+            },
+            {
+                path: 'display',
+                component: () => import('@/views/Bikes/AngleDisplayPage.vue')
+            }
+   
+        ]
     },
     {
         path: '/pages',

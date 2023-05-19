@@ -32,7 +32,7 @@
                 <li>stack2ReachIndex2: {{ bike?.stack2ReachIndex2 }}</li>
                 <li>stack2ReachIndex3: {{ bike?.stack2ReachIndex3 }}</li>
             </ul>
-            <button class="absolute bottom-0 right-0 p-2 xxs:p-4" @click="goToAngles">></button>
+            <button class="absolute bottom-0 right-0 p-2 xxs:p-4" @click="goToAngleMeasure">></button>
         </ion-content>
     </ion-page>
 </template>
@@ -67,12 +67,12 @@ const goToHome = () => {
     router.navigate('/pages/home', 'none', 'replace');
 };
 
-const goToAngles = () => {
+const goToAngleMeasure = () => {
     // router.navigate('/angles', 'none', 'replace');
     if (bike.value != null)
-        router.navigate('/angles/' + bike.value.id, 'none', 'replace');
+        router.navigate('/bikes/' + bike.value.id + '/measure', 'none', 'replace');
     else {
-        console.log("goToAngles(): bike entity is null")
+        console.log("goToAngleMeasure(): bike entity is null")
     }
 };
 

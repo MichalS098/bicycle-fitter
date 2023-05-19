@@ -139,6 +139,8 @@ const measureDone = async () => {
         // getMaxMinEveryAngle() doesnt calculate it either, remove later.
         angles.bike = bike.value
         await angles.save();
+    
+        router.navigate('/bikes/' + bike.value.id + '/display')
     }
 }
 
