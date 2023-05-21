@@ -158,6 +158,7 @@ const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
                 if (measuringProgress.value > 60) {
                     camera.value?.stop();
                     bodyParams.value = getBodyParamsMedian(bodyParamsArray);
+                    console.log("armLength: " + bodyParams.value.armLength * 100);
                     measureDone();
                 } else {
                     const bodyParams = getBodyParamsFromMediapipeResults(results);
