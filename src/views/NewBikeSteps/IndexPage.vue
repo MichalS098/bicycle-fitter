@@ -264,6 +264,7 @@ const createBike = async () => {
     bike.stemLength = bikeFittingParams.stemLength;
     bike.stemAngle = bikeFittingParams.stemAngle;
     bike.crankLength = bikeFittingParams.crankLength;
+    bike.frameHeight = bikeFittingParams.frameHeight;
     bike.stackMin = bikeFittingParams.stackMin;
     bike.reachMin = bikeFittingParams.reachMin;
     bike.stackMax = bikeFittingParams.stackMax;

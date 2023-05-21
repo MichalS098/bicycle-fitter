@@ -23,6 +23,7 @@
                 <li>seatDrop: {{ bike?.seatDrop }}</li>               
                 <li>stemLength: {{ bike?.stemLength }}</li>
                 <li>stemAngle: {{ bike?.stemAngle }}</li>
+                <li>frameHeight: {{ bike?.frameHeight }}</li>
                 <li>stackMin: {{ bike?.stackMin }}</li>
                 <li>reachMin: {{ bike?.reachMin }}</li>
                 <li>stackMax: {{ bike?.stackMax }}</li>

@@ -68,16 +68,6 @@ export async function getBikefittingParams(bike: Bike, user: User): Promise<bike
         bike.expectationsFeetPain,
         bike.expectationsClickPedals, bike.expectationsNothing);
 
-    if(bike.crankLength == 0)    
-    {
-        bike.crankLength = 18;
-    }
-
-    if(bike.stemLength == 0)
-    {
-        bike.stemLength = 10;
-    }
-
     const newBikeParams = new bikeParams(bikeTypeFromStr(bike.type), ridingStyleFromStr(bike.style), bike.crankLength, bike.stemLength, 10, bikeExpectationsTemp, bike.choiceFlexibilitySurvey);
 
     console.log("humanParams to bike fitting calculated: ", person)
