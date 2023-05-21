@@ -107,7 +107,11 @@ export async function getBodyParamsFromMediapipeResults(results: Results): Promi
         await user.save();
     }
 
-    const armLengthTemp = armLength(leftElbowToLeftShoulder + leftElbowToLeftWrist, rightElbowToRightShoulder + rightElbowToRightWrist);
+    // const armLengthTemp = armLength(leftElbowToLeftShoulder + leftElbowToLeftWrist, rightElbowToRightShoulder + rightElbowToRightWrist);
+
+    // Zmiana bo rightElbowToRightWrist zawsze wychodził 0.04m i chuj wie czemu
+
+    const armLengthTemp = leftElbowToLeftShoulder + leftElbowToLeftWrist;
 
     const leftAnkleToLeftKnee = getDistanceBetweenPoints(results.poseWorldLandmarks[POSE_LANDMARKS_LEFT.LEFT_ANKLE], results.poseWorldLandmarks[POSE_LANDMARKS_LEFT.LEFT_KNEE]);
     const rightAnkleToRightKnee = getDistanceBetweenPoints(results.poseWorldLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_ANKLE], results.poseWorldLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_KNEE]);
