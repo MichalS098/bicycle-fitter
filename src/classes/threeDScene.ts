@@ -11,14 +11,14 @@ export class threeDScene {
     private _scene!: THREE.Scene;
     private _camera!:   THREE.PerspectiveCamera;
     private _controls!: OrbitControls;
-    _renderer: THREE.WebGLRenderer;
+    private _renderer!: THREE.WebGLRenderer;
 
     
     private _defaultCameraPosition: THREE.Vector3 =  new THREE.Vector3(290, 70, -170);
     private _defaultCameraLookAt:   THREE.Vector3 =  new THREE.Vector3(40, 30, -0.7);
 
-    actualCameraPosition: THREE.Vector3;
-    actualCameraLookAt:   THREE.Vector3;
+    private actualCameraPosition!: THREE.Vector3;
+    private actualCameraLookAt!:   THREE.Vector3;
 
 
     _bikeModelPoints = {
@@ -37,7 +37,7 @@ export class threeDScene {
 
     private _line: THREE.Line | null = null;
 
-    constructor(elementSelector: string) {
+    init(elementSelector: string) {
         
         this._renderer = new THREE.WebGLRenderer();
         this._renderer.setSize( window.innerWidth, window.innerHeight );
@@ -61,6 +61,7 @@ export class threeDScene {
         this.addObjectsToScene();
         // this.GSAPcreateSetAnimations();
     }
+
 
     cameraSetup() {
 
@@ -172,15 +173,8 @@ export class threeDScene {
         this.actualCameraLookAt = position;
     }
 
-    
-    // GSAP ANIMATIONS
 
-
-
-
-// ...
-
-    GSAPcreateCameraPositionTween(fromPoint: THREE.Vector3, toPoint: THREE.Vector3, duration: number, easing: string) {
+    createCameraPositionTween(fromPoint: THREE.Vector3, toPoint: THREE.Vector3, duration: number, easing: string) {
         const midPoint = new THREE.Vector3().addVectors(fromPoint, toPoint).multiplyScalar(0.5);
         const dir = new THREE.Vector3().subVectors(this._camera.position, midPoint);
         const lineDir = new THREE.Vector3().subVectors(toPoint, fromPoint).normalize();
@@ -207,7 +201,7 @@ export class threeDScene {
         });
     }
 
-    GSAPcreateCameraLookAtTween(fromPoint: THREE.Vector3, toPoint: THREE.Vector3, duration: number, easing: string) {
+    createCameraLookAtTween(fromPoint: THREE.Vector3, toPoint: THREE.Vector3, duration: number, easing: string) {
         const endLookAt = new THREE.Vector3().addVectors(fromPoint, toPoint).multiplyScalar(0.5);
         const tweenLookAt = this.actualCameraLookAt;
 
@@ -228,17 +222,17 @@ export class threeDScene {
         });
     }
 
-    GSAPcreateSetAnimations() {
+    createSetAnimations() {
         const easing = 'power3.inOut';
 
-        this.GSAPcreateCameraPositionTween(
+        this.createCameraPositionTween(
             this._bikeModelPoints.saddle, 
             this._bikeModelPoints.handleBar, 
             2,   
             easing
         );
 
-        this.GSAPcreateCameraLookAtTween(                         
+        this.createCameraLookAtTween(                         
             this._bikeModelPoints.saddle,           
             this._bikeModelPoints.handleBar,                                           
             2,                                        
@@ -247,17 +241,17 @@ export class threeDScene {
     }
 
 
-    GSAPcreateSetAnimations2() {
+    createSetAnimations2() {
         const easing = 'power3.inOut';
 
-        this.GSAPcreateCameraPositionTween(
+        this.createCameraPositionTween(
             this._bikeModelPoints.saddle, 
             this._bikeModelPoints.floorUnderCrank, 
             2,   
             easing
         );
 
-        this.GSAPcreateCameraLookAtTween(                             
+        this.createCameraLookAtTween(                             
             this._bikeModelPoints.saddle,           
             this._bikeModelPoints.floorUnderCrank,                                           
             2,                                        

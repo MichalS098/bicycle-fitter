@@ -40,16 +40,19 @@
                         <span class="text-xs text-white">Test</span>
                     </button>
                     <button
+                        @click="prevButtonClicked"
                         class="rounded-2xl bg-neutral-700 shadow-lg flex flex-col items-center justify-center gap-[1px] p-2 aspect-square w-full">
                         <BackwardIcon class="w-8 h-8 text-white" />
                         <span class="text-xs text-white">Prev</span>
                     </button>
                     <button
+                        @click="playButtonClicked"
                         class="rounded-2xl bg-neutral-700 shadow-lg flex flex-col items-center justify-center gap-[1px] p-2 aspect-square w-full">
                         <PlayIcon class="w-8 h-8 text-white" />
                         <span class="text-xs text-white">Play</span>
                     </button>
                     <button
+                    @click="nextButtonClicked"
                         class="rounded-2xl bg-neutral-700 shadow-lg flex flex-col items-center justify-center gap-[1px] p-2 aspect-square w-full">
                         <ForwardIcon class="w-8 h-8 text-white" />
                         <span class="text-xs text-white">Next</span>
@@ -122,6 +125,8 @@ const tips = ref<Tip[]>([]);
 
 const router = useIonRouter();
 
+const threeDS = new threeDScene;
+
 const goToHome = () => {
     router.navigate('/pages/home', 'none', 'replace');
 };
@@ -132,12 +137,7 @@ onMounted(async () => {
     })
     tips.value = await Tip.find();
 
-    const threeDS = new threeDScene('#threejs-container');
-
-
-
-    threeDS.GSAPcreateSetAnimations();
-    threeDS.GSAPcreateSetAnimations2();
+    threeDS.init('#threejs-container');
 
 
 
@@ -195,6 +195,16 @@ function touchEnd() {
         isExpanded.value = false;
         return;
     }
+}
+
+function prevButtonClicked() {
+    threeDS.createSetAnimations();
+}
+function playButtonClicked() {
+    threeDS.createSetAnimations();
+}
+function nextButtonClicked() {
+    threeDS.createSetAnimations();
 }
 
 
