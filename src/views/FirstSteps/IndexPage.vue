@@ -22,6 +22,10 @@
                         class="font-bold text-lg">
                         Get started!
                     </ion-button>
+                    <ion-button @click="goToExampleBikeFitting()" expand="block" shape="round" color="primary" mode="ios" type="button"
+                        class="font-bold text-lg">
+                        Example Bike Fitting
+                    </ion-button>
                 </div>
             </div>
 
@@ -39,7 +43,8 @@
                     :buttons="['OK']" @did-dismiss="form.errors.height = ''">
                 </ion-alert>
 
-                <button-input v-model="form.shoeSize" type="number" inputmode="numeric" placeholder="Enter your shoe size" postfix="EU"/>
+                <button-input v-model="form.shoeSize" type="number" inputmode="numeric" placeholder="Enter your shoe size"
+                    postfix="EU" />
                 <ion-alert :is-open="form.errors.shoeSize != ''" header="Wrong shoe size" :message="form.errors.shoeSize"
                     :buttons="['OK']" @did-dismiss="form.errors.shoeSize = ''">
                 </ion-alert>
@@ -105,7 +110,9 @@ import ButtonInput from '@/components/ButtonInput.vue';
 import StepsRadioButton from '@/components/StepsRadioButton.vue';
 import StepCard from '@/components/StepCard.vue';
 import { User } from '@/entity/User';
+import { Bike } from '@/entity/Bike';
 import { saveDbForWeb } from '@/composables/useSqliteOnWeb';
+import { getBikefittingParams } from '@/functions/calculatedBikeFittingParams';
 
 const numberOfSteps = 5; // from 0 to 6
 const currentStep = ref(0);
@@ -126,6 +133,66 @@ const form = ref({
     }
 });
 
+const goToExampleBikeFitting = async () => {
+    const user = new User();
+    user.id = 1;
+    // TODO We must add to logic program consideration unit System
+    user.unitSystem = 'metric';
+    user.overallHeight = 175;
+    user.rideTime = 1;
+    user.riderStyle = "casual";
+    user.shoeSize = 42;
+    user.inseamLength = 81;
+    user.thighLength = 42;
+    user.shankLength = 47;
+    user.shoulderHeight = 145;
+    user.armLength = 55;
+    await user.save();
+
+    const bike = new Bike();
+    bike.brand = "Romet";
+    bike.model = "MTB";
+    bike.type = "road";
+    bike.style = "sportslike";
+    bike.stemLength = 10;
+    bike.crankLength = 18;
+
+    bike.expectationsBackOrNeckPain = false;
+    bike.expectationsButPain = false;
+    bike.expectationsClickPedals = true;
+    bike.expectationsFeetPain = false;
+    bike.expectationsKneePain = false;
+    bike.expectationsNothing = false;
+    bike.choiceFlexibilitySurvey = 1;
+
+    bike.user = user;
+
+    // Calculated bike params
+    const bikeFittingParams = await getBikefittingParams(bike, user);
+    bike.seatHeight = bikeFittingParams.seatHeight;
+    bike.seatSetback = bikeFittingParams.seatSetback;
+    bike.seatLength = bikeFittingParams.seatLength;
+    bike.seatDrop = bikeFittingParams.seatDrop;
+    bike.stemLength = bikeFittingParams.stemLength;
+    bike.stemAngle = bikeFittingParams.stemAngle;
+    bike.crankLength = bikeFittingParams.crankLength;
+    bike.frameHeight = bikeFittingParams.frameHeight;
+    bike.stackMin = bikeFittingParams.stackMin;
+    bike.reachMin = bikeFittingParams.reachMin;
+    bike.stackMax = bikeFittingParams.stackMax;
+    bike.reachMax = bikeFittingParams.reachMax;
+    bike.stack2ReachIndex1 = bikeFittingParams.stack2ReachIndex1;
+    bike.stack2ReachIndex2 = bikeFittingParams.stack2ReachIndex2;
+    bike.stack2ReachIndex3 = bikeFittingParams.stack2ReachIndex3;
+    bike.messageFromButPain = bikeFittingParams.messageFromButPain;
+    bike.messageFromFeetPain = bikeFittingParams.messageFromFeetPain;
+    bike.messageFromFlexibilitySurvey = bikeFittingParams.messageFromFlexibilitySurvey;
+    bike.messageFromKneePain = bikeFittingParams.messageFromKneePain;
+    bike.messageFromNeckOrBackPain = bikeFittingParams.messageFromNeckOrBackPain;
+    await bike.save();
+
+    router.navigate('/bikes/' + bike.id, 'none', 'replace');
+}
 const nextStep = () => {
     form.value.errors = {
         unitSystem: "",
