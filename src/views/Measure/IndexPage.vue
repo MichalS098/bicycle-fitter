@@ -50,6 +50,14 @@ import { getUserFromDatabase } from '@/helpers/helpersDataBase'
 import { areAllBodyPointsVisible } from '@/helpers/mediapipeHelpers';
 import MeasureFinishedModal from './MeasureFinishedModal.vue';
 
+//import { File } from '@ionic-native/file/ngx';
+//import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
+import { Platform } from '@ionic/vue';
+import { Plugins} from '@capacitor/core';
+
+const { Filesystem, Permissions } = Plugins;
+
+
 const router = useIonRouter();
 const video = ref<HTMLVideoElement>();
 const canvas = ref<HTMLCanvasElement>();
@@ -70,18 +78,60 @@ const showMeasureFinishedModal = ref(false);
 const allBodyPointsVisible = ref(false);
 const measuringProgress = ref(0);
 
+/*const createFile = async () => {
+
+    const file = new File()
+    try {
+        const dirExists = await file.checkDir(file.dataDirectory, 'mydir');
+        console.log('Directory exists', dirExists);
+    } catch (err) {
+        console.log('Directory doesnt exist', err);
+    }
+
+    try {
+        const fileCreated = await file.createFile(file.dataDirectory, 'mydir/myfile.txt', true);
+        console.log('File created', fileCreated);
+    } catch (err) {
+        console.log('Unable to create file', err);
+    }
+
+    const data = 'This is some text data that will be written to the file.';
+
+    try {
+        const fileWritten = await file.writeFile(file.dataDirectory, 'mydir/myfile.txt', data, { replace: true });
+        console.log('File written', fileWritten);
+    } catch (err) {
+        console.log('Unable to write file', err);
+    }
+}
+
+const androidPermission = async () => {
+
+    const androidPermission = new AndroidPermissions();
+
+    try {
+        const result = await androidPermission.checkPermission(androidPermission.PERMISSION.WRITE_EXTERNAL_STORAGE);
+        console.log('Has permission?', result.hasPermission);
+    } catch (err) {
+        await androidPermission.requestPermission(androidPermission.PERMISSION.WRITE_EXTERNAL_STORAGE);
+    }
+
+    await androidPermission.requestPermissions([androidPermission.PERMISSION.WRITE_EXTERNAL_STORAGE]);
+}*/
+
 const measureDone = async () => {
     measuringDone.value = true;
     showMeasureFinishedModal.value = true;
+
     const user = await getUserFromDatabase();
     if (user != null) {
-        user.shoulderHeight = bodyParams.value.shoulderHeight;
-        user.armLength = bodyParams.value.armLength;
-        user.shankLength = bodyParams.value.shankLength;
-        user.thighLength = bodyParams.value.thighLength;
-        user.inseamLength = bodyParams.value.inseamLength;
+        user.shoulderHeight = bodyParams.value.shoulderHeight * 100;
+        user.armLength = bodyParams.value.armLength * 100;
+        user.shankLength = bodyParams.value.shankLength * 100;
+        user.thighLength = bodyParams.value.thighLength * 100;
+        user.inseamLength = bodyParams.value.inseamLength * 100;
         await user.save();
-    }    
+    }
 }
 
 function goToTheApp() {
@@ -107,7 +157,7 @@ const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
                 allBodyPointsVisible.value = true;
                 if (measuringProgress.value > 60) {
                     camera.value?.stop();
-                    bodyParams.value = getBodyParamsMedian(bodyParamsArray);                    
+                    bodyParams.value = getBodyParamsMedian(bodyParamsArray);
                     measureDone();
                 } else {
                     const bodyParams = getBodyParamsFromMediapipeResults(results);

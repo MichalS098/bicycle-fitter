@@ -1,5 +1,6 @@
 ﻿import { bikeParams, bikeType, ridingStyle } from "../../classes/bikeParams";
 import { humanParams } from "../../classes/humanParams";
+import { bikeExpectations } from "../../classes/bikeExpectations";
 
 /**
  B = 1 more than 10 cm to ground 
@@ -118,18 +119,21 @@ export function bicycleFunction(person: humanParams, bike: bikeParams, Sa: numbe
             M = 0.53
             H = 45
             PS = 1
+            person.armTorsoangle = 85
             break;
         }
         case ridingStyle.Sport: {
             M = 0.54
             H = 37.5
             PS = 2
+            person.armTorsoangle = 85
             break;
         }
         case ridingStyle.Aerodynamic: {
             M = 0.53
             H = 30
             PS = 3
+            person.armTorsoangle = 85
             break;
         }
     }
@@ -266,30 +270,85 @@ export function calcFrameHeight(person: humanParams, bike: bikeParams): [humanPa
 
 //}
 
+export function additionalSurvey(bikeParamsTemp: bikeParams): [number, number, number] {
+
+    //KLIK od "Clickk Peals?"
+    /*if (bikeParamsTemp.bikeExpectationsParms.clickPedal == 1) {
+        bikeParamsTemp.bikeExpectationsParms.clickPedal = 2.3
+    }
+    else {
+        bikeParamsTemp.bikeExpectationsParms.clickPedal = 1
+    }*/
+
+    //Neck or Back Pain?
+    let SWa = 0
+
+    if (bikeParamsTemp.bikeExpectationsParms.backOrNeckPain) {
+        bikeParamsTemp.messageFromNeckOrBackPain = 'pozycja siodełka zbyt agresywna'
+        SWa = 5
+    }
+    else {
+        bikeParamsTemp.messageFromNeckOrBackPain = ''
+    }
+
+
+    if (bikeParamsTemp.bikeExpectationsParms.butPain) {
+        bikeParamsTemp.messageFromButPain = 'siodełko nieoptymalne'
+    }
+    else {
+        bikeParamsTemp.messageFromButPain = ''
+    }
+
+    //Feet Pain?
+
+    if (bikeParamsTemp.bikeExpectationsParms.feetPain) {
+        bikeParamsTemp.messageFromFeetPain = 'potrzebujesz wkładek do butów rowerowych'
+    }
+    else {
+        bikeParamsTemp.messageFromFeetPain = ''
+    }
+
+    //Knee Pain?
+    let Sa
+    let NSa
+
+    if (bikeParamsTemp.bikeExpectationsParms.kneePain) {
+        bikeParamsTemp.messageFromKneePain = 'skonsultuj się z rowerowym dopasowaniem'
+        Sa = -5
+        NSa = 1
+    }
+    else {
+        bikeParamsTemp.messageFromKneePain = ''
+        Sa = 0
+        NSa = 0
+    }
+
+    return [SWa, Sa, NSa]
+}
 /**
  B = 1 more than 10 cm to ground 
  B = 2 more than 5 cm to ground 
  B = 3 finger tips to ground 
  B = 4 palms to ground 
  */
-export function flexibilitySurvey(SWa: number, RSa: number, B: number): [number, string] {
+export function flexibilitySurvey(SWa: number, RSa: boolean, B: number): [number, string] {
 
     let message = ''
     let SWnew = 0
 
-    switch (B) {
-        case flexIndex.poor: {
+    switch (Number(B)) {
+        case 1: {
             SWnew = SWa + 50
             message = 'choose a more upright position'
             break;
         }
-        case flexIndex.average: {
+        case 2: {
             SWnew = SWa + 45
             message = 'you have to do mobility exercise'
             break;
         }
-        case flexIndex.good: {
-            if (RSa == 1) {
+        case 3: {
+            if (RSa) {
                 SWnew = SWa + 50
                 message = 'a sports like position is not recommended'
             }
@@ -299,8 +358,8 @@ export function flexibilitySurvey(SWa: number, RSa: number, B: number): [number,
             }
             break;
         }
-        case flexIndex.great: {
-            if (RSa == 1) {
+        case 4: {
+            if (RSa) {
                 SWnew = SWa + 45
                 message = 'an aerodynamic position is not recommended'
             }
@@ -308,6 +367,12 @@ export function flexibilitySurvey(SWa: number, RSa: number, B: number): [number,
                 SWnew = SWa + 35
                 message = 'aerodynamic'
             }
+            break;
+        }
+        default: 
+        {
+            console.log("Error default")
+            break;
         }
     }
 

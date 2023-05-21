@@ -1,4 +1,5 @@
-﻿
+﻿import { bikeExpectations } from '@/classes/bikeExpectations';
+
 enum bikeType {
     City,
     Mountain,
@@ -17,7 +18,7 @@ function bikeTypeFromStr(str: string): bikeType {
         case "gravel": return bikeType.Gravel;
         case "cross": return bikeType.Cross;
         case "electric": return bikeType.Electric;
-        case "mtb": return bikeType.Mtb;        
+        case "mtb": return bikeType.Mtb;
         default: return bikeType.City;
     }
 }
@@ -40,32 +41,77 @@ function ridingStyleFromStr(str: string): ridingStyle {
 
 // TODO This class is to rebuild !!!! 
 class bikeParams {
-    type: bikeType = bikeType.City;
-    style: ridingStyle = ridingStyle.Ergonomic;
-    crankLength = 0; //KL, distance between the center of the crank and floor (see Maro's docs)
-    
-    seatHeight = 0;
-    seatSetback = 0;
-    seatLength = 0;
-    seatDrop = 0;
-    spacerHeight = 0; //dl rama-siodelko
-    stemLength = 0; //dl. wspornika (ger. Vorbau)
-    stemAngle = 0;
+    type: bikeType;
+    style: ridingStyle;
+    crankLength; //KL, distance between the center of the crank and floor (see Maro's docs)
+    stemLength; //dl. wspornika (ger. Vorbau)
+    stemAngle;
+    bikeExpectationsParms: bikeExpectations;
+    choiceFlexibilitySurvey;
 
     //to calculations
-    frameHeight = 0; 
-    crankLengthInInch = 0; 
+    seatHeight;
+    seatSetback;
+    seatLength;
+    seatDrop;
+    frameHeight;
 
-    //stack = 0;
-    //reach = 0;
+    crankLengthInInch;
 
-    stackMin = 0
-    reachMin = 0
-    stackMax = 0
-    reachMax = 0
-    stack2ReachIndex1 = 0;
-    stack2ReachIndex2 = 0;
-    stack2ReachIndex3 = 0;
+    stackMin;
+    reachMin;
+    stackMax;
+    reachMax;
+    stack2ReachIndex1;
+    stack2ReachIndex2;
+    stack2ReachIndex3;
+    messageFromFlexibilitySurvey;
+    messageFromNeckOrBackPain;
+    messageFromButPain;
+    messageFromFeetPain;
+    messageFromKneePain;
+
+    constructor(
+        type: bikeType,
+        style: ridingStyle,
+        crankLength: number,
+        stemLength: number,
+        stemAngle: number,
+        bikeExpectationsParms: bikeExpectations,
+        choiceFlexibilitySurvey: number) {
+
+        this.type =  type;
+        this.style = style;
+        this.crankLength = crankLength;
+        this.stemLength = stemLength;
+        this.stemAngle = stemAngle;
+
+        this.bikeExpectationsParms = bikeExpectationsParms;
+
+        this.choiceFlexibilitySurvey = choiceFlexibilitySurvey;
+
+        //to calculations
+        this.seatHeight = 0;
+        this.seatSetback = 0;
+        this.seatLength = 0;
+        this.seatDrop = 0;
+        this.frameHeight = 0;
+
+        this.crankLengthInInch = 0;
+
+        this.stackMin = 0
+        this.reachMin = 0
+        this.stackMax = 0
+        this.reachMax = 0
+        this.stack2ReachIndex1 = 0;
+        this.stack2ReachIndex2 = 0;
+        this.stack2ReachIndex3 = 0;
+        this.messageFromFlexibilitySurvey = '';
+        this.messageFromNeckOrBackPain = '';
+        this.messageFromButPain= '';
+        this.messageFromFeetPain= '';
+        this.messageFromKneePain= '';
+    }
 
 }
 

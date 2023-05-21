@@ -111,6 +111,7 @@ router.beforeEach(async (to, from, next) => {
     } else {
         next();
     }
+    //next('/pages/home');
 });
 
 export default router

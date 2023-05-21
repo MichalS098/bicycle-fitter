@@ -12,12 +12,24 @@ export class Bike extends BaseEntity {
     @Column()
     type!: string;
     @Column()
-    expectations!: string;
+    expectationsBackOrNeckPain!: boolean;
+    @Column()
+    expectationsButPain!: boolean;
+    @Column()
+    expectationsKneePain!: boolean;
+    @Column()
+    expectationsFeetPain!: boolean;
+    @Column()
+    expectationsClickPedals!: boolean;
+    @Column()
+    expectationsNothing!: boolean;
+    @Column()
+    choiceFlexibilitySurvey!: number;
     @Column()
     style!: string;
-    // Calculated parameters
     @Column()
     crankLength!: number;
+    // Calculated parameters
     @Column()
     seatHeight!: number;
     @Column()
@@ -26,8 +38,6 @@ export class Bike extends BaseEntity {
     seatLength!: number;
     @Column()
     seatDrop!: number;
-    @Column()
-    spacerHeight!: number;
     @Column()
     stemLength!: number;
     @Column()
@@ -50,6 +60,16 @@ export class Bike extends BaseEntity {
     stack2ReachIndex2!: number;
     @Column()
     stack2ReachIndex3!: number;
+    @Column()
+    messageFromFlexibilitySurvey !: string;
+    @Column()
+    messageFromNeckOrBackPain!: string;
+    @Column()
+    messageFromButPain!: string;
+    @Column()
+    messageFromFeetPain!: string;
+    @Column()
+    messageFromKneePain!: string;
 
     @ManyToOne(type => User, user => user.bikes, {
         cascade: ['insert']
