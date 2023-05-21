@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import * as TWEEN from '@tweenjs/tween.js';
+import { gsap } from 'gsap';
 
 
 export class threeDScene {
@@ -34,7 +34,6 @@ export class threeDScene {
     };
 
     _lengthFromMeasuredPointToCamera = 0.8;
-    _animationEasing = TWEEN.Easing.Quadratic.InOut;
 
     private _line: THREE.Line | null = null;
 
@@ -60,7 +59,7 @@ export class threeDScene {
 
         this.lightSetup();
         this.addObjectsToScene();
-        this.createSetAnimations();
+        // this.GSAPcreateSetAnimations();
     }
 
     cameraSetup() {
@@ -173,91 +172,118 @@ export class threeDScene {
         this.actualCameraLookAt = position;
     }
 
-    createCameraPositionTween(camera: { position: THREE.Vector3; }, fromPoint: THREE.Vector3, toPoint: THREE.Vector3, duration: number | undefined, easing: ((amount: number) => number) | undefined) {
+    
+    // GSAP ANIMATIONS
+
+
+
+
+// ...
+
+    GSAPcreateCameraPositionTween(fromPoint: THREE.Vector3, toPoint: THREE.Vector3, duration: number, easing: string) {
         const midPoint = new THREE.Vector3().addVectors(fromPoint, toPoint).multiplyScalar(0.5);
-        const dir = new THREE.Vector3().subVectors(camera.position, midPoint);
+        const dir = new THREE.Vector3().subVectors(this._camera.position, midPoint);
         const lineDir = new THREE.Vector3().subVectors(toPoint, fromPoint).normalize();
         const normal = new THREE.Vector3().crossVectors(lineDir, dir).cross(lineDir).normalize();
         const newCameraPosition = new THREE.Vector3().addVectors(midPoint, normal.multiplyScalar(dir.length() * this._lengthFromMeasuredPointToCamera));
-    
-        return new TWEEN.Tween(camera.position)
-            .to(newCameraPosition, duration)
-            .easing(easing)
-            .onComplete(() => {
+
+        const proxy = { x: this.actualCameraPosition.x, y: this.actualCameraPosition.y, z: this.actualCameraPosition.z };
+
+        gsap.to(proxy, {
+            x: newCameraPosition.x,
+            y: newCameraPosition.y,
+            z: newCameraPosition.z,
+            duration: duration,
+            ease: easing,
+            onUpdate: () => {
+                this._camera.position.set(proxy.x, proxy.y, proxy.z);
+            },
+            onComplete: () => {
                 this.setCameraPosition(newCameraPosition);
                 if (this._line)
                     this._scene.remove(this._line);
-                this.drawLinesBetweenPoints(fromPoint, toPoint, 0xff0000 );
-            });
+                this.drawLinesBetweenPoints(fromPoint, toPoint, 0xff0000);
+            }
+        });
     }
 
-    createCameraLookAtTween(camera: { lookAt: (arg0: THREE.Vector3) => void; }, fromPoint: THREE.Vector3, toPoint: THREE.Vector3, duration: number | undefined, easing: ((amount: number) => number) | undefined) {
+    GSAPcreateCameraLookAtTween(fromPoint: THREE.Vector3, toPoint: THREE.Vector3, duration: number, easing: string) {
         const endLookAt = new THREE.Vector3().addVectors(fromPoint, toPoint).multiplyScalar(0.5);
         const tweenLookAt = this.actualCameraLookAt;
 
-        return new TWEEN.Tween(tweenLookAt)
-            .to({x: endLookAt.x, y: endLookAt.y, z: endLookAt.z}, duration)
-            .easing(easing)
-            .onUpdate(() => {
-            camera.lookAt(new THREE.Vector3(tweenLookAt.x, tweenLookAt.y, tweenLookAt.z));
-            })
-            .onComplete(() => {
+        const proxy = { x: tweenLookAt.x, y: tweenLookAt.y, z: tweenLookAt.z };
+
+        gsap.to(proxy, {
+            x: endLookAt.x,
+            y: endLookAt.y,
+            z: endLookAt.z,
+            duration: duration,
+            ease: easing,
+            onUpdate: () => {
+                this._camera.lookAt(new THREE.Vector3(proxy.x, proxy.y, proxy.z));
+            },
+            onComplete: () => {
                 this.setCameraLookAt(endLookAt);
-            });
+            }
+        });
     }
 
-    createSetAnimations() {
+    GSAPcreateSetAnimations() {
+        const easing = 'power3.inOut';
 
-        const easing = TWEEN.Easing.Exponential.InOut;
-
-        const tween1 = this.createCameraPositionTween(
-            this._camera, 
+        this.GSAPcreateCameraPositionTween(
             this._bikeModelPoints.saddle, 
             this._bikeModelPoints.handleBar, 
-            2000,   
-            easing);
+            2,   
+            easing
+        );
 
-        const lookAtTween1 = this.createCameraLookAtTween(
-            this._camera,                                
+        this.GSAPcreateCameraLookAtTween(                         
             this._bikeModelPoints.saddle,           
             this._bikeModelPoints.handleBar,                                           
-            2000,                                        
-            easing);
-
-        const tween2 = this.createCameraPositionTween(    
-            this._camera,             
-            this._bikeModelPoints.saddle,        
-            this._bikeModelPoints.floorUnderCrank,                                     
-            1500, 
-            easing);
-
-        const lookAtTween2 = this.createCameraLookAtTween(
-            this._camera,                      
-            this._bikeModelPoints.saddle,           
-            this._bikeModelPoints.floorUnderCrank,                                          
-            1500,                                 
-            easing);
-        
-        const tween3 = this.createCameraPositionTween(
-            this._camera,                                           
-            this._bikeModelPoints.handleBar,                                           
-            this._bikeModelPoints.frontWheelHub,                                           
-            1500,                                           
-            easing);
-
-        const lookAtTween3 = this.createCameraLookAtTween(
-            this._camera,                                                                                  
-            this._bikeModelPoints.handleBar,                                               
-            this._bikeModelPoints.frontWheelHub,                                                
-            1500,                                               
-            easing);
-
-        tween1.chain(tween2.chain(tween3));
-        lookAtTween1.chain(lookAtTween2.chain(lookAtTween3));
-        
-        tween1.start();
-        lookAtTween1.start();
+            2,                                        
+            easing
+        );
     }
+
+
+    GSAPcreateSetAnimations2() {
+        const easing = 'power3.inOut';
+
+        this.GSAPcreateCameraPositionTween(
+            this._bikeModelPoints.saddle, 
+            this._bikeModelPoints.floorUnderCrank, 
+            2,   
+            easing
+        );
+
+        this.GSAPcreateCameraLookAtTween(                             
+            this._bikeModelPoints.saddle,           
+            this._bikeModelPoints.floorUnderCrank,                                           
+            2,                                        
+            easing
+        );
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
 
     drawLinesBetweenPoints(fromPoint: THREE.Vector3, toPoint: THREE.Vector3, color: number) {
 
@@ -273,20 +299,11 @@ export class threeDScene {
         this._scene.add(this._line);
     }
 
-    createAnimation( fromPoint: THREE.Vector3, toPoint: THREE.Vector3, duration: number | undefined) {
-
-        const tween1 = this.createCameraPositionTween(this._camera, fromPoint, toPoint, duration,   this._animationEasing);
-
-        const lookAtTween1 = this.createCameraLookAtTween( this._camera, fromPoint, toPoint, duration, this._animationEasing);
-
-
-    }
-
 
     animate(time?: number) {
 
         requestAnimationFrame(this.animate.bind(this));
-        TWEEN.update(time);
+        // TWEEN.update(time);
     
         this._renderer.render(this._scene, this._camera);
         // console.log("position: ", camera.position);

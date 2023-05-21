@@ -136,7 +136,8 @@ onMounted(async () => {
 
 
 
-
+    threeDS.GSAPcreateSetAnimations();
+    threeDS.GSAPcreateSetAnimations2();
 
 
 
