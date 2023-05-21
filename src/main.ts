@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router';
 
 import { IonicVue } from '@ionic/vue';
+import VueApexCharts from "vue3-apexcharts";
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/vue/css/core.css';
@@ -45,6 +46,7 @@ applyPolyfills().then(() => {
 window.addEventListener('DOMContentLoaded', async () => {
     const app = createApp(App)
         .use(IonicVue)
+        .use(VueApexCharts);
 
     const platform = Capacitor.getPlatform();
     app.config.globalProperties.$platform = platform;

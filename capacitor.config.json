@@ -1,5 +1,5 @@
 {
-    "appId": "com.bike.fitter.app.project",
+    "appId": "com.bike.fitter.app.project.app",
     "appName": "BicycleFitter",
     "webDir": "dist",
     "bundledWebRuntime": false,

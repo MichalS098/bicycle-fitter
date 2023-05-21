@@ -1,21 +1,86 @@
 <template>
     <ion-page>
-        <ion-content class="ion-padding" :fullscreen="true">
-            <div class="flex flex-col justify-between gap-6 xxs:gap-12 pt-12">
-                <button class="absolute top-0 right-0 p-2 xxs:p-4" @click="goToHome">X</button>
-                <div class="px-3 xxs:px-6 pt-3 xxs:pt-6">
-                    <h1 class="text-5xl xxs:text-6xl">
-                        Trek
+        <div class="h-screen w-screen bg-black relative">
+            <!-- IMITATION OF THREE.JS -->
+            <div id="threejs-container" class="w-full h-full"></div>
+            <!-- <svg viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                class="absolute top-0 left-0 w-full h-full z-0">
+                <defs>
+                    <radialGradient id="myGradient">
+                        <stop offset="0%" stop-color="#E48C56" />
+                        <stop offset="100%" stop-color="rgba(0, 0, 0, 0)" />
+                    </radialGradient>
+                </defs>
+                <circle cx="8" cy="2" r="9" fill="url('#myGradient')" />
+            </svg> -->
+
+            <div class="absolute top-0 left-0 right-0 w-full px-6 pt-24 z-[10] flex justify-between">
+                <div>
+                    <h1 class="text-4xl xs:text-5xl text-white font-bold">
+                        {{ bike?.brand ?? 'No brand' }}
                     </h1>
-                </div>
-                <div class="px-3 xxs:px-6 pt-3 xxs:pt-6">
-                    <h2 class="text-xl xxs:text-xl">
-                        Suggested
-                        <br>
-                        measurements
+                    <h2 class="text-base xs:text-lg text-white">
+                        {{ bike?.model ?? 'No model' }}
                     </h2>
                 </div>
+                <x-mark-icon class="w-8 h-8 text-white" @click="goToHome" />
             </div>
+
+            <div class="z-[20] px-3 py-4 bg-neutral-800 absolute bottom-0 left-0 right-0 w-full flex flex-col gap-6 transition-all duration-500 ease-in-out"
+                @touchstart="touchStart" @touchmove="touchMove" @touchend="touchEnd" :class="{
+                    'h-1/4 rounded-t-[30px]': !isExpanded,                    
+                    'h-3/4 rounded-t-[30px]': isExpanded && !isFullyExpanded,
+                    'h-full overflow-y-auto rounded-none': isFullyExpanded
+                }">
+                <div class="mx-auto w-[40px] h-[5px] rounded-full bg-neutral-700 shrink-0"></div>
+                <div class="w-full flex items-center justify-between gap-6">
+                    <button
+                        class="rounded-2xl bg-neutral-700 shadow-lg flex flex-col items-center justify-center gap-[1px] p-2 aspect-square w-full">
+                        <HeartIcon class="w-8 h-8 text-white" />
+                        <span class="text-xs text-white">Test</span>
+                    </button>
+                    <button
+                        class="rounded-2xl bg-neutral-700 shadow-lg flex flex-col items-center justify-center gap-[1px] p-2 aspect-square w-full">
+                        <BackwardIcon class="w-8 h-8 text-white" />
+                        <span class="text-xs text-white">Prev</span>
+                    </button>
+                    <button
+                        class="rounded-2xl bg-neutral-700 shadow-lg flex flex-col items-center justify-center gap-[1px] p-2 aspect-square w-full">
+                        <PlayIcon class="w-8 h-8 text-white" />
+                        <span class="text-xs text-white">Play</span>
+                    </button>
+                    <button
+                        class="rounded-2xl bg-neutral-700 shadow-lg flex flex-col items-center justify-center gap-[1px] p-2 aspect-square w-full">
+                        <ForwardIcon class="w-8 h-8 text-white" />
+                        <span class="text-xs text-white">Next</span>
+                    </button>
+                </div>
+
+
+                <div>
+                    <h2 class="fitter-h2 mt-3 mb-6 text-white">
+                        Tips for you
+                    </h2>
+                    <tips-swiper :tips="tips" />                    
+                </div>
+
+                <div>
+                    <h2 class="fitter-h2 mt-3 mb-6 text-white">
+                        Your bike fit
+                    </h2>
+
+                    <apexchart class="w-full" type="line" :options="chartOptions" :series="chartSeries"></apexchart>
+                </div>
+
+
+
+            </div>
+        </div>
+        <!-- /IMITATION OF THREE.JS -->
+
+
+
+        <!-- 
             <ul>
                 <li>seatHeight: {{ bike?.seatHeight }}</li>
                 <li>seatSetback: {{ bike?.seatSetback }}</li>
@@ -32,33 +97,28 @@
                 <li>stack2ReachIndex2: {{ bike?.stack2ReachIndex2 }}</li>
                 <li>stack2ReachIndex3: {{ bike?.stack2ReachIndex3 }}</li>
             </ul>
-        </ion-content>
+        -->
+
     </ion-page>
 </template>
   
 <script lang="ts" setup>
 import {
-    IonPage, IonContent, useIonRouter
+    IonPage, useIonRouter
 } from '@ionic/vue';
 import { onMounted, ref } from 'vue';
-
+import { BackwardIcon, ForwardIcon, HeartIcon, PlayIcon, XMarkIcon } from '@heroicons/vue/24/outline';
 import { Bike } from '@/entity/Bike';
-import { User } from '@/entity/User';
-import AppDataSource from '@/data-sources/SqliteDataSource';
-import { updateProperty } from '@/helpers/helpersDataBase';
-
-import { seatHeightCalc, sind, cosd } from '@/functions/bikefittinglogic/bikeFittingParamsLogic';
-import { calculatedBikeFittingParams } from '@/functions/calculatedBikeFittingParams';
-import { bikeParams, bikeType, ridingStyle } from '@/classes/bikeParams';
-import { humanParams } from '@/classes/humanParams';
-import { getLastBikeOfUser } from '@/helpers/helpersDataBase';
+import { Tip } from '@/entity/Tip';
 import { useRoute } from 'vue-router';
+import TipsSwiper from '@/components/TipsSwiper.vue';
+import { threeDScene } from '@/classes/threeDScene';
 
 // get router params props
 const route = useRoute();
 const bike_id = Number(route.params.id);
 const bike = ref<Bike | null>();
-
+const tips = ref<Tip[]>([]);
 
 const router = useIonRouter();
 
@@ -66,151 +126,125 @@ const goToHome = () => {
     router.navigate('/pages/home', 'none', 'replace');
 };
 
-
 onMounted(async () => {
     bike.value = await Bike.findOneBy({
         id: bike_id
     })
-    console.log("bike: ", bike.value);
+    tips.value = await Tip.find();
 
-    if (!bike.value) {
-        console.log('No bike found');
-        goToHome();        
-        return;
-    }
+    const threeDS = new threeDScene('#threejs-container');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // TODO: Remove this in production
+    // if (!bike.value) {
+    //     console.log('No bike found');    
+    //     goToHome();        
+    //     return;
+    // }    
 });
 
-//     bikeRef.value = bike;    
-// });
+
+const startY = ref<number>(0)
+const endY = ref<number>(0)
+const isExpanded = ref<boolean>(false)
+const isFullyExpanded = ref<boolean>(false)
+const swipeLength = 80 // this value must be between 50-100
+
+function touchStart(e: TouchEvent) {
+    console.log('touchStart');
+    startY.value = e.touches[0].clientY;
+}
+function touchMove(e: TouchEvent) {
+    console.log('touchMove');
+    endY.value = e.touches[0].clientY;
+}
+function touchEnd() {
+    console.log('touchEnd');
+    const diffY = Number(endY.value) - Number(startY.value);
+
+    if (!isFullyExpanded.value && !isExpanded.value && diffY < -swipeLength) {
+        isExpanded.value = true;
+        return;
+    }
+
+    if (!isFullyExpanded.value && isExpanded.value && diffY > swipeLength) {
+        isExpanded.value = false;
+        return;
+    }
+
+    if (!isFullyExpanded.value && isExpanded.value && diffY < -swipeLength) {
+        isFullyExpanded.value = true;
+        return;
+    }
+
+    if (isFullyExpanded.value && isExpanded.value && diffY > swipeLength && startY.value < 100) {
+        isFullyExpanded.value = false;
+        isExpanded.value = false;
+        return;
+    }
+}
 
 
-// const bike = ref<Bike>();
-// onMounted(async () => {
-//     bike = await Bike.findOne({
-//         where: {
-//             id: 1
-//         }
-//     });
+// chart series of measured angles during bike fit
+const chartSeries = ref<any[]>([{
+    name: 'Bicep angles',    
+    data: [0, 0.5, 0.7, 0.9, 1, 0.9, 0.7, 0.5, 0, -0.5, -0.7, -0.9, -1, -0.9, -0.7, -0.5, 0]
+}, {
+    name: 'Knee angles',
+    // faster and phased sinus
+    data: [0.6, 0.8, 1, 0.8, 0.6, 0.4, 0.2, 0, -0.2, -0.4, -0.6, -0.8, -1, -0.8, -0.6, -0.4, -0.2]
+}])
 
-//     console.log("Bike Fitting!")
+const chartOptions = ref<any>({
+    chart: {
+        type: 'line',
+        height: 350
+    },
+    plotOptions: {
+        bar: {
+            horizontal: false,
+            columnWidth: '55%',
+            endingShape: 'rounded'
+        },
+    },
+    dataLabels: {
+        enabled: false
+    },
+    stroke: {
+        show: true,
+        width: 2        
+    },
+    xaxis: {
+        categories: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17']
+    },
+    yaxis: {
+        title: {
+            text: 'Angle (°)'
+        }
+    },
+    fill: {
+        opacity: 1
+    },
+    tooltip: {
+        y: {
+            formatter: function (val: number) {
+                return val + "°"
+            }
+        }
+    }
+})
 
-//     const userToUpdate = await userRepository.findOne({
-//         where: {
-//             id: 1
-//         },
-//         relations: {
-//             bikes: true
-//         }
-//     })
-
-//     console.log("userToUpdate: ", userToUpdate);
-//     const lastBike = await getLastBikeOfUser();
-
-//     if (!lastBike) {
-//         console.log('No bikes found for this user');
-//         return;
-//     }
-
-//     console.log("lastBike: ", lastBike);
-
-//     const clickPedals = 1;
-//     const neckOrBackPain = 2;
-//     const butPain = 2;
-//     const feetPain = 2;
-//     const kneePain = 2;
-//     const choiceFlexibilitySurvey = 1;
-
-//     let shankLength;
-//     let thighLength;
-//     let shoeSize = 44; //this input must add to interview
-//     let inseamLength;
-//     let shoulderHeight;
-//     let armLength;
-//     let overallHeight;
-
-//     if ((userToUpdate != null) && (lastBike != null)) {
-//         shankLength = userToUpdate.shankLength;
-//         thighLength = userToUpdate.thighLength;
-//         shoeSize = 44; //this input must add to interview
-//         inseamLength = userToUpdate.inseamLength;
-//         shoulderHeight = userToUpdate.shoulderHeight;
-//         armLength = userToUpdate.armLength;
-//         overallHeight = userToUpdate.overallHeight;
-//         const person = new humanParams(shankLength, thighLength, shoeSize, inseamLength, shoulderHeight, armLength, 85, overallHeight, 37.5);
-
-//         const bike = new bikeParams();
-//         bike.type = chooseBikeType(lastBike.type);
-//         bike.style = chooseRidingStyle(lastBike.style);
-//         bike.crankLength = 18 //it we must know before bikefitting, we must add this to interview bike 
-//         bike.seatHeight = 90
-//         bike.seatSetback = 20
-//         bike.seatLength = 40
-//         bike.seatDrop = -5
-//         bike.spacerHeight = 2 //W programie matlabowym było to tak zdefiniowane 
-//         bike.stemLength = 10 //VL
-//         bike.stemAngle = 10 //VW
-//         const [returnedBike, returnedPerson] = calculatedBikeFittingParams(
-//             clickPedals,
-//             neckOrBackPain,
-//             butPain,
-//             feetPain,
-//             kneePain,
-//             choiceFlexibilitySurvey,
-//             person,
-//             bike
-//         );
-
-//         lastBike.seatHeight = returnedBike.seatHeight;
-//         lastBike.seatSetback = returnedBike.seatSetback;
-//         lastBike.seatLength = returnedBike.seatLength;
-//         lastBike.seatDrop = returnedBike.seatDrop;
-//         lastBike.spacerHeight = returnedBike.spacerHeight;
-//         lastBike.stemLength = returnedBike.stemLength;
-//         lastBike.stemAngle = returnedBike.stemAngle;
-//         lastBike.stackMin = returnedBike.stackMin;
-//         lastBike.reachMin = returnedBike.reachMin;
-//         lastBike.stackMax = returnedBike.stackMax;
-//         lastBike.reachMax = returnedBike.reachMax;
-//         lastBike.stack2ReachIndex1 = returnedBike.stack2ReachIndex1;
-//         lastBike.stack2ReachIndex2 = returnedBike.stack2ReachIndex2;
-//         lastBike.stack2ReachIndex3 = returnedBike.stack2ReachIndex3;
-
-//         await bikeRepository.save(lastBike);
-
-//         bikeRef.value = lastBike;
-
-//         console.log("seatHeight: ", returnedBike.seatHeight);
-//         console.log("seatSetback: ", returnedBike.seatSetback);
-//         console.log("seatLength: ", returnedBike.seatLength);
-//         console.log("seatDrop: ", returnedBike.seatDrop);
-//         console.log("spacerHeight: ", returnedBike.spacerHeight);
-//         console.log("stemLength: ", returnedBike.stemLength);
-//         console.log("stemAngle: ", returnedBike.stemAngle);
-//         console.log("stackMin: ", returnedBike.stackMin);
-//         console.log("reachMin: ", returnedBike.reachMin);
-//         console.log("stackMax: ", returnedBike.stackMax);
-//         console.log("reachMax: ", returnedBike.reachMax);
-//         console.log("stack2ReachIndex1: ", returnedBike.stack2ReachIndex1);
-//         console.log("stack2ReachIndex2: ", returnedBike.stack2ReachIndex2);
-//         console.log("stack2ReachIndex3: ", returnedBike.stack2ReachIndex3);
-//     }
-//     else {
-//         console.log("Error with human or bike params !!!");
-//     }
-
-//     //PLEASE DONT TOUCH THIS COMMENT, IT CAN BE NEEED IN THE FUTERE TO DEBUG 
-//     //const person = new humanParams(47, 42, 42, 81, 145, 70, 85, 190,0);
-
-//     /*const person = new humanParams(userToUpdate.shankLength,
-//      userToUpdate.thighLength,
-//      shoeSize,
-//      userToUpdate.inseamLength,
-//      userToUpdate.shoulderHeight,
-//      userToUpdate.armLength,
-//      85,
-//      userToUpdate.overallHeight,
-//      37.5);*/
-
-// });
 
 </script>
