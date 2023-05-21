@@ -38,31 +38,47 @@
             <step-card title="Your expectations" sub-title="What do you expect from bikefitting?" :this-step="4"
                 :current-step="currentStep" :number-of-steps="numberOfSteps" @prev="prevStep()" @next="nextStep()"
                 color="primary">
-                <steps-check-box v-model="form.expectations" :value="{ id: 'backOrNeckPain', value: true }"
-                    label="Neck or back pain" color="primary" />
-                <steps-check-box  v-model="form.expectations" :value="{ id: 'butPain', value: true }" label="Butt pain"
-                     color="primary" />
-                <steps-check-box v-model="form.expectations" :value="{ id: 'kneePain', value: true }" label="Knee pain"
-                     color="primary" />
-                <steps-check-box  v-model="form.expectations" :value="{ id: 'feetPain', value: true }" label="Feet pain"
-                     color="primary" />
-                <steps-check-box v-model="form.expectations" :value="{ id: 'clickPedals', value: 1 }" label="Click pedals"
-                     color="primary" />
-                <steps-check-box  v-model="form.expectations" :value="{ id: 'nothing', value: true }" label="Nothing"
-                     color="primary" />
+                <steps-check-box v-model="form.expectations.backOrNeckPain" label="Back Or Neck Pain" color="primary" />
+                <steps-check-box v-model="form.expectations.butPain" label="But Pain" color="primary" />
+                <steps-check-box v-model="form.expectations.kneePain" label="Knee pain" color="primary" />
+                <steps-check-box v-model="form.expectations.feetPain" label="Feet pain" color="primary" />
+                <steps-check-box v-model="form.expectations.clickPedals" label="Click pedals" color="primary" />
+                <steps-check-box v-model="form.expectations.nothing" label="Nothing" color="primary" />
+                <!-- <ion-list>
+                    <ion-item>
+                        <ion-select aria-label="Additional" color="primary" interface="popover" placeholder="Select additional">
+                            <ion-select-option value="palms to ground" color="primary" >Oranges</ion-select-option>
+                            <ion-select-option value="finger tips to ground" color="primary" >Oranges</ion-select-option>
+                            <ion-select-option value="more than 5 cm to ground" color="primary">Bananas</ion-select-option>
+                            <ion-select-option value="more than 10 cm to ground" color="primary">Bananas</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                </ion-list> -->
             </step-card>
+
+            <!-- <step-card title="Your bike params" sub-title="Please add bike params" :this-step="5"
+                :current-step="currentStep" :number-of-steps="numberOfSteps" @prev="prevStep()" @next="nextStep()"
+                color="primary">
+                <button-input v-model="form.stemLength" type="number" inputmode="numeric"
+                    placeholder="Enter your stem length" :postfix="user?.unitSystem === 'metric' ? 'cm' : 'inch'" />
+                <button-input v-model="form.crankLength" type="number" inputmode="numeric"
+                    placeholder="Enter your crank length" :postfix="user?.unitSystem === 'metric' ? 'cm' : 'inch'" />
+            </step-card> -->
         </ion-content>
     </ion-page>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { IonList, IonItem, IonSelect, IonSelectOption } from '@ionic/vue';
+import { defineComponent } from 'vue';
 import { IonPage, IonContent, useIonRouter } from '@ionic/vue';
 import ButtonInput from '@/components/ButtonInput.vue';
 import StepsRadioButton from '@/components/StepsRadioButton.vue';
 import StepsCheckBox from '@/components/StepsCheckBox.vue';
 import StepCard from '@/components/StepCard.vue';
 import { Bike } from '@/entity/Bike';
+import { User } from '@/entity/User';
 import { getUserFromDatabase } from '@/helpers/helpersDataBase';
 
 import { getBikefittingParams } from '@/functions/calculatedBikeFittingParams';
@@ -70,6 +86,7 @@ import { getBikefittingParams } from '@/functions/calculatedBikeFittingParams';
 import { onMounted, watch } from 'vue';
 
 import { bikeExpectations } from '@/classes/bikeExpectations';
+
 
 
 const numberOfSteps = 4;
@@ -81,62 +98,24 @@ const form = ref({
     bikeCompany: '',
     bikeModel: '',
     bikeFittingGoal: '',
-    /*expectations: {
+    expectations: {
         backOrNeckPain: false,
         butPain: false,
         kneePain: false,
         feetPain: false,
-        clickPedals: 0,
+        clickPedals: false,
         nothing: false
-    },*/
-    expectations: [
-        { id: 'backOrNeckPain', value: false },
-        { id: 'butPain', value: false },
-        { id: 'kneePain', value: false },
-        { id: 'feetPain', value: false },
-        { id: 'clickPedals', value: 0 },
-        { id: 'nothing', value: false },
-    ],
+    },
     noBikeModel: false,
     suggestNewBike: false,
+    stemLength: 0,
+    crankLength: 0,
+    additionalSurvey: 0,
 });
-
-/*onMounted(() => {
-    initializeFourStep();
-});
-
-watch(currentStep, (newStep) => {
-    if (newStep === 4) {
-        initializeFourStep();
-    }
-});*/
-
-//const isChecked = (id: string) => form.value.expectations.some(item => item.id === id);
-
-/*const updateExpectations = (newItem: { id: string; value: boolean | number }) => {
-    const index = form.value.expectations.findIndex(item => item.id === newItem.id);
-    if (index === -1) {
-        form.value.expectations.push(newItem);
-    } else {
-        form.value.expectations[index].value = !form.value.expectations[index].value;
-    }
-};*/
-
-/*function initializeFourStep() {
-    const newExpectations = form.value.expectations.map(item => ({ ...item }));
-    newExpectations.forEach((item) => {
-        if (typeof item.value === 'boolean') {
-            item.value = false;
-        } else if (typeof item.value === 'number') {
-            item.value = 0;
-        }
-    });
-    form.value.expectations = newExpectations;
-}*/
 
 
 const nextStep = async () => {
-    //initializeFourStep();
+
     if (currentStep.value == 1) {
         if (form.value.bikeType == '') {
             return;
@@ -152,11 +131,15 @@ const nextStep = async () => {
             return;
         }
     } else if (currentStep.value === 4) {
-
-        const nothingItem = form.value.expectations.find((item: { id: string; value: boolean | number }) => item.id === 'nothing')
-        if (nothingItem && nothingItem.value === false) {
+        if ((form.value.expectations.nothing == false) &&
+            (form.value.expectations.backOrNeckPain == false) &&
+            (form.value.expectations.butPain == false) &&
+            (form.value.expectations.clickPedals == false) &&
+            (form.value.expectations.feetPain == false) &&
+            (form.value.expectations.kneePain == false)) {
             return;
         }
+
         createBike();
     }
     if (currentStep.value < numberOfSteps) {
@@ -180,50 +163,25 @@ const createBike = async () => {
         return;
     }
 
-    /*
-    { id: 'backOrNeckPain', value: false },
-        { id: 'butPain', value: false },
-        { id: 'kneePain', value: false },
-        { id: 'feetPain', value: false },
-        { id: 'clickPedals', value: 0 },
-        { id: 'nothing', value: false },
-    */
+
     // Interview bike params
     const bike = new Bike();
     bike.brand = form.value.bikeCompany;
     bike.model = form.value.bikeModel;
     bike.type = form.value.bikeType;
     bike.style = form.value.bikeFittingGoal;
-    const nothingItem = form.value.expectations.find((item: { id: string; value: boolean | number }) => item.id === 'nothing')
+    bike.stemLength = form.value.stemLength;
+    bike.crankLength = form.value.crankLength;
 
-let nothingValue: boolean | undefined;
-
-if (nothingItem !== undefined) {
-  if (typeof nothingItem.value === 'boolean') {
-    nothingValue = nothingItem.value;
-    bike.expectationsNothing = nothingValue;
-  } else {
-    // nothingItem.value jest liczbą, zrób coś z tym
-  }
-} else {
-  // nothingItem jest undefined, zrób coś z tym
-}
-    console.log("expectations", form.value.expectations)
-    /*bike.expectationsBackOrNeckPain = form.value.expectations.backOrNeckPain;
-    bike.expectationsButPain = form.value.expectations.butPain;
-    bike.expectationsClickPedals = form.value.expectations.clickPedals;
-    bike.expectationsFeetPain = form.value.expectations.feetPain;
-    bike.expectationsKneePain = form.value.expectations.kneePain;*/
-
-    
-   
-    /*bike.expectationsBackOrNeckPain = form.value.expectations.backOrNeckPain;
+    bike.expectationsBackOrNeckPain = form.value.expectations.backOrNeckPain;
     bike.expectationsButPain = form.value.expectations.butPain;
     bike.expectationsClickPedals = form.value.expectations.clickPedals;
     bike.expectationsFeetPain = form.value.expectations.feetPain;
     bike.expectationsKneePain = form.value.expectations.kneePain;
-    bike.expectationsNothing = form.value.expectations.nothing;*/
-    bike.crankLength = 18;
+    bike.expectationsNothing = form.value.expectations.nothing;
+
+    console.log("expectations", form.value.expectations)
+
     bike.user = user;
 
     // Calculated bike params
@@ -249,6 +207,7 @@ if (nothingItem !== undefined) {
     bike.messageFromNeckOrBackPain = bikeFittingParams.messageFromNeckOrBackPain;
     await bike.save();
 
+    console.log("bike from data base: ", bike)
     router.navigate('/bikes/' + bike.id, 'none', 'replace');
 }
 </script>

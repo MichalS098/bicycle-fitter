@@ -37,7 +37,13 @@ export function calculatedBikeFittingParams(person: humanParams, bike: bikeParam
 
     //RE2 = Math.round(RE2) / 10
 
-    bike.seatHeight = bike.bikeExpectationsParms.clickPedal + bike.seatHeight
+    if (bike.bikeExpectationsParms.clickPedal == true) {
+        bike.seatHeight = 2.3 + bike.seatHeight
+    }
+    else
+    {
+        bike.seatHeight = 1.0 + bike.seatHeight
+    }
 
     //console.log("person", person)
     //console.log("bike", bike)
@@ -62,7 +68,17 @@ export async function getBikefittingParams(bike: Bike, user: User): Promise<bike
         bike.expectationsFeetPain,
         bike.expectationsClickPedals, bike.expectationsNothing);
 
-    const newBikeParams = new bikeParams(bikeTypeFromStr(bike.type), ridingStyleFromStr(bike.style), 18, 10, 10, bikeExpectationsTemp, 1);
+    if(bike.crankLength == 0)    
+    {
+        bike.crankLength = 18;
+    }
+
+    if(bike.stemLength == 0)
+    {
+        bike.stemLength = 10;
+    }
+
+    const newBikeParams = new bikeParams(bikeTypeFromStr(bike.type), ridingStyleFromStr(bike.style), bike.crankLength, bike.stemLength, 10, bikeExpectationsTemp, 1);
 
     console.log("humanParams to bike fitting calculated: ", person)
     console.log("bikeParams to bike fitting calculated: ", newBikeParams)

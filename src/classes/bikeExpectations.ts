@@ -10,7 +10,7 @@ export class bikeExpectations{
         butPain: boolean,
         kneePain: boolean,
         feetPain: boolean,
-        clickPedals: number,
+        clickPedals: boolean,
         nothing: boolean
     )
     {

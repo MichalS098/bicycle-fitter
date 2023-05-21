@@ -13,7 +13,7 @@ export class CreateBikesTable1682638602865 implements MigrationInterface {
                 "expectationsButPain" boolean,
                 "expectationsKneePain" boolean,
                 "expectationsFeetPain" boolean,
-                "expectationsClickPedals" number,
+                "expectationsClickPedals" boolean,
                 "expectationsNothing" boolean,
                 "style" varchar,
                 "crankLength" integer,

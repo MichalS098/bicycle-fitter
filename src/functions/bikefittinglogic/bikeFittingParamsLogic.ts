@@ -273,12 +273,12 @@ export function calcFrameHeight(person: humanParams, bike: bikeParams): [humanPa
 export function additionalSurvey(bikeParamsTemp: bikeParams): [number, number, number] {
 
     //KLIK od "Clickk Peals?"
-    if (bikeParamsTemp.bikeExpectationsParms.clickPedal == 1) {
+    /*if (bikeParamsTemp.bikeExpectationsParms.clickPedal == 1) {
         bikeParamsTemp.bikeExpectationsParms.clickPedal = 2.3
     }
     else {
         bikeParamsTemp.bikeExpectationsParms.clickPedal = 1
-    }
+    }*/
 
     //Neck or Back Pain?
     let SWa = 0

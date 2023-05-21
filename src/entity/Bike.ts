@@ -20,7 +20,7 @@ export class Bike extends BaseEntity {
     @Column()
     expectationsFeetPain!: boolean;
     @Column()
-    expectationsClickPedals!: number;
+    expectationsClickPedals!: boolean;
     @Column()
     expectationsNothing!: boolean;
     @Column()

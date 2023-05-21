@@ -123,23 +123,6 @@ const measureDone = async () => {
     measuringDone.value = true;
     showMeasureFinishedModal.value = true;
 
-    if (Platform.is('android')) {
-      // Sprawdzanie uprawnień
-const { status } = await Permissions.request({ name: 'storage' });
-
-if (status === 'granted') {
-    // Utworzenie pliku
-    const result = await Filesystem.writeFile({
-        path: 'mydir/myfile.txt',
-        data: 'This is some text data that will be written to the file.',
-        directory: 'data'
-    });
-
-    console.log('File written', result);
-}
-    }
-
-
     const user = await getUserFromDatabase();
     if (user != null) {
         user.shoulderHeight = bodyParams.value.shoulderHeight * 100;

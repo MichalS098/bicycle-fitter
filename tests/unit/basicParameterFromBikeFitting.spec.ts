@@ -22,7 +22,7 @@ describe('calculatedBikeFittingParams', () => {
       false,
       false,
       false,
-      1, false);
+      false, false);
 
     const newBikeParams = new bikeParams(bikeType.Road,ridingStyle.Sport, 18, 10, 10, bikeExpectationsTemp, 1);
 
