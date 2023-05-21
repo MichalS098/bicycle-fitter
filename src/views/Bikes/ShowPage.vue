@@ -165,7 +165,7 @@ const swipeLength = 80 // this value must be between 50-100
 
 function touchStart(e: TouchEvent) {
     console.log('touchStart');
-    startY.value = e.touches[0].clientY;
+    // startY.value = e.touches[0].clientY;
 }
 function touchMove(e: TouchEvent) {
     console.log('touchMove');
