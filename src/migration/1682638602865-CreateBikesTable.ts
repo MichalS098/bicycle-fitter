@@ -15,6 +15,7 @@ export class CreateBikesTable1682638602865 implements MigrationInterface {
                 "expectationsFeetPain" boolean,
                 "expectationsClickPedals" boolean,
                 "expectationsNothing" boolean,
+                "choiceFlexibilitySurvey" number,
                 "style" varchar,
                 "crankLength" integer,
                 "seatHeight" integer,

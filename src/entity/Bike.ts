@@ -24,10 +24,12 @@ export class Bike extends BaseEntity {
     @Column()
     expectationsNothing!: boolean;
     @Column()
+    choiceFlexibilitySurvey!: number;
+    @Column()
     style!: string;
-    // Calculated parameters
     @Column()
     crankLength!: number;
+    // Calculated parameters
     @Column()
     seatHeight!: number;
     @Column()

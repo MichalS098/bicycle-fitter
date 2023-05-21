@@ -38,22 +38,29 @@
             <step-card title="Your expectations" sub-title="What do you expect from bikefitting?" :this-step="4"
                 :current-step="currentStep" :number-of-steps="numberOfSteps" @prev="prevStep()" @next="nextStep()"
                 color="primary">
+                <ion-list>
+                    <ion-item>
+                        <ion-select v-model="form.additionalSurvey" aria-label="Additional" expand="block" shape="round"
+                            color="primary" mode="ios" fill="outline" interface="popover" placeholder="Select additional"
+                            type="button" class="select-wizard-button">
+                            <ion-select-option value="4" color="primary" class="combobox">foot to
+                                ground</ion-select-option>
+                            <ion-select-option value="3" color="primary" class="combobox">finger tips to
+                                ground</ion-select-option>
+                            <ion-select-option value="2" color="primary" class="combobox">more than 5 cm to
+                                ground</ion-select-option>
+                            <ion-select-option value="1" color="primary" class="combobox">more than 10 cm to
+                                ground</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                </ion-list>
                 <steps-check-box v-model="form.expectations.backOrNeckPain" label="Back Or Neck Pain" color="primary" />
                 <steps-check-box v-model="form.expectations.butPain" label="But Pain" color="primary" />
                 <steps-check-box v-model="form.expectations.kneePain" label="Knee pain" color="primary" />
                 <steps-check-box v-model="form.expectations.feetPain" label="Feet pain" color="primary" />
                 <steps-check-box v-model="form.expectations.clickPedals" label="Click pedals" color="primary" />
-                <steps-check-box v-model="form.expectations.nothing" label="Nothing" color="primary" />
-                <!-- <ion-list>
-                    <ion-item>
-                        <ion-select aria-label="Additional" color="primary" interface="popover" placeholder="Select additional">
-                            <ion-select-option value="palms to ground" color="primary" >Oranges</ion-select-option>
-                            <ion-select-option value="finger tips to ground" color="primary" >Oranges</ion-select-option>
-                            <ion-select-option value="more than 5 cm to ground" color="primary">Bananas</ion-select-option>
-                            <ion-select-option value="more than 10 cm to ground" color="primary">Bananas</ion-select-option>
-                        </ion-select>
-                    </ion-item>
-                </ion-list> -->
+                <steps-check-box v-model="form.expectations.nothing" label="Nothing" color="primary"
+                    :disabled="anyExpectationSelected()" />
             </step-card>
 
             <!-- <step-card title="Your bike params" sub-title="Please add bike params" :this-step="5"
@@ -113,6 +120,15 @@ const form = ref({
     additionalSurvey: 0,
 });
 
+const anyExpectationSelected = () => {
+    return (
+        form.value.expectations.backOrNeckPain ||
+        form.value.expectations.butPain ||
+        form.value.expectations.kneePain ||
+        form.value.expectations.feetPain ||
+        form.value.expectations.clickPedals
+    );
+}
 
 const nextStep = async () => {
 
@@ -138,6 +154,10 @@ const nextStep = async () => {
             (form.value.expectations.feetPain == false) &&
             (form.value.expectations.kneePain == false)) {
             return;
+        }
+
+        if (form.value.additionalSurvey == 0) {
+            form.value.additionalSurvey = 4;
         }
 
         createBike();
@@ -179,6 +199,8 @@ const createBike = async () => {
     bike.expectationsFeetPain = form.value.expectations.feetPain;
     bike.expectationsKneePain = form.value.expectations.kneePain;
     bike.expectationsNothing = form.value.expectations.nothing;
+    bike.choiceFlexibilitySurvey = form.value.additionalSurvey;
+
 
     console.log("expectations", form.value.expectations)
 
@@ -211,3 +233,17 @@ const createBike = async () => {
     router.navigate('/bikes/' + bike.id, 'none', 'replace');
 }
 </script>
+
+<style>
+.select-wizard-button {
+    --border-width: 2px;
+    font-weight: 600;
+    --padding-start: 15px;
+    --padding-end: 15px;
+    --padding-top: 10px;
+    --padding-bottom: 10px;
+    --background: transparent;
+    --color: var(--ion-color-primary);
+    --border-color: var(--ion-color-primary);
+}
+</style>

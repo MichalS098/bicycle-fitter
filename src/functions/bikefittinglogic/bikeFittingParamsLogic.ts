@@ -336,18 +336,18 @@ export function flexibilitySurvey(SWa: number, RSa: boolean, B: number): [number
     let message = ''
     let SWnew = 0
 
-    switch (B) {
-        case flexIndex.poor: {
+    switch (Number(B)) {
+        case 1: {
             SWnew = SWa + 50
             message = 'choose a more upright position'
             break;
         }
-        case flexIndex.average: {
+        case 2: {
             SWnew = SWa + 45
             message = 'you have to do mobility exercise'
             break;
         }
-        case flexIndex.good: {
+        case 3: {
             if (RSa) {
                 SWnew = SWa + 50
                 message = 'a sports like position is not recommended'
@@ -358,7 +358,7 @@ export function flexibilitySurvey(SWa: number, RSa: boolean, B: number): [number
             }
             break;
         }
-        case flexIndex.great: {
+        case 4: {
             if (RSa) {
                 SWnew = SWa + 45
                 message = 'an aerodynamic position is not recommended'
@@ -367,6 +367,12 @@ export function flexibilitySurvey(SWa: number, RSa: boolean, B: number): [number
                 SWnew = SWa + 35
                 message = 'aerodynamic'
             }
+            break;
+        }
+        default: 
+        {
+            console.log("Error default")
+            break;
         }
     }
 

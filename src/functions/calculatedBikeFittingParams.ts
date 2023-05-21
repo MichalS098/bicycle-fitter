@@ -78,7 +78,7 @@ export async function getBikefittingParams(bike: Bike, user: User): Promise<bike
         bike.stemLength = 10;
     }
 
-    const newBikeParams = new bikeParams(bikeTypeFromStr(bike.type), ridingStyleFromStr(bike.style), bike.crankLength, bike.stemLength, 10, bikeExpectationsTemp, 1);
+    const newBikeParams = new bikeParams(bikeTypeFromStr(bike.type), ridingStyleFromStr(bike.style), bike.crankLength, bike.stemLength, 10, bikeExpectationsTemp, bike.choiceFlexibilitySurvey);
 
     console.log("humanParams to bike fitting calculated: ", person)
     console.log("bikeParams to bike fitting calculated: ", newBikeParams)
