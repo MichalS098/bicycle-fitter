@@ -53,6 +53,10 @@
                             </ion-select>
                         </ion-item>
                     </ion-list>
+                    <ion-button @click="deleteDataBaseAndReturnFirstSteps()" expand="block" shape="round" mode="ios"
+                        type="button" color="sand-desert" class="font-bold text-lg">
+                        Delete account
+                    </ion-button>
                 </div>
             </div>
             <space-for-tab-bar-menu />
@@ -62,7 +66,7 @@
   
 <script setup lang="ts">
 import {
-    IonPage, IonContent, IonList, IonItem, IonLabel, IonSelect, IonSelectOption, IonIcon
+    IonPage, IonContent, IonList, IonItem, IonLabel, IonSelect, IonSelectOption, IonIcon, useIonRouter
 } from '@ionic/vue';
 import SpaceForTabBarMenu from '@/components/SpaceForTabBarMenu.vue';
 import { EllipsisHorizontalIcon } from '@heroicons/vue/24/outline';
@@ -70,6 +74,45 @@ import { ChartBarIcon } from '@heroicons/vue/24/solid';
 import {
     languageOutline, optionsOutline
 } from 'ionicons/icons';
+
+import { User } from '@/entity/User';
+import { Bike } from '@/entity/Bike';
+import { getUserFromDatabase, dropDatabase, getLastBikeOfUser } from '@/helpers/helpersDataBase';
+
+const router = useIonRouter();
+
+const deleteDataBaseAndReturnFirstSteps = async () => {
+
+    const bikeTemp = await getLastBikeOfUser();
+
+
+    if (bikeTemp != null) {
+        await Bike.remove(bikeTemp);
+    }
+    else {
+        console.log("Last Bike not found")
+    }
+
+    const userTemp = await getUserFromDatabase();
+
+    console.log("userTemp before delete: ", userTemp)
+
+    if (userTemp != null) {
+        await User.remove(userTemp);
+    }
+    else {
+        console.log("USer not found")
+    }
+
+
+    //await dropDatabase();
+
+
+
+    router.replace('/first-steps');
+
+
+}
 </script>
 <style scoped>
 ion-content::part(background) {
