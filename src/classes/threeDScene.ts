@@ -33,7 +33,7 @@ export class threeDScene {
         floorUnderCrank: new THREE.Vector3(10, -20, -0.7)
     };
 
-    _lengthFromMeasuredPointToCamera = 0.8;
+    _lengthFromMeasuredPointToCamera = 0.9;
 
     private _line: THREE.Line | null = null;
 
@@ -174,7 +174,7 @@ export class threeDScene {
     }
 
 
-    createCameraPositionTween(fromPoint: THREE.Vector3, toPoint: THREE.Vector3, duration: number, easing: string) {
+    createCameraPositionGSAP(fromPoint: THREE.Vector3, toPoint: THREE.Vector3, duration: number, easing: string) {
         const midPoint = new THREE.Vector3().addVectors(fromPoint, toPoint).multiplyScalar(0.5);
         const dir = new THREE.Vector3().subVectors(this._camera.position, midPoint);
         const lineDir = new THREE.Vector3().subVectors(toPoint, fromPoint).normalize();
@@ -201,7 +201,7 @@ export class threeDScene {
         });
     }
 
-    createCameraLookAtTween(fromPoint: THREE.Vector3, toPoint: THREE.Vector3, duration: number, easing: string) {
+    createCameraLookAtGSAP(fromPoint: THREE.Vector3, toPoint: THREE.Vector3, duration: number, easing: string) {
         const endLookAt = new THREE.Vector3().addVectors(fromPoint, toPoint).multiplyScalar(0.5);
         const tweenLookAt = this.actualCameraLookAt;
 
@@ -222,62 +222,70 @@ export class threeDScene {
         });
     }
 
+    goToDefaultCameraPositionGSAP(duration: number, easing: string) {
+        const proxy = { x: this.actualCameraPosition.x, y: this.actualCameraPosition.y, z: this.actualCameraPosition.z };
+
+        gsap.to(proxy, {
+            x: this._defaultCameraPosition.x,
+            y: this._defaultCameraPosition.y,
+            z: this._defaultCameraPosition.z,
+            duration: duration,
+            ease: easing,
+            onUpdate: () => {
+                this._camera.position.set(proxy.x, proxy.y, proxy.z);
+            },
+            onComplete: () => {
+                this.setCameraPosition(this._defaultCameraPosition);
+                if (this._line)
+                    this._scene.remove(this._line);
+            }
+        });
+    }
+
+    goToDefaultCameraLookAtGSAP(duration: number, easing: string) {
+        const tweenLookAt = this.actualCameraLookAt;
+
+        const proxy = { x: tweenLookAt.x, y: tweenLookAt.y, z: tweenLookAt.z };
+
+        gsap.to(proxy, {
+            x: this._defaultCameraLookAt.x,
+            y: this._defaultCameraLookAt.y,
+            z: this._defaultCameraLookAt.z,
+            duration: duration,
+            ease: easing,
+            onUpdate: () => {
+                this._camera.lookAt(new THREE.Vector3(proxy.x, proxy.y, proxy.z));
+            },
+            onComplete: () => {
+                this.setCameraLookAt(this._defaultCameraLookAt);
+            }
+        });
+    }
+
+    goToDefaultAnimation() {
+        const easing = 'power3.inOut';
+
+        this.goToDefaultCameraPositionGSAP( 2, easing );
+        this.goToDefaultCameraLookAtGSAP( 2, easing );
+    }
+
     createSetAnimations() {
         const easing = 'power3.inOut';
 
-        this.createCameraPositionTween(
+        this.createCameraPositionGSAP(
             this._bikeModelPoints.saddle, 
             this._bikeModelPoints.handleBar, 
             2,   
             easing
         );
 
-        this.createCameraLookAtTween(                         
+        this.createCameraLookAtGSAP(                         
             this._bikeModelPoints.saddle,           
             this._bikeModelPoints.handleBar,                                           
             2,                                        
             easing
         );
     }
-
-
-    createSetAnimations2() {
-        const easing = 'power3.inOut';
-
-        this.createCameraPositionTween(
-            this._bikeModelPoints.saddle, 
-            this._bikeModelPoints.floorUnderCrank, 
-            2,   
-            easing
-        );
-
-        this.createCameraLookAtTween(                             
-            this._bikeModelPoints.saddle,           
-            this._bikeModelPoints.floorUnderCrank,                                           
-            2,                                        
-            easing
-        );
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
 
     drawLinesBetweenPoints(fromPoint: THREE.Vector3, toPoint: THREE.Vector3, color: number) {
 

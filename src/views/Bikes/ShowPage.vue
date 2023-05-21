@@ -201,7 +201,7 @@ function prevButtonClicked() {
     threeDS.createSetAnimations();
 }
 function playButtonClicked() {
-    threeDS.createSetAnimations();
+    threeDS.goToDefaultAnimation();
 }
 function nextButtonClicked() {
     threeDS.createSetAnimations();
