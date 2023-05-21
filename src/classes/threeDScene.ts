@@ -191,9 +191,9 @@ export class threeDScene {
             ease: easing,
             onUpdate: () => {
                 this._camera.position.set(proxy.x, proxy.y, proxy.z);
+                this.setCameraPosition(new THREE.Vector3(proxy.x, proxy.y, proxy.z));
             },
             onComplete: () => {
-                this.setCameraPosition(newCameraPosition);
                 if (this._line)
                     this._scene.remove(this._line);
                 this.drawLinesBetweenPoints(fromPoint, toPoint, 0xff0000);
@@ -215,9 +215,10 @@ export class threeDScene {
             ease: easing,
             onUpdate: () => {
                 this._camera.lookAt(new THREE.Vector3(proxy.x, proxy.y, proxy.z));
+                this.setCameraLookAt(new THREE.Vector3(proxy.x, proxy.y, proxy.z));
             },
             onComplete: () => {
-                this.setCameraLookAt(endLookAt);
+                console.log("onComplete");
             }
         });
     }
@@ -233,9 +234,9 @@ export class threeDScene {
             ease: easing,
             onUpdate: () => {
                 this._camera.position.set(proxy.x, proxy.y, proxy.z);
+                this.setCameraPosition(new THREE.Vector3(proxy.x, proxy.y, proxy.z));
             },
             onComplete: () => {
-                this.setCameraPosition(this._defaultCameraPosition);
                 if (this._line)
                     this._scene.remove(this._line);
             }
@@ -255,9 +256,10 @@ export class threeDScene {
             ease: easing,
             onUpdate: () => {
                 this._camera.lookAt(new THREE.Vector3(proxy.x, proxy.y, proxy.z));
+                this.setCameraLookAt(new THREE.Vector3(proxy.x, proxy.y, proxy.z));
             },
             onComplete: () => {
-                this.setCameraLookAt(this._defaultCameraLookAt);
+                console.log("onComplete");
             }
         });
     }
