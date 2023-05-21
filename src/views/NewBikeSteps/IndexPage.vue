@@ -38,32 +38,30 @@
             <step-card title="Your expectations" sub-title="What do you expect from bikefitting?" :this-step="4"
                 :current-step="currentStep" :number-of-steps="numberOfSteps" @prev="prevStep()" @next="nextStep()"
                 color="primary">
-                <ion-list>
-                    <ion-item>
-                        <ion-select v-model="form.additionalSurvey" aria-label="Additional" expand="block" shape="round"
-                            color="primary" mode="ios" fill="outline" interface="popover" placeholder="Select additional"
-                            type="button" class="select-wizard-button">
-                            <ion-select-option value="4" color="primary" class="combobox">foot to
-                                ground</ion-select-option>
-                            <ion-select-option value="3" color="primary" class="combobox">finger tips to
-                                ground</ion-select-option>
-                            <ion-select-option value="2" color="primary" class="combobox">more than 5 cm to
-                                ground</ion-select-option>
-                            <ion-select-option value="1" color="primary" class="combobox">more than 10 cm to
-                                ground</ion-select-option>
-                        </ion-select>
-                    </ion-item>
-                </ion-list>
-                <steps-check-box v-model="form.expectations.backOrNeckPain" label="Back Or Neck Pain" color="primary" />
-                <steps-check-box v-model="form.expectations.butPain" label="But Pain" color="primary" />
-                <steps-check-box v-model="form.expectations.kneePain" label="Knee pain" color="primary" />
-                <steps-check-box v-model="form.expectations.feetPain" label="Feet pain" color="primary" />
-                <steps-check-box v-model="form.expectations.clickPedals" label="Click pedals" color="primary" />
-                <steps-check-box v-model="form.expectations.nothing" label="Nothing" color="primary"
+                <steps-check-box v-model="form.expectations.backOrNeckPain" label="Back Or Neck Pain" color="primary" :disabled="nothingSelected()" />
+                <steps-check-box v-model="form.expectations.butPain" label="But Pain" color="primary" :disabled="nothingSelected()" />
+                <steps-check-box v-model="form.expectations.kneePain" label="Knee pain" color="primary" :disabled="nothingSelected()" />
+                <steps-check-box v-model="form.expectations.feetPain" label="Feet pain" color="primary" :disabled="nothingSelected()" />
+                <steps-check-box v-model="form.expectations.clickPedals" label="Click pedals" color="primary" :disabled="nothingSelected()"  />
+                <steps-check-box v-model="form.expectations.nothing" label="Nothing" color="primary" 
                     :disabled="anyExpectationSelected()" />
             </step-card>
+            
+            <step-card title="Your bike problem" sub-title="What is your bike problem?" :this-step="5" :current-step="currentStep"
+                :number-of-steps="numberOfSteps" @prev="goBackHome()" @next="nextStep()" color="primary">
+                <steps-radio-button @click="nextStep()" v-model="form.additionalSurvey" label="foot to
+                                ground" value="4" color="primary" />
+                <steps-radio-button @click="nextStep()" v-model="form.additionalSurvey" label="finger tips to
+                                ground" value="3" color="primary" />
+                <steps-radio-button @click="nextStep()" v-model="form.additionalSurvey" label="more than 5 cm to
+                                ground" value="2"
+                    color="primary" />
+                <steps-radio-button @click="nextStep()" v-model="form.additionalSurvey" label="more than 10 cm to
+                                ground" value="1"
+                    color="primary" />
+            </step-card>
 
-            <step-card title="Your bike stem and crank length" sub-title="Please add bike params" :this-step="5"
+            <step-card title="Your bike stem and crank length" sub-title="Please add bike params" :this-step="6"
                 :current-step="currentStep" :number-of-steps="numberOfSteps" @prev="prevStep()" @next="nextStep()"
                 color="primary">
                 <button-input v-model="form.stemLength" type="number" inputmode="numeric"
@@ -102,7 +100,7 @@ import { bikeExpectations } from '@/classes/bikeExpectations';
 
 
 
-const numberOfSteps = 5;
+const numberOfSteps = 6;
 const currentStep = ref(1);
 const router = useIonRouter();
 
@@ -149,6 +147,12 @@ const anyExpectationSelected = () => {
     );
 }
 
+const nothingSelected = () => {
+    return (
+        form.value.expectations.nothing
+    );
+}
+
 const nextStep = async () => {
 
     if (currentStep.value == 1) {
@@ -179,14 +183,20 @@ const nextStep = async () => {
             form.value.additionalSurvey = 4;
         }
 
+    } else if (currentStep.value === 5) {
+        if (form.value.additionalSurvey == 0) {
+            return;
+        }
+
     }
-    else if (currentStep.value === 5) {
+    else if (currentStep.value === 6) {
         if (form.value.userUnitSystem == 'metric') {
             if (form.value.stemLength < 5 || form.value.stemLength > 14) {
                 form.value.errors.stemLength = "Stem length must be between 5 and 14 cm";
                 return;
             }
         }
+
 
         if (form.value.userUnitSystem == 'imperial') {
             if (form.value.stemLength <  1.97 || form.value.stemLength > 5.51 ) {
