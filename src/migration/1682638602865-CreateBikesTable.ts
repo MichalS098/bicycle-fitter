@@ -22,7 +22,6 @@ export class CreateBikesTable1682638602865 implements MigrationInterface {
                 "seatSetback" integer,
                 "seatLength" integer,
                 "seatDrop" integer,
-                "spacerHeight" integer,
                 "stemLength" integer,
                 "stemAngle" integer,
                 "frameHeight" integer,

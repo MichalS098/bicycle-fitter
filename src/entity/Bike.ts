@@ -39,8 +39,6 @@ export class Bike extends BaseEntity {
     @Column()
     seatDrop!: number;
     @Column()
-    spacerHeight!: number;
-    @Column()
     stemLength!: number;
     @Column()
     stemAngle!: number;

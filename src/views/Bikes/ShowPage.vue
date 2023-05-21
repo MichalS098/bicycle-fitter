@@ -20,8 +20,7 @@
                 <li>seatHeight: {{ bike?.seatHeight }}</li>
                 <li>seatSetback: {{ bike?.seatSetback }}</li>
                 <li>seatLength: {{ bike?.seatLength }}</li>
-                <li>seatDrop: {{ bike?.seatDrop }}</li>
-                <li>spacerHeight: {{ bike?.spacerHeight }}</li>
+                <li>seatDrop: {{ bike?.seatDrop }}</li>               
                 <li>stemLength: {{ bike?.stemLength }}</li>
                 <li>stemAngle: {{ bike?.stemAngle }}</li>
                 <li>stackMin: {{ bike?.stackMin }}</li>

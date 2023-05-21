@@ -63,21 +63,27 @@
                     :disabled="anyExpectationSelected()" />
             </step-card>
 
-            <!-- <step-card title="Your bike params" sub-title="Please add bike params" :this-step="5"
+            <step-card title="Your bike stem and crank length" sub-title="Please add bike params" :this-step="5"
                 :current-step="currentStep" :number-of-steps="numberOfSteps" @prev="prevStep()" @next="nextStep()"
                 color="primary">
                 <button-input v-model="form.stemLength" type="number" inputmode="numeric"
-                    placeholder="Enter your stem length" :postfix="user?.unitSystem === 'metric' ? 'cm' : 'inch'" />
+                    placeholder="Enter your stem length" :postfix="form.userUnitSystem === 'metric' ? 'cm' : 'inch'" />
+                <ion-alert :is-open="form.errors.stemLength != ''" header="Wrong stem length" :message="form.errors.stemLength"
+                    :buttons="['OK']" @did-dismiss="form.errors.stemLength = ''">
+                </ion-alert>
                 <button-input v-model="form.crankLength" type="number" inputmode="numeric"
-                    placeholder="Enter your crank length" :postfix="user?.unitSystem === 'metric' ? 'cm' : 'inch'" />
-            </step-card> -->
+                    placeholder="Enter your crank length" :postfix="form.userUnitSystem === 'metric' ? 'cm' : 'inch'" />
+                    <ion-alert :is-open="form.errors.crankLength != ''" header="Wrong crank length" :message="form.errors.crankLength"
+                    :buttons="['OK']" @did-dismiss="form.errors.crankLength = ''">
+                </ion-alert>
+            </step-card>
         </ion-content>
     </ion-page>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { IonList, IonItem, IonSelect, IonSelectOption } from '@ionic/vue';
+import { IonList, IonItem, IonSelect, IonSelectOption, IonAlert } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { IonPage, IonContent, useIonRouter } from '@ionic/vue';
 import ButtonInput from '@/components/ButtonInput.vue';
@@ -90,13 +96,13 @@ import { getUserFromDatabase } from '@/helpers/helpersDataBase';
 
 import { getBikefittingParams } from '@/functions/calculatedBikeFittingParams';
 
-import { onMounted, watch } from 'vue';
+import { onMounted, watch } from "vue";
 
 import { bikeExpectations } from '@/classes/bikeExpectations';
 
 
 
-const numberOfSteps = 4;
+const numberOfSteps = 5;
 const currentStep = ref(1);
 const router = useIonRouter();
 
@@ -118,6 +124,19 @@ const form = ref({
     stemLength: 0,
     crankLength: 0,
     additionalSurvey: 0,
+    userUnitSystem: 'cm',
+    errors: {
+        crankLength: "",
+        stemLength: ""
+    }
+});
+
+onMounted(async () => {
+    const user = await getUserFromDatabase();
+    if (user == null) {
+        return;
+    }
+    form.value.userUnitSystem = user.unitSystem;
 });
 
 const anyExpectationSelected = () => {
@@ -158,6 +177,36 @@ const nextStep = async () => {
 
         if (form.value.additionalSurvey == 0) {
             form.value.additionalSurvey = 4;
+        }
+
+    }
+    else if (currentStep.value === 5) {
+        if (form.value.userUnitSystem == 'metric') {
+            if (form.value.stemLength < 5 || form.value.stemLength > 14) {
+                form.value.errors.stemLength = "Stem length must be between 5 and 14 cm";
+                return;
+            }
+        }
+
+        if (form.value.userUnitSystem == 'imperial') {
+            if (form.value.stemLength <  1.97 || form.value.stemLength > 5.51 ) {
+                form.value.errors.stemLength = "Stem length must be between 1.97 and 5.51  inches";
+                return;
+            }
+        }
+
+        if (form.value.userUnitSystem == 'metric') {
+            if (form.value.crankLength < 16 || form.value.crankLength > 18.5) {
+                form.value.errors.crankLength = "Crank length must be between 16 and 18.5 cm";
+                return;
+            }
+        }
+
+        if (form.value.userUnitSystem == 'imperial') {
+            if (form.value.crankLength < 6.3 || form.value.crankLength > 7.28) {
+                form.value.errors.crankLength = "Crank length must be between  6.3 and 7.28 inches";
+                return;
+            }
         }
 
         createBike();
