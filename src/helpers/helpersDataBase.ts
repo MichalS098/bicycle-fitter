@@ -31,14 +31,14 @@ export async function getLastBikeOfUser(): Promise<Bike | null> {
     return user.bikes[user.bikes.length - 1];
 }
 
-export async function getUserFromDatabase(): Promise<User | null> {        
+export async function getUserFromDatabase(): Promise<User> {        
     const user = await User.findOneBy({
         id: 1,
     })
 
     if (!user) {
         console.error('User not found');
-        return null;
+        return new User();
     }
 
     return user;

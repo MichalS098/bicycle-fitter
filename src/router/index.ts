@@ -85,6 +85,10 @@ const routes: Array<RouteRecordRaw> = [
                 path: 'profile',
                 component: () => import('@/views/Profile/IndexPage.vue')
             },
+            {
+                path: 'profile/measurements',
+                component: () => import('@/views/Profile/MeasurementsPage.vue')
+            },
         ]
     },
 ]

@@ -26,7 +26,7 @@ const createBikeAnimation: AnimationBuilder = (baseEl: any, opts?: any) => {
     if (bikeButton.value) {
         return createAnimation()
             .addElement(bikeButton.value)
-            .duration(1000)
+            .duration(800)
             .easing('ease-in-out')
             .fill('both')
             .beforeAddWrite(() => {
@@ -38,7 +38,7 @@ const createBikeAnimation: AnimationBuilder = (baseEl: any, opts?: any) => {
                 'border-radius': '100%',
             })
             .keyframes([
-                { offset: 0, scale: '1', background: 'var(--ion-color-tertiary-shade)', borderRadius: '50px'},
+                { offset: 0, scale: '1', background: 'var(--ion-color-tertiary-shade)', borderRadius: '50px' },
                 { offset: 0.5, scale: '6', background: 'var(--ion-color-tertiary-shade)', borderRadius: '100%' },
                 { offset: 1, scale: '6', background: '#000' },
             ]);

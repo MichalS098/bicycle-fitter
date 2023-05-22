@@ -1,5 +1,5 @@
 <template>
-    <ion-page>
+    <ion-page>        
         <ion-content class="ion-padding" :fullscreen="true">
             <div class="flex flex-col justify-between gap-6 xxs:gap-12">
                 <div class="px-3 xxs:px-6 pt-3 xxs:pt-6">
@@ -11,34 +11,22 @@
                     <h2 class="fitter-h2 px-2 xxs:px-3">
                         Statistics
                     </h2>
-                    <div
-                        class="rounded-3xl bg-gradient-to-br from-secondary-shade to-secondary-tint w-full flex items-center px-6 py-4 h-full">
-                        <div class="grid grid-cols-2 w-full gap-1">
-                            <h3 class="text-lg xxs:text-xl col-span-2 pb-3">
-                                My measurements
-                            </h3>
-                            <span class="text-white font-bold text-2xl xxs:text-3xl">192cm</span>
-                            <span class="text-white font-bold text-2xl xxs:text-3xl">75cm</span>
-                            <span class="text-white text-sm">height</span>
-                            <span class="text-white text-sm">leg</span>
-                        </div>
-                        <div class="h-full flex flex-col justify-between gap-4 items-end">
-                            <EllipsisHorizontalIcon class="h-6 w-6 text-white" />
-                            <ChartBarIcon class="h-16 w-16 text-white" />
-                        </div>
-                    </div>
+                    <measurements-card :user="user" />
+
                     <h2 class="fitter-h2 px-2 xxs:px-3">
                         Settings
                     </h2>
+
                     <ion-list lines="none" class="px-3">
                         <ion-item>
                             <ion-label>
                                 <ion-icon :icon="optionsOutline"></ion-icon>
                                 Units
                             </ion-label>
-                            <ion-select value="m" interface="action-sheet">
-                                <ion-select-option value="m">Metric</ion-select-option>
-                                <ion-select-option value="i">Imperial</ion-select-option>
+                            <ion-select interface="action-sheet" :value="user?.unitSystem"
+                                @ionChange="unitSystemChanged($event.detail.value)">
+                                <ion-select-option value="metric">Metric</ion-select-option>
+                                <ion-select-option value="imperial">Imperial</ion-select-option>
                             </ion-select>
                         </ion-item>
                         <ion-item>
@@ -46,17 +34,25 @@
                                 <ion-icon :icon="languageOutline"></ion-icon>
                                 Language
                             </ion-label>
-                            <ion-select value="en" interface="action-sheet">
+                            <ion-select interface="action-sheet" :value="user?.language"
+                                @ionChange="languageChanged($event.detail.value)">
                                 <ion-select-option value="en">English</ion-select-option>
-                                <ion-select-option value="de">Deutsch</ion-select-option>
                                 <ion-select-option value="pl">Polski</ion-select-option>
                             </ion-select>
                         </ion-item>
                     </ion-list>
-                    <ion-button @click="deleteDataBaseAndReturnFirstSteps()" expand="block" shape="round" mode="ios"
-                        type="button" color="sand-desert" class="font-bold text-lg">
-                        Delete account
+
+                    <h2 class="fitter-h2 px-2 xxs:px-3">
+                        Account
+                    </h2>
+                    <ion-button id="delete-account-alert" mode="ios" color="danger" size="default" expand="block"
+                        fill="outline">
+                        <ion-icon slot="start" :icon="trashOutline"></ion-icon>
+                        Delete your account
                     </ion-button>
+                    <ion-alert trigger="delete-account-alert" header="Delete your account"
+                        message="Are you sure you want to delete your account? This action cannot be undone."
+                        :buttons="alertButtons"></ion-alert>
                 </div>
             </div>
             <space-for-tab-bar-menu />
@@ -65,55 +61,75 @@
 </template>
   
 <script setup lang="ts">
-import {
-    IonPage, IonContent, IonList, IonItem, IonLabel, IonSelect, IonSelectOption, IonIcon, useIonRouter
-} from '@ionic/vue';
+import { IonPage, IonContent, IonList, IonItem, IonLabel, IonSelect, IonSelectOption, IonIcon, useIonRouter, IonButton, IonAlert, onIonViewDidEnter,    
+ } from '@ionic/vue';
+import { languageOutline, optionsOutline, trashOutline } from 'ionicons/icons';
 import SpaceForTabBarMenu from '@/components/SpaceForTabBarMenu.vue';
-import { EllipsisHorizontalIcon } from '@heroicons/vue/24/outline';
-import { ChartBarIcon } from '@heroicons/vue/24/solid';
-import {
-    languageOutline, optionsOutline
-} from 'ionicons/icons';
-
+import MeasurementsCard from '@/components/MeasurementsCard.vue';
 import { User } from '@/entity/User';
-import { Bike } from '@/entity/Bike';
-import { getUserFromDatabase, dropDatabase, getLastBikeOfUser } from '@/helpers/helpersDataBase';
+import { getUserFromDatabase, getLastBikeOfUser } from '@/helpers/helpersDataBase';
+import { onMounted, ref } from 'vue';
 
 const router = useIonRouter();
 
+const user = ref<User>();
+onMounted(async () => {
+    user.value = await getUserFromDatabase();
+});
+
+onIonViewDidEnter(async () => {
+    user.value = await getUserFromDatabase();
+});
+
+const alertButtons = [
+    {
+        text: 'Cancel',
+        role: 'cancel',
+    },
+    {
+        text: 'Delete',
+        role: 'destructive',
+        handler: () => {
+            deleteDataBaseAndReturnFirstSteps();
+        },
+    },
+];
+
 const deleteDataBaseAndReturnFirstSteps = async () => {
-
     const bikeTemp = await getLastBikeOfUser();
-
-
-    if (bikeTemp != null) {
-        await Bike.remove(bikeTemp);
-    }
-    else {
-        console.log("Last Bike not found")
-    }
-
     const userTemp = await getUserFromDatabase();
-
-    console.log("userTemp before delete: ", userTemp)
-
-    if (userTemp != null) {
-        await User.remove(userTemp);
+    try {
+        if (bikeTemp) {
+            await bikeTemp.remove();
+        }
+        if (userTemp) {
+            await userTemp.remove();
+        }
+        router.replace('/first-steps');
+    } catch (error) {
+        console.log(error);
     }
-    else {
-        console.log("USer not found")
+}
+
+const unitSystemChanged = async (value: string) => {
+    if (user.value) {
+        user.value.unitSystem = value;
+        await user.value.save();
+    } else {
+        console.error('User not found');
     }
+}
 
-
-    //await dropDatabase();
-
-
-
-    router.replace('/first-steps');
-
-
+const languageChanged = async (value: string) => {
+    if (user.value) {
+        user.value.language = value;
+        await user.value.save();
+    } else {
+        console.error('User not found');
+    }
 }
 </script>
+
 <style scoped>
 ion-content::part(background) {
     background-image: linear-gradient(to top right, var(--tw-gradient-stops));
