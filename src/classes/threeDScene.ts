@@ -20,8 +20,9 @@ export class threeDScene {
     private actualCameraPosition!: THREE.Vector3;
     private actualCameraLookAt!:   THREE.Vector3;
 
-
-    _bikeModelPoints = {
+    private _easing = 'power3.inOut';
+    
+    bikeModelPoints = {
         saddle:         new THREE.Vector3(-27, 78, -0.7),
         handleBar:      new THREE.Vector3(36, 76, -0.7),
         handleBarGrip:  new THREE.Vector3(45, 81, -0.7),
@@ -47,7 +48,7 @@ export class threeDScene {
         
         const element = document.querySelector(elementSelector);
         if (element) {
-            element.appendChild( this._renderer.domElement );             // TO JEST DO ZMIANY ŻEBY SCENA NIE BYŁA NA GÓRZE STRONY 
+            element.appendChild( this._renderer.domElement );
         } else {
             console.error(`Element ${elementSelector} not found`);
         }
@@ -264,29 +265,16 @@ export class threeDScene {
         });
     }
 
-    goToDefaultAnimation() {
-        const easing = 'power3.inOut';
+    createDefaultCameraPozAnimation() {
 
-        this.goToDefaultCameraPositionGSAP( 2, easing );
-        this.goToDefaultCameraLookAtGSAP( 2, easing );
+        this.goToDefaultCameraPositionGSAP( 1.5, this._easing );
+        this.goToDefaultCameraLookAtGSAP( 1.5, this._easing );
     }
 
-    createSetAnimations() {
-        const easing = 'power3.inOut';
+    createAnimation(firstPoint: THREE.Vector3, secondPoint: THREE.Vector3, duration: number) {
 
-        this.createCameraPositionGSAP(
-            this._bikeModelPoints.saddle, 
-            this._bikeModelPoints.handleBar, 
-            2,   
-            easing
-        );
-
-        this.createCameraLookAtGSAP(                         
-            this._bikeModelPoints.saddle,           
-            this._bikeModelPoints.handleBar,                                           
-            2,                                        
-            easing
-        );
+        this.createCameraPositionGSAP( firstPoint, secondPoint, duration, this._easing );
+        this.createCameraLookAtGSAP( firstPoint, secondPoint, duration, this._easing );
     }
 
     drawLinesBetweenPoints(fromPoint: THREE.Vector3, toPoint: THREE.Vector3, color: number) {
@@ -307,9 +295,8 @@ export class threeDScene {
     animate(time?: number) {
 
         requestAnimationFrame(this.animate.bind(this));
-        // TWEEN.update(time);
     
         this._renderer.render(this._scene, this._camera);
-        // console.log("position: ", camera.position);
+        // console.log("position: ", this._camera.position);
     }
 }

@@ -138,22 +138,7 @@ onMounted(async () => {
     tips.value = await Tip.find();
 
     threeDS.init('#threejs-container');
-
-
-
-
-
-
-
-
-
-
-    // TODO: Remove this in production
-    // if (!bike.value) {
-    //     console.log('No bike found');    
-    //     goToHome();        
-    //     return;
-    // }    
+ 
 });
 
 
@@ -198,13 +183,13 @@ function touchEnd() {
 }
 
 function prevButtonClicked() {
-    threeDS.createSetAnimations();
+    threeDS.createAnimation(threeDS.bikeModelPoints.saddle, threeDS.bikeModelPoints.handleBar, 1.5);
 }
-function playButtonClicked() {
-    threeDS.goToDefaultAnimation();
+function playButtonClicked() {      // Execute this when you close the window with bike param info
+    threeDS.createDefaultCameraPozAnimation();
 }
 function nextButtonClicked() {
-    threeDS.createSetAnimations();
+    threeDS.createAnimation(threeDS.bikeModelPoints.saddle, threeDS.bikeModelPoints.handleBar, 1.5);
 }
 
 
