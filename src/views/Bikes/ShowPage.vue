@@ -141,6 +141,7 @@ onMounted(async () => {
  
 });
 
+const animationIndex = ref<number>(-1);
 
 const startY = ref<number>(0)
 const endY = ref<number>(0)
@@ -183,13 +184,26 @@ function touchEnd() {
 }
 
 function prevButtonClicked() {
-    threeDS.createAnimation(threeDS.bikeModelPoints.saddle, threeDS.bikeModelPoints.handleBar, 1.5);
+    // threeDS.createAnimation(threeDS.bikeModelPoints.saddle, threeDS.bikeModelPoints.handleBar, 1.5);
+    if (animationIndex.value == 0) {
+        animationIndex.value = 3;
+    } else {
+        animationIndex.value--;
+    }
+    threeDS.createNextAnimation(animationIndex.value, 1.5, true);
+    
 }
 function playButtonClicked() {      // Execute this when you close the window with bike param info
     threeDS.createDefaultCameraPozAnimation();
 }
 function nextButtonClicked() {
-    threeDS.createAnimation(threeDS.bikeModelPoints.saddle, threeDS.bikeModelPoints.handleBar, 1.5);
+    // threeDS.createAnimation(threeDS.bikeModelPoints.saddle, threeDS.bikeModelPoints.handleBar, 1.5);
+    if (animationIndex.value == 3) {
+        animationIndex.value = 0;
+    } else {
+        animationIndex.value++;
+    }
+    threeDS.createNextAnimation(animationIndex.value, 1.5, true);
 }
 
 

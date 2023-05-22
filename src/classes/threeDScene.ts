@@ -23,16 +23,25 @@ export class threeDScene {
     private _easing = 'power3.inOut';
     
     bikeModelPoints = {
-        saddle:         new THREE.Vector3(-27, 78, -0.7),
-        handleBar:      new THREE.Vector3(36, 76, -0.7),
-        handleBarGrip:  new THREE.Vector3(45, 81, -0.7),
-        frontWheelHub:  new THREE.Vector3(63, 16, -0.7),
-        backWheelHub:   new THREE.Vector3(-49, 16, -0.7),
-        crankMiddle:    new THREE.Vector3(-2, 12, -0.7),
-        frontPedal:     new THREE.Vector3(11, 0.7, 8),
-        backPedal:      new THREE.Vector3(-16, 22, -9),
-        floorUnderCrank: new THREE.Vector3(10, -20, -0.7)
+        saddle:             new THREE.Vector3(-27, 78, -0.7),
+        handleBar:          new THREE.Vector3(36, 76, -0.7),
+        handleBarGrip:      new THREE.Vector3(45, 81, -0.7),
+        frontWheelHub:      new THREE.Vector3(63, 16, -0.7),
+        backWheelHub:       new THREE.Vector3(-49, 16, -0.7),
+        crankMiddle:        new THREE.Vector3(-2, 12, -0.7),
+        frontPedal:         new THREE.Vector3(11, 0.7, 8),
+        backPedal:          new THREE.Vector3(-16, 22, -9),
+        floorUnderCrank:    new THREE.Vector3(10, -20, -0.7),
+        crankHBelowSeat:    new THREE.Vector3(-27, 12, -0.7),
+        seatHUpwardHandleBarGrip:   new THREE.Vector3(45, 78, -0.7),
     };
+
+    animationQueue: Array<[THREE.Vector3, THREE.Vector3]> = [
+        [this.bikeModelPoints.saddle,           this.bikeModelPoints.handleBarGrip],
+        [this.bikeModelPoints.saddle,           this.bikeModelPoints.floorUnderCrank],
+        [this.bikeModelPoints.crankMiddle,      this.bikeModelPoints.crankHBelowSeat],
+        [this.bikeModelPoints.handleBarGrip,    this.bikeModelPoints.seatHUpwardHandleBarGrip]
+    ];
 
     _lengthFromMeasuredPointToCamera = 0.9;
 
@@ -175,7 +184,7 @@ export class threeDScene {
     }
 
 
-    createCameraPositionGSAP(fromPoint: THREE.Vector3, toPoint: THREE.Vector3, duration: number, easing: string) {
+    createCameraPositionGSAP(fromPoint: THREE.Vector3, toPoint: THREE.Vector3, duration: number, easing: string, drawLine: boolean) {
         const midPoint = new THREE.Vector3().addVectors(fromPoint, toPoint).multiplyScalar(0.5);
         const dir = new THREE.Vector3().subVectors(this._camera.position, midPoint);
         const lineDir = new THREE.Vector3().subVectors(toPoint, fromPoint).normalize();
@@ -197,7 +206,8 @@ export class threeDScene {
             onComplete: () => {
                 if (this._line)
                     this._scene.remove(this._line);
-                this.drawLinesBetweenPoints(fromPoint, toPoint, 0xff0000);
+                if (drawLine)
+                    this.drawLinesBetweenPoints(fromPoint, toPoint, 0xff0000);
             }
         });
     }
@@ -271,9 +281,16 @@ export class threeDScene {
         this.goToDefaultCameraLookAtGSAP( 1.5, this._easing );
     }
 
-    createAnimation(firstPoint: THREE.Vector3, secondPoint: THREE.Vector3, duration: number) {
+    // createAnimation(firstPoint: THREE.Vector3, secondPoint: THREE.Vector3, duration: number, drawLine: boolean) {
 
-        this.createCameraPositionGSAP( firstPoint, secondPoint, duration, this._easing );
+    //     this.createCameraPositionGSAP( firstPoint, secondPoint, duration, this._easing, drawLine );
+    //     this.createCameraLookAtGSAP( firstPoint, secondPoint, duration, this._easing );
+    // }
+
+    createNextAnimation(i: number, duration: number, drawLine: boolean) {
+        const firstPoint  = this.animationQueue[i][0];
+        const secondPoint = this.animationQueue[i][1];
+        this.createCameraPositionGSAP( firstPoint, secondPoint, duration, this._easing, drawLine );
         this.createCameraLookAtGSAP( firstPoint, secondPoint, duration, this._easing );
     }
 
