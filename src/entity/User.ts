@@ -7,9 +7,9 @@ export class User extends BaseEntity {
     @PrimaryGeneratedColumn()
     id!: number;
     @Column()
-    unitSystem!: string;
+    unitSystem!: string;  // metric || imperial
     @Column()
-    height!: number;
+    language!: string;  // en || pl    
     @Column()
     rideTime!: number;
     @Column()

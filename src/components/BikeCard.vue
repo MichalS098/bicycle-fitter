@@ -28,7 +28,7 @@ const goToBikeAnimation: AnimationBuilder = (baseEl: any, opts?: any) => {
     if (bikeButton.value) {
         return createAnimation()
             .addElement(bikeButton.value)
-            .duration(1000)
+            .duration(800)
             .easing('ease-in-out')
             .fill('both')
             .beforeAddWrite(() => {
