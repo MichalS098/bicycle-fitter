@@ -28,9 +28,9 @@ export class User extends BaseEntity {
     @Column()
     armLength!: number;
     @Column()
-    armTorsoAngle!: number;
-    @Column()
     overallHeight!: number;
+    @Column()
+    armTorsoAngle!: number;
     @Column()
     torsoAngle!: number;
 

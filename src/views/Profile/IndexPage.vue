@@ -1,5 +1,5 @@
 <template>
-    <ion-page>
+    <ion-page>        
         <ion-content class="ion-padding" :fullscreen="true">
             <div class="flex flex-col justify-between gap-6 xxs:gap-12">
                 <div class="px-3 xxs:px-6 pt-3 xxs:pt-6">
@@ -23,9 +23,10 @@
                                 <ion-icon :icon="optionsOutline"></ion-icon>
                                 Units
                             </ion-label>
-                            <ion-select interface="action-sheet">
-                                <ion-select-option value="m">Metric</ion-select-option>
-                                <ion-select-option value="i">Imperial</ion-select-option>
+                            <ion-select interface="action-sheet" :value="user?.unitSystem"
+                                @ionChange="unitSystemChanged($event.detail.value)">
+                                <ion-select-option value="metric">Metric</ion-select-option>
+                                <ion-select-option value="imperial">Imperial</ion-select-option>
                             </ion-select>
                         </ion-item>
                         <ion-item>
@@ -33,18 +34,19 @@
                                 <ion-icon :icon="languageOutline"></ion-icon>
                                 Language
                             </ion-label>
-                            <ion-select value="en" interface="action-sheet">
+                            <ion-select interface="action-sheet" :value="user?.language"
+                                @ionChange="languageChanged($event.detail.value)">
                                 <ion-select-option value="en">English</ion-select-option>
                                 <ion-select-option value="pl">Polski</ion-select-option>
                             </ion-select>
-                        </ion-item>                        
+                        </ion-item>
                     </ion-list>
 
                     <h2 class="fitter-h2 px-2 xxs:px-3">
                         Account
                     </h2>
-                    <ion-button id="delete-account-alert" mode="ios"
-                        color="danger" size="default" expand="block" fill="outline">
+                    <ion-button id="delete-account-alert" mode="ios" color="danger" size="default" expand="block"
+                        fill="outline">
                         <ion-icon slot="start" :icon="trashOutline"></ion-icon>
                         Delete your account
                     </ion-button>
@@ -59,7 +61,8 @@
 </template>
   
 <script setup lang="ts">
-import { IonPage, IonContent, IonList, IonItem, IonLabel, IonSelect, IonSelectOption, IonIcon, useIonRouter, IonButton, IonAlert } from '@ionic/vue';
+import { IonPage, IonContent, IonList, IonItem, IonLabel, IonSelect, IonSelectOption, IonIcon, useIonRouter, IonButton, IonAlert, onIonViewDidEnter,    
+ } from '@ionic/vue';
 import { languageOutline, optionsOutline, trashOutline } from 'ionicons/icons';
 import SpaceForTabBarMenu from '@/components/SpaceForTabBarMenu.vue';
 import MeasurementsCard from '@/components/MeasurementsCard.vue';
@@ -71,6 +74,10 @@ const router = useIonRouter();
 
 const user = ref<User>();
 onMounted(async () => {
+    user.value = await getUserFromDatabase();
+});
+
+onIonViewDidEnter(async () => {
     user.value = await getUserFromDatabase();
 });
 
@@ -101,6 +108,24 @@ const deleteDataBaseAndReturnFirstSteps = async () => {
         router.replace('/first-steps');
     } catch (error) {
         console.log(error);
+    }
+}
+
+const unitSystemChanged = async (value: string) => {
+    if (user.value) {
+        user.value.unitSystem = value;
+        await user.value.save();
+    } else {
+        console.error('User not found');
+    }
+}
+
+const languageChanged = async (value: string) => {
+    if (user.value) {
+        user.value.language = value;
+        await user.value.save();
+    } else {
+        console.error('User not found');
     }
 }
 </script>

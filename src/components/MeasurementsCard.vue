@@ -33,20 +33,16 @@
     </button>
 </template>
 <script setup lang="ts">
-import {
-    useIonRouter,
-    createAnimation,
-    AnimationBuilder
-} from '@ionic/vue';
+import { useIonRouter } from '@ionic/vue';
 import { EllipsisHorizontalIcon } from '@heroicons/vue/24/outline';
 import { ChartBarIcon } from '@heroicons/vue/24/solid';
-import { onMounted, ref } from 'vue';
-import { defineProps, PropType } from 'vue';
+import { onMounted, onUpdated, ref } from 'vue';
+import { defineProps } from 'vue';
 import { User } from '@/entity/User';
 
 const props = defineProps({
     user: {
-        type: Object as PropType<User>
+        type: User
     }
 });
 
@@ -57,7 +53,15 @@ const unit = ref<string>('cm');
 const measurementsCard = ref<HTMLButtonElement>();
 
 onMounted(() => {
-    console.log(props.user)
+    if (props.user) {        
+        height.value = props.user.overallHeight;
+        legLength.value = props.user.shankLength + props.user.thighLength;
+        unitSystem.value = props.user.unitSystem;
+        unit.value = unitSystem.value == 'metric' ? 'cm' : 'in';
+    }
+});
+
+onUpdated(() => {
     if (props.user) {
         height.value = props.user.overallHeight;
         legLength.value = props.user.shankLength + props.user.thighLength;
@@ -66,33 +70,9 @@ onMounted(() => {
     }
 });
 
-const createMeasurementsCardAnimation: AnimationBuilder = (baseEl: any, opts?: any) => {
-    if (measurementsCard.value) {
-        return createAnimation()
-            .addElement(measurementsCard.value)
-            .duration(800)
-            .easing('ease-in-out')
-            .fill('both')
-            .beforeAddWrite(() => {
-                document.querySelector('ion-tab-bar')?.classList.add('ion-hide');
-            })
-            .beforeAddClass('measurements-card-animation')
-            .beforeStyles({
-                'z-index': '9999',
-                'border-radius': '100%',
-            })
-            .keyframes([
-                { offset: 0, scale: '1', background: 'var(--ion-color-secondary-shade)', borderRadius: '50px' },
-                { offset: 0.5, scale: '6', background: 'var(--ion-color-secondary-shade)', borderRadius: '100%' },
-                { offset: 1, scale: '6', background: 'var(--ion-color-secondary-shade)' },
-            ]);
-    }
-    return createAnimation();
-};
-
 const router = useIonRouter();
 const goToMeasurePage = () => {
-    router.navigate('/pages/profile/measurements', 'none', 'replace', createMeasurementsCardAnimation);
+    router.navigate('/pages/profile/measurements', 'forward', 'push');
 };
 </script>
 <style scoped>
@@ -106,9 +86,5 @@ const goToMeasurePage = () => {
     background-color: var(--ion-color-secondary-shade);
     scale: 1.03;
     transform: translateY(-3px);
-}
-
-.measurements-card-animation>* {
-    display: none;
 }
 </style>

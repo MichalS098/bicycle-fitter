@@ -1,11 +1,11 @@
 <template>
     <button type="button" :class="colorClass" @click="goToBike()" ref="bikeButton"
-        class="bike-button w-full aspect-[1.54] rounded-[30px] bg-gradient-to-br p-5 sm:p-6 md:p-8 lg:p-12 relative flex flex-col justify-between items-start overflow-hidden">
+        class="bike-button w-full aspect-[1.54] rounded-[30px] p-5 sm:p-6 md:p-8 lg:p-12 relative flex flex-col justify-between items-start overflow-hidden">
         <div>
-            <h2 class="text-3xl xs:text-4xl text-white font-bold">
+            <h2 class="text-3xl xs:text-4xl text-white font-bold text-left">
                 {{ bike.brand ?? 'No brand' }}
             </h2>
-            <p class="text-base xs:text-lg text-white">
+            <p class="text-base xs:text-lg text-white text-left">
                 {{ bike.model ?? 'No model' }}
             </p>
         </div>
