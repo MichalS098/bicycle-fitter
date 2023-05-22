@@ -100,7 +100,7 @@ export function getBodyParamsFromMediapipeResults(results: Results): BodyParamsF
 
     // Zmiana bo rightElbowToRightWrist zawsze wychodził 0.04m i chuj wie czemu
 
-    const armLengthTemp = leftElbowToLeftShoulder + leftElbowToLeftWrist * 1.2;
+    const armLengthTemp = leftElbowToLeftShoulder + leftElbowToLeftWrist;
 
     console.log("leftElbowToLeftShoulder: ", leftElbowToLeftShoulder);
     console.log("leftElbowToLeftWrist: ", leftElbowToLeftWrist);
