@@ -2,7 +2,7 @@
     <ion-page>
         <ion-content :fullscreen="true" class="relative">
             <video playsinline="true" muted="true" loop="true" class="hidden" ref="video"
-                style="position: absolute; z-index: -1;"></video>
+                style="position: absolute; z-index: -1;" ></video>
             <canvas class="absolute inset-0 w-full my-auto pd-15" ref="canvas"></canvas>
 
             <div class="fixed w-full h-full top-0 left-0 bg-transparent">
@@ -80,7 +80,7 @@ const route = useRoute(); //shouldnt we use IonicRouter?
 const bike_id = Number(route.params.id);
 const bike = ref<Bike | null>();
 
-const samples = 60*5;
+const samples = 60*1;
 
 const bodyAngles = ref<BodyAnglesMaxMin>({
     footFloorAngleMax: 0,
@@ -113,12 +113,12 @@ const measureDone = async () => {
     })
     console.log("bike: ", bike.value);
 
-    console.log("footFlootMaxAngle: ", angles.footFloorAngleMax = bodyAngles.value.footFloorAngleMax)
+    console.log("footFlootAngleMax: ", angles.footFloorAngleMax = bodyAngles.value.footFloorAngleMax)
     console.log("footFloorAngleMin: ", angles.footFloorAngleMin = bodyAngles.value.footFloorAngleMin)
     console.log("torsoFloorAngleMax: ", angles.torsoFloorAngleMax = bodyAngles.value.torsoFloorAngleMax)
     console.log("torsoFloorAngleMin: ", angles.torsoFloorAngleMin = bodyAngles.value.torsoFloorAngleMin)
-    console.log("thighShankAngleMax: ", angles.thighShankAngleMax = bodyAngles.value.thighShankAngleMax) //works
-    console.log("thighShankAngleMin: ", angles.thighShankAngleMin = bodyAngles.value.thighShankAngleMin) //works
+    console.log("thighShankAngleMax: ", angles.thighShankAngleMax = bodyAngles.value.thighShankAngleMax) 
+    console.log("thighShankAngleMin: ", angles.thighShankAngleMin = bodyAngles.value.thighShankAngleMin) 
     console.log("torsoBicepAngleMax: ", angles.torsoBicepAngleMax = bodyAngles.value.torsoBicepAngleMax)
     console.log("torsoBicepAngleMin: ", angles.torsoBicepAngleMin = bodyAngles.value.torsoBicepAngleMin)
     console.log("bicepForearmAngleMax: ", angles.bicepForearmAngleMax = bodyAngles.value.bicepForearmAngleMax)
@@ -151,7 +151,9 @@ const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
         drawResults(results, canvas);
 
         if (results.poseLandmarks !== undefined){
-            if (areAllLeftBodyPointsVisible(results.poseLandmarks)) { //HARDCODED
+            //TODO???: Those functions could have gotten switched - areAllLEft check for right points and areAllRight check for lefts.
+            //Confusion is due to the camera feed being mirrored. Probably.
+            if (areAllLeftBodyPointsVisible(results.poseLandmarks)) { //HARDCODED, ONLY CHECK FOR LEFT SIDE
                 allBodyPointsVisible.value = true;
 
                 if (counter.value == 0){
@@ -162,7 +164,7 @@ const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
                         measureDone()
                     } 
                     else{
-                        bodyAnglesArray[measuringProgress.value] = getBodyAnglesFromMediapipeResults(results, "left")
+                        bodyAnglesArray[measuringProgress.value] = getBodyAnglesFromMediapipeResults(results, "left") //!!!
                     }
                     measuringProgress.value++
                 }

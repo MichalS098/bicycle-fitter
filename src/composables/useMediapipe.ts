@@ -10,7 +10,7 @@ export default function useMediapipePose() {
         }
     });
     const options: Options = {
-        selfieMode: true,
+        selfieMode: false, //------------------
         modelComplexity: 1,
         smoothLandmarks: true,
         enableSegmentation: true,

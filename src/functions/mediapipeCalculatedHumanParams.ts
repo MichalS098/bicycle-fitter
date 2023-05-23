@@ -71,12 +71,15 @@ function theHeightOfTheTriangle(firstSideOfTriangle: number, secondSideOfTriangl
 }
 
 //Returns angle at point1
+//TODO add a check to see if any pair is essentially the same point.
 function getAngleBetweenPoints(point1: NormalizedLandmark, point2: NormalizedLandmark, point3: NormalizedLandmark) {
     const p12 = getDistanceBetweenPoints(point1, point2); //p12
     const p23 = getDistanceBetweenPoints(point2, point3); //p23
     const p31 = getDistanceBetweenPoints(point3, point1); //p31
-    // returns in radians?
+
     const angle = Math.acos((Math.pow(p12, 2) + Math.pow(p31, 2) - Math.pow(p23, 2)) / (2 * p23 * p31));
+
+    if (Number.isNaN(angle)) return 0;
 
     return angle * (180.0 / 3.14159);
 }
@@ -184,11 +187,24 @@ export function getBodyAnglesFromMediapipeResults(results: Results, side: string
     let torsoFloorAngle = 0 
     let torsoBicepAngle = 0
     let bicepForearmAngle = 0
+
+    let fakeHorizon: NormalizedLandmark //NormalisedLAndmark is normalised to a [0 1] scale.
     const crankAngle = 0
 
+    //its not "turn right" but "make your right side visible to the camera". Same with left.
     if (side == "right"){
-        footFloorAngle = 0;
-        torsoFloorAngle = 0
+        fakeHorizon = {...results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_INDEX]};
+        fakeHorizon.x = results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_HEEL].x; //Might be a problem if the angle goes beyond 90deg 
+        footFloorAngle = getAngleBetweenPoints(results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_INDEX],
+                                               results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_HEEL],
+                                               fakeHorizon);
+
+        fakeHorizon = {...results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_HIP]};
+        fakeHorizon.x = results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_SHOULDER].x;
+        torsoFloorAngle = getAngleBetweenPoints(results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_HIP],
+                                                results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_SHOULDER],
+                                                fakeHorizon)
+
         thighShankAngle = getAngleBetweenPoints(results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_KNEE],
                                                 results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_HIP],
                                                 results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_ANKLE])
@@ -202,8 +218,18 @@ export function getBodyAnglesFromMediapipeResults(results: Results, side: string
                                                   results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_WRIST])
     }
     else if (side == "left"){
-        footFloorAngle = 0; //TODO
-        torsoFloorAngle = 0;
+        fakeHorizon = {...results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_INDEX]};
+        fakeHorizon.x = results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_HEEL].x;
+        footFloorAngle = getAngleBetweenPoints(results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_INDEX],
+                                               results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_HEEL],
+                                               fakeHorizon);
+
+        fakeHorizon = {...results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_HIP]};
+        fakeHorizon.x = results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_SHOULDER].x;
+        torsoFloorAngle = getAngleBetweenPoints(results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_HIP],
+                                                results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_SHOULDER],
+                                                fakeHorizon);
+
         thighShankAngle = getAngleBetweenPoints(results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_KNEE],
                                                 results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_HIP],
                                                 results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_ANKLE])
@@ -216,7 +242,7 @@ export function getBodyAnglesFromMediapipeResults(results: Results, side: string
                                                 results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_SHOULDER],
                                                 results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_WRIST])
     }
-                                                     
+
     return new BodyAnglesFromMediapipe(footFloorAngle,
                                         thighShankAngle,
                                         torsoFloorAngle,
@@ -244,18 +270,15 @@ export function getMaxMinEveryAngle(measurements: BodyAnglesFromMediapipe[]){
         if (current.footFloorAngle < footFloorAngleMin) footFloorAngleMin = current.footFloorAngle
         if (current.footFloorAngle > footFloorAngleMax) footFloorAngleMax = current.footFloorAngle
 
-        //works
         if (current.thighShankAngle < thighShankAngleMin) thighShankAngleMin = current.thighShankAngle
         if (current.thighShankAngle > thighShankAngleMax) thighShankAngleMax = current.thighShankAngle
 
         if (current.torsoFloorAngle < torsoFloorAngleMin) torsoFloorAngleMin = current.torsoFloorAngle
         if (current.torsoFloorAngle > torsoFloorAngleMax) torsoFloorAngleMax = current.torsoFloorAngle
 
-        //doesnt
         if (current.torsoBicepAngle < torsoBicepAngleMin) torsoBicepAngleMin = current.torsoBicepAngle
         if (current.torsoBicepAngle > torsoBicepAngleMax) torsoBicepAngleMax = current.torsoBicepAngle
         
-        //doesnt
         if (current.bicepForearmAngle < bicepForearmAngleMin) bicepForearmAngleMin = current.bicepForearmAngle
         if (current.bicepForearmAngle > bicepForearmAngleMax) bicepForearmAngleMax = current.bicepForearmAngle
     }
