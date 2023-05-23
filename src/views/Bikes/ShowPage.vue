@@ -138,24 +138,10 @@ onMounted(async () => {
     tips.value = await Tip.find();
 
     threeDS.init('#threejs-container');
-
-
-
-
-
-
-
-
-
-
-    // TODO: Remove this in production
-    // if (!bike.value) {
-    //     console.log('No bike found');    
-    //     goToHome();        
-    //     return;
-    // }    
+ 
 });
 
+const animationIndex = ref<number>(-1);
 
 const startY = ref<number>(0)
 const endY = ref<number>(0)
@@ -165,7 +151,7 @@ const swipeLength = 80 // this value must be between 50-100
 
 function touchStart(e: TouchEvent) {
     console.log('touchStart');
-    startY.value = e.touches[0].clientY;
+    // startY.value = e.touches[0].clientY;
 }
 function touchMove(e: TouchEvent) {
     console.log('touchMove');
@@ -198,13 +184,21 @@ function touchEnd() {
 }
 
 function prevButtonClicked() {
-    threeDS.createSetAnimations();
+    if (animationIndex.value == 0)      animationIndex.value = 3;
+    else                                animationIndex.value--;
+    threeDS.createNextAnimation(animationIndex.value, 1.5);
 }
-function playButtonClicked() {
-    threeDS.goToDefaultAnimation();
+
+
+function playButtonClicked() {      // Execute this when you close the window with bike param info
+    threeDS.createDefaultCameraPozAnimation();
 }
+
+
 function nextButtonClicked() {
-    threeDS.createSetAnimations();
+    if (animationIndex.value == 3)      animationIndex.value = 0;
+    else                                animationIndex.value++;
+    threeDS.createNextAnimation(animationIndex.value, 1.5);
 }
 
 
