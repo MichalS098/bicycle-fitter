@@ -312,13 +312,36 @@ export class threeDScene {
         this.goToDefaultCameraLookAtGSAP( 1.5, this._easing );
     }
 
+    createAnimation(firstPoint: THREE.Vector3, secondPoint: THREE.Vector3, duration: number) {
+        if (this._lines[1])     this._scene.remove(this._lines[1]);
+        if (this._lines[2])     this._scene.remove(this._lines[2]);
+        if (this._lines[3])     this._scene.remove(this._lines[3]);
+        if (this._cylinder)     this._scene.remove(this._cylinder);
+
+        this.createCameraPositionGSAP( firstPoint, secondPoint, duration, this._easing );
+        this.createCameraLookAtGSAP( firstPoint, secondPoint, duration, this._easing );
+    }
+
     createNextAnimation(animationIndex: number, duration: number) {
         const firstPoint  = this.animationQueue[animationIndex][0];
         const secondPoint = this.animationQueue[animationIndex][1];
-        if (animationIndex === 3) 
-            this.createCameraPositionGSAP( firstPoint, secondPoint, duration, this._easing, new THREE.Vector3(267, 82, -267) );
-        else
-            this.createCameraPositionGSAP( firstPoint, secondPoint, duration, this._easing );
+        switch (animationIndex) {
+            case 0:
+                this.createCameraPositionGSAP( firstPoint, secondPoint, duration, this._easing);
+                break;
+            case 1:
+                this.createCameraPositionGSAP( firstPoint, secondPoint, duration, this._easing );
+                break;
+            case 2:
+                this.createCameraPositionGSAP( firstPoint, secondPoint, duration, this._easing );
+                break;
+            case 3:
+                this.createCameraPositionGSAP( firstPoint, secondPoint, duration, this._easing, new THREE.Vector3(267, 82, -267) );
+                break;
+            default:
+                this.createCameraPositionGSAP( firstPoint, secondPoint, duration, this._easing );
+                break;
+        }
 
         this.createCameraLookAtGSAP( firstPoint, secondPoint, duration, this._easing );
 
@@ -402,6 +425,6 @@ export class threeDScene {
         requestAnimationFrame(this.animate.bind(this));
     
         this._renderer.render(this._scene, this._camera);
-        // console.log("position: ", this._camera.position);
+        console.log("position: ", this._camera.position);
     }
 }
