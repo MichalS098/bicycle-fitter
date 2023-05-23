@@ -1,6 +1,6 @@
 <template>
     <ion-page>
-        <div class="h-screen w-screen bg-black relative">            
+        <div class="h-screen w-screen bg-black relative">
             <div id="threejs-container" class="w-full h-full"></div>
             <div class="absolute top-0 left-0 right-0 w-full px-6 pt-24 z-[10] flex justify-between">
                 <div>
@@ -14,8 +14,17 @@
                 <x-mark-icon class="w-8 h-8 text-white" @click="goToHome" />
             </div>
 
-            <ion-modal ref="modal" :is-open="true" :backdrop-dismiss="true" :backdrop-breakpoint="1"
-                :initial-breakpoint="0.25" :breakpoints="[0.25, 1]">
+            <ion-modal 
+                :is-open="showModal" 
+                :breakpoints="[0.25, 1]"
+                :initial-breakpoint="0.25" 
+                :backdrop-dismiss="true" 
+                :backdrop-breakpoint="1"
+                :swipe-to-close="true" 
+                :keyboard-close="true" 
+                :showBackdrop="true" 
+                :animated="true"                                
+                >
                 <ion-content class="ion-padding">
                     <div class="flex flex-col gap-6 pt-5">
                         <div class="w-full flex items-center justify-between gap-6">
@@ -76,13 +85,14 @@ const route = useRoute();
 const bike_id = Number(route.params.id);
 const bike = ref<Bike | null>();
 const tips = ref<Tip[]>([]);
-const modal = ref<typeof IonModal>();
+const showModal = ref<boolean>(true);
 
 const router = useIonRouter();
 
 const threeDS = new threeDScene;
 
 const goToHome = () => {
+    showModal.value = false;
     router.navigate('/pages/home', 'none', 'replace');
 };
 
@@ -93,8 +103,10 @@ onMounted(async () => {
     tips.value = await Tip.find();
 
     threeDS.init('#threejs-container');
-
+    showModal.value = true;
 });
+
+
 
 const animationIndex = ref<number>(-1);
 
