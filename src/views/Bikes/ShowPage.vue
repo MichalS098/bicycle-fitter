@@ -1,19 +1,7 @@
 <template>
     <ion-page>
-        <div class="h-screen w-screen bg-black relative">
-            <!-- IMITATION OF THREE.JS -->
+        <div class="h-screen w-screen bg-black relative">            
             <div id="threejs-container" class="w-full h-full"></div>
-            <!-- <svg viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                class="absolute top-0 left-0 w-full h-full z-0">
-                <defs>
-                    <radialGradient id="myGradient">
-                        <stop offset="0%" stop-color="#E48C56" />
-                        <stop offset="100%" stop-color="rgba(0, 0, 0, 0)" />
-                    </radialGradient>
-                </defs>
-                <circle cx="8" cy="2" r="9" fill="url('#myGradient')" />
-            </svg> -->
-
             <div class="absolute top-0 left-0 right-0 w-full px-6 pt-24 z-[10] flex justify-between">
                 <div>
                     <h1 class="text-4xl xs:text-5xl text-white font-bold">
@@ -26,88 +14,54 @@
                 <x-mark-icon class="w-8 h-8 text-white" @click="goToHome" />
             </div>
 
-            <div class="z-[20] px-3 py-4 bg-neutral-800 absolute bottom-0 left-0 right-0 w-full flex flex-col gap-6 transition-all duration-500 ease-in-out"
-                @touchstart="touchStart" @touchmove="touchMove" @touchend="touchEnd" :class="{
-                    'h-1/4 rounded-t-[30px]': !isExpanded,                    
-                    'h-3/4 rounded-t-[30px]': isExpanded && !isFullyExpanded,
-                    'h-full overflow-y-auto rounded-none': isFullyExpanded
-                }">
-                <div class="mx-auto w-[40px] h-[5px] rounded-full bg-neutral-700 shrink-0"></div>
-                <div class="w-full flex items-center justify-between gap-6">
-                    <button
-                        class="rounded-2xl bg-neutral-700 shadow-lg flex flex-col items-center justify-center gap-[1px] p-2 aspect-square w-full">
-                        <HeartIcon class="w-8 h-8 text-white" />
-                        <span class="text-xs text-white">Test</span>
-                    </button>
-                    <button
-                        @click="prevButtonClicked"
-                        class="rounded-2xl bg-neutral-700 shadow-lg flex flex-col items-center justify-center gap-[1px] p-2 aspect-square w-full">
-                        <BackwardIcon class="w-8 h-8 text-white" />
-                        <span class="text-xs text-white">Prev</span>
-                    </button>
-                    <button
-                        @click="playButtonClicked"
-                        class="rounded-2xl bg-neutral-700 shadow-lg flex flex-col items-center justify-center gap-[1px] p-2 aspect-square w-full">
-                        <PlayIcon class="w-8 h-8 text-white" />
-                        <span class="text-xs text-white">Play</span>
-                    </button>
-                    <button
-                    @click="nextButtonClicked"
-                        class="rounded-2xl bg-neutral-700 shadow-lg flex flex-col items-center justify-center gap-[1px] p-2 aspect-square w-full">
-                        <ForwardIcon class="w-8 h-8 text-white" />
-                        <span class="text-xs text-white">Next</span>
-                    </button>
-                </div>
-
-
-                <div>
-                    <h2 class="fitter-h2 mt-3 mb-6 text-white">
-                        Tips for you
-                    </h2>
-                    <tips-swiper :tips="tips" />                    
-                </div>
-
-                <div>
-                    <h2 class="fitter-h2 mt-3 mb-6 text-white">
-                        Your bike fit
-                    </h2>
-
-                    <apexchart class="w-full" type="line" :options="chartOptions" :series="chartSeries"></apexchart>
-                </div>
-
-
-
-            </div>
+            <ion-modal ref="modal" :is-open="true" :backdrop-dismiss="true" :backdrop-breakpoint="1"
+                :initial-breakpoint="0.25" :breakpoints="[0.25, 1]">
+                <ion-content class="ion-padding">
+                    <div class="flex flex-col gap-6 pt-5">
+                        <div class="w-full flex items-center justify-between gap-6">
+                            <button
+                                class="rounded-2xl bg-neutral-700 shadow-lg flex flex-col items-center justify-center gap-[1px] p-2 aspect-square w-full">
+                                <HeartIcon class="w-8 h-8 text-white" />
+                                <span class="text-xs text-white">Test</span>
+                            </button>
+                            <button @click="prevButtonClicked"
+                                class="rounded-2xl bg-neutral-700 shadow-lg flex flex-col items-center justify-center gap-[1px] p-2 aspect-square w-full">
+                                <BackwardIcon class="w-8 h-8 text-white" />
+                                <span class="text-xs text-white">Prev</span>
+                            </button>
+                            <button @click="playButtonClicked"
+                                class="rounded-2xl bg-neutral-700 shadow-lg flex flex-col items-center justify-center gap-[1px] p-2 aspect-square w-full">
+                                <PlayIcon class="w-8 h-8 text-white" />
+                                <span class="text-xs text-white">Play</span>
+                            </button>
+                            <button @click="nextButtonClicked"
+                                class="rounded-2xl bg-neutral-700 shadow-lg flex flex-col items-center justify-center gap-[1px] p-2 aspect-square w-full">
+                                <ForwardIcon class="w-8 h-8 text-white" />
+                                <span class="text-xs text-white">Next</span>
+                            </button>
+                        </div>
+                        <div>
+                            <h2 class="fitter-h2 mt-3 mb-6 text-white">
+                                Tips for you
+                            </h2>
+                            <tips-swiper :tips="tips" />
+                        </div>
+                        <div>
+                            <h2 class="fitter-h2 mt-3 mb-6 text-white">
+                                Your bike fit
+                            </h2>
+                            <apexchart class="w-full" type="line" :options="chartOptions" :series="chartSeries"></apexchart>
+                        </div>
+                    </div>
+                </ion-content>
+            </ion-modal>
         </div>
-        <!-- /IMITATION OF THREE.JS -->
-
-
-
-        <!-- 
-            <ul>
-                <li>seatHeight: {{ bike?.seatHeight }}</li>
-                <li>seatSetback: {{ bike?.seatSetback }}</li>
-                <li>seatLength: {{ bike?.seatLength }}</li>
-                <li>seatDrop: {{ bike?.seatDrop }}</li>               
-                <li>stemLength: {{ bike?.stemLength }}</li>
-                <li>stemAngle: {{ bike?.stemAngle }}</li>
-                <li>frameHeight: {{ bike?.frameHeight }}</li>
-                <li>stackMin: {{ bike?.stackMin }}</li>
-                <li>reachMin: {{ bike?.reachMin }}</li>
-                <li>stackMax: {{ bike?.stackMax }}</li>
-                <li>reachMax: {{ bike?.reachMax }}</li>
-                <li>stack2ReachIndex1: {{ bike?.stack2ReachIndex1 }}</li>
-                <li>stack2ReachIndex2: {{ bike?.stack2ReachIndex2 }}</li>
-                <li>stack2ReachIndex3: {{ bike?.stack2ReachIndex3 }}</li>
-            </ul>
-        -->
-
     </ion-page>
 </template>
   
 <script lang="ts" setup>
 import {
-    IonPage, useIonRouter
+    IonPage, useIonRouter, IonModal, IonContent
 } from '@ionic/vue';
 import { onMounted, ref } from 'vue';
 import { BackwardIcon, ForwardIcon, HeartIcon, PlayIcon, XMarkIcon } from '@heroicons/vue/24/outline';
@@ -122,6 +76,7 @@ const route = useRoute();
 const bike_id = Number(route.params.id);
 const bike = ref<Bike | null>();
 const tips = ref<Tip[]>([]);
+const modal = ref<typeof IonModal>();
 
 const router = useIonRouter();
 
@@ -138,54 +93,15 @@ onMounted(async () => {
     tips.value = await Tip.find();
 
     threeDS.init('#threejs-container');
- 
+
 });
 
 const animationIndex = ref<number>(-1);
 
-const startY = ref<number>(0)
-const endY = ref<number>(0)
-const isExpanded = ref<boolean>(false)
-const isFullyExpanded = ref<boolean>(false)
-const swipeLength = 80 // this value must be between 50-100
-
-function touchStart(e: TouchEvent) {
-    console.log('touchStart');
-    // startY.value = e.touches[0].clientY;
-}
-function touchMove(e: TouchEvent) {
-    console.log('touchMove');
-    endY.value = e.touches[0].clientY;
-}
-function touchEnd() {
-    console.log('touchEnd');
-    const diffY = Number(endY.value) - Number(startY.value);
-
-    if (!isFullyExpanded.value && !isExpanded.value && diffY < -swipeLength) {
-        isExpanded.value = true;
-        return;
-    }
-
-    if (!isFullyExpanded.value && isExpanded.value && diffY > swipeLength) {
-        isExpanded.value = false;
-        return;
-    }
-
-    if (!isFullyExpanded.value && isExpanded.value && diffY < -swipeLength) {
-        isFullyExpanded.value = true;
-        return;
-    }
-
-    if (isFullyExpanded.value && isExpanded.value && diffY > swipeLength && startY.value < 100) {
-        isFullyExpanded.value = false;
-        isExpanded.value = false;
-        return;
-    }
-}
 
 function prevButtonClicked() {
-    if (animationIndex.value == 0)      animationIndex.value = 3;
-    else                                animationIndex.value--;
+    if (animationIndex.value == 0) animationIndex.value = 3;
+    else animationIndex.value--;
     threeDS.createNextAnimation(animationIndex.value, 1.5);
 }
 
@@ -196,15 +112,15 @@ function playButtonClicked() {      // Execute this when you close the window wi
 
 
 function nextButtonClicked() {
-    if (animationIndex.value == 3)      animationIndex.value = 0;
-    else                                animationIndex.value++;
+    if (animationIndex.value == 3) animationIndex.value = 0;
+    else animationIndex.value++;
     threeDS.createNextAnimation(animationIndex.value, 1.5);
 }
 
 
 // chart series of measured angles during bike fit
 const chartSeries = ref<any[]>([{
-    name: 'Bicep angles',    
+    name: 'Bicep angles',
     data: [0, 0.5, 0.7, 0.9, 1, 0.9, 0.7, 0.5, 0, -0.5, -0.7, -0.9, -1, -0.9, -0.7, -0.5, 0]
 }, {
     name: 'Knee angles',
@@ -229,7 +145,7 @@ const chartOptions = ref<any>({
     },
     stroke: {
         show: true,
-        width: 2        
+        width: 2
     },
     xaxis: {
         categories: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17']
