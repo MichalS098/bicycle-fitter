@@ -23,37 +23,48 @@ export class threeDScene {
     private _easing = 'power3.inOut';
     
     bikeModelPoints = {
-        saddle:             new THREE.Vector3(-27, 78, -0.7),
-        handleBar:          new THREE.Vector3(36, 76, -0.7),
-        handleBarGrip:      new THREE.Vector3(45, 81, -0.7),
-        frontWheelHub:      new THREE.Vector3(63, 16, -0.7),
-        backWheelHub:       new THREE.Vector3(-49, 16, -0.7),
-        crankMiddle:        new THREE.Vector3(-2, 12, -0.7),
-        frontPedal:         new THREE.Vector3(11, 0.7, 8),
-        backPedal:          new THREE.Vector3(-16, 22, -9),
-        floorUnderCrank:    new THREE.Vector3(10, -20, -0.7),
-        crankHBelowSeat:    new THREE.Vector3(-27, 12, -0.7),
-        seatHUpwardHandleBarGrip:   new THREE.Vector3(45, 78, -0.7),
-
-        aboveSaddle:        new THREE.Vector3(-27, 90, -0.7),
-        aboveHandleBarGrip: new THREE.Vector3(45, 90, -0.7),
+        saddle:                     new THREE.Vector3(-27, 78, -0.7),
+        handleBar:                  new THREE.Vector3(36, 76, -0.7),
+        handleBarGrip:              new THREE.Vector3(45, 81, -0.7),
+        frontWheelHub:              new THREE.Vector3(63, 16, -0.7),
+        backWheelHub:               new THREE.Vector3(-49, 16, -0.7),
+        crankMiddle:                new THREE.Vector3(-2, 12, -0.7),
+        frontPedal:                 new THREE.Vector3(11, 0.7, 8),
+        backPedal:                  new THREE.Vector3(-16, 22, -9),
+        floorUnderCrank:            new THREE.Vector3(10, -20, -0.7),
+        crankHBelowSeat:            new THREE.Vector3(-27, 12, -0.7),
+        seatHUpwardHandleBarGrip:   new THREE.Vector3(52, 78, -0.7),
+        aboveSaddle:                new THREE.Vector3(-27, 90, -0.7),
+        aboveHandleBarGrip:         new THREE.Vector3(45, 90, -0.7),
+        forwardSaddle:              new THREE.Vector3(-27, 78, -10),
+        forwardfloorUnderCrank:     new THREE.Vector3(10, -20, -10),
+        forwardcrankMiddle:         new THREE.Vector3(-2, 12, -10),
+        forwardcrankHBelowSeat:     new THREE.Vector3(-27, 12, -10),
+        forwardhandleBarGrip:       new THREE.Vector3(52, 81, -0.7),
     };
 
     animationQueue: Array<[THREE.Vector3, THREE.Vector3]> = [
-        [this.bikeModelPoints.aboveSaddle,      this.bikeModelPoints.aboveHandleBarGrip],
-        [this.bikeModelPoints.saddle,           this.bikeModelPoints.floorUnderCrank],
-        [this.bikeModelPoints.crankMiddle,      this.bikeModelPoints.crankHBelowSeat],
-        [this.bikeModelPoints.handleBarGrip,    this.bikeModelPoints.seatHUpwardHandleBarGrip]
+        [this.bikeModelPoints.aboveSaddle,          this.bikeModelPoints.aboveHandleBarGrip],
+        [this.bikeModelPoints.forwardSaddle,        this.bikeModelPoints.forwardfloorUnderCrank],
+        [this.bikeModelPoints.forwardcrankMiddle,   this.bikeModelPoints.forwardcrankHBelowSeat],
+        [this.bikeModelPoints.forwardhandleBarGrip, this.bikeModelPoints.seatHUpwardHandleBarGrip]
     ];
 
     helperLines: Array<[THREE.Vector3, THREE.Vector3]> = [
-        [this.bikeModelPoints.saddle,           this.bikeModelPoints.aboveSaddle],
-        [this.bikeModelPoints.handleBarGrip,    this.bikeModelPoints.aboveHandleBarGrip],
-        [this.bikeModelPoints.saddle,           this.bikeModelPoints.crankHBelowSeat],
-        [this.bikeModelPoints.saddle,           this.bikeModelPoints.seatHUpwardHandleBarGrip]
+        [this.bikeModelPoints.saddle,        this.bikeModelPoints.aboveSaddle],
+        [this.bikeModelPoints.handleBarGrip, this.bikeModelPoints.aboveHandleBarGrip],
+
+        [this.bikeModelPoints.saddle,        this.bikeModelPoints.forwardSaddle],
+
+        [this.bikeModelPoints.saddle,                 this.bikeModelPoints.crankHBelowSeat],
+        [this.bikeModelPoints.forwardcrankHBelowSeat, this.bikeModelPoints.crankHBelowSeat],
+        [this.bikeModelPoints.crankMiddle,            this.bikeModelPoints.forwardcrankMiddle],
+
+        [this.bikeModelPoints.saddle,        this.bikeModelPoints.seatHUpwardHandleBarGrip],
+        [this.bikeModelPoints.handleBarGrip, this.bikeModelPoints.forwardhandleBarGrip]
     ];
 
-    _lengthFromMeasuredPointToCamera = 0.9;
+    _lengthFromMeasuredPointToCamera = 0.7;
 
     private _lines: Array<THREE.Line> = [];
     private _cylinder: THREE.Mesh | null = null;
@@ -299,10 +310,9 @@ export class threeDScene {
         this.createCameraPositionGSAP( firstPoint, secondPoint, duration, this._easing );
         this.createCameraLookAtGSAP( firstPoint, secondPoint, duration, this._easing );
 
-        if (this._lines[1])
-            this._scene.remove(this._lines[1]);
-        if (this._lines[2])
-            this._scene.remove(this._lines[2]);
+        if (this._lines[1])     this._scene.remove(this._lines[1]);
+        if (this._lines[2])     this._scene.remove(this._lines[2]);
+        if (this._lines[3])     this._scene.remove(this._lines[3]);
 
         this.drawHelperLines(animationIndex);
         if (this._cylinder)
@@ -319,14 +329,18 @@ export class threeDScene {
                 break;
 
             case 1:
-                break;
-
-            case 2:
                 this.drawLinesBetweenPoints(this.helperLines[2][0], this.helperLines[2][1], this._linesColor, 1);
                 break;
 
-            case 3:
+            case 2:
                 this.drawLinesBetweenPoints(this.helperLines[3][0], this.helperLines[3][1], this._linesColor, 1);
+                this.drawLinesBetweenPoints(this.helperLines[4][0], this.helperLines[4][1], this._linesColor, 2);
+                this.drawLinesBetweenPoints(this.helperLines[5][0], this.helperLines[5][1], this._linesColor, 3);
+                break;
+
+            case 3:
+                this.drawLinesBetweenPoints(this.helperLines[6][0], this.helperLines[6][1], this._linesColor, 1);
+                this.drawLinesBetweenPoints(this.helperLines[7][0], this.helperLines[7][1], this._linesColor, 1);
                 break;
 
             default:
