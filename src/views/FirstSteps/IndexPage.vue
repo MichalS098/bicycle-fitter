@@ -22,6 +22,7 @@
                         class="font-bold text-lg">
                         Get started!
                     </ion-button>
+                    <steps-check-box v-model="form.correctMediaPipe" label="Go with correct Media Pipe" color="primary" />
                 </div>
             </div>
 
@@ -107,6 +108,7 @@ import StepsRadioButton from '@/components/StepsRadioButton.vue';
 import StepCard from '@/components/StepCard.vue';
 import { User } from '@/entity/User';
 import { saveDbForWeb } from '@/composables/useSqliteOnWeb';
+import StepsCheckBox from '@/components/StepsCheckBox.vue';
 
 const numberOfSteps = 5; // from 0 to 6
 const currentStep = ref(0);
@@ -125,7 +127,8 @@ const form = ref({
         riderStyle: "",
         shoeSize: "",
     },
-    nameOfUser: ''
+    nameOfUser: '',
+    correctMediaPipe: false
 });
 
 const nextStep = () => {
@@ -190,6 +193,7 @@ const goToMeasure = async () => {
     user.riderStyle = form.value.riderStyle;
     user.shoeSize = form.value.shoeSize;
     user.nameOfUser = form.value.nameOfUser;
+    user.correctMediaPipe = form.value.correctMediaPipe;
     await user.save();
     saveDbForWeb();
 

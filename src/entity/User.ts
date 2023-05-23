@@ -40,6 +40,8 @@ export class User extends BaseEntity {
     leftElbowToLeftWrist!: number;
     @Column()
     rightElbowToRightWrist!: number;
+    @Column()
+    correctMediaPipe!: boolean;
     // Human body parameters
     @Column()
     shankLength!: number;

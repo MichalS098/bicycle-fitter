@@ -44,7 +44,7 @@ import { ref, onMounted, Transition } from "vue";
 import useMediapipe from '@/composables/useMediapipe';
 import { Camera } from '@mediapipe/camera_utils';
 import { alertCircleOutline, hourglassOutline } from 'ionicons/icons';
-import { getBodyParamsFromMediapipeResults, BodyParamsFromMediapipe, getBodyParamsMedian } from '@/functions/mediapipeCalculatedHumanParams';
+import { getBodyParamsFromMediapipeResults, BodyParamsFromMediapipe, getBodyParamsMedian, getBodyParamsFromMediapipeResultsWithCorrect } from '@/functions/mediapipeCalculatedHumanParams';
 import { useIonRouter } from '@ionic/vue';
 import { getUserFromDatabase } from '@/helpers/helpersDataBase'
 import { areAllBodyPointsVisible } from '@/helpers/mediapipeHelpers';
@@ -53,7 +53,7 @@ import MeasureFinishedModal from './MeasureFinishedModal.vue';
 //import { File } from '@ionic-native/file/ngx';
 //import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { Platform } from '@ionic/vue';
-import { Plugins} from '@capacitor/core';
+import { Plugins } from '@capacitor/core';
 
 const { Filesystem, Permissions } = Plugins;
 
@@ -78,6 +78,8 @@ const showMeasureFinishedModal = ref(false);
 const allBodyPointsVisible = ref(false);
 const measuringProgress = ref(0);
 
+let overallHeight: number;
+let correctMediaPipe: boolean;
 /*const createFile = async () => {
 
     const file = new File()
@@ -123,22 +125,21 @@ const measureDone = async () => {
     measuringDone.value = true;
     showMeasureFinishedModal.value = true;
 
-   /* if (Platform.is('android')) {
-      // Sprawdzanie uprawnień
-const { status } = await Permissions.request({ name: 'storage' });
-
-if (status === 'granted') {
-    // Utworzenie pliku
-    const result = await Filesystem.writeFile({
-        path: 'mydir/myfile.txt',
-        data: 'This is some text data that will be written to the file.',
-        directory: 'data'
-    });
-
-    console.log('File written', result);
-}
-    }*/
-
+    /* if (Platform.is('android')) {
+       // Sprawdzanie uprawnień
+ const { status } = await Permissions.request({ name: 'storage' });
+ 
+ if (status === 'granted') {
+     // Utworzenie pliku
+     const result = await Filesystem.writeFile({
+         path: 'mydir/myfile.txt',
+         data: 'This is some text data that will be written to the file.',
+         directory: 'data'
+     });
+ 
+     console.log('File written', result);
+ }
+     }*/
 
     const user = await getUserFromDatabase();
     if (user != null) {
@@ -149,6 +150,7 @@ if (status === 'granted') {
         user.inseamLength = bodyParams.value.inseamLength * 100;
         await user.save();
     }
+
 }
 
 function goToTheApp() {
@@ -160,13 +162,18 @@ onMounted(async () => {
     if (video.value === undefined || canvas.value === undefined) {
         return;
     }
+    const user = await getUserFromDatabase();
+    if (user != null) {
+        overallHeight = user.overallHeight;
+        correctMediaPipe = user.correctMediaPipe;
+    }
 
     setupMediaPipe(video.value, canvas.value);
 });
 
-const  setupMediaPipe  =  (video: HTMLVideoElement, canvas: HTMLCanvasElement)   => {
+const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
     const { pose, drawResults } = useMediapipe();
-    pose.onResults(async(results) => {
+    pose.onResults(async (results) => {
         drawResults(results, canvas);
 
         if (results.poseLandmarks !== undefined) {
@@ -177,7 +184,14 @@ const  setupMediaPipe  =  (video: HTMLVideoElement, canvas: HTMLCanvasElement)  
                     bodyParams.value = getBodyParamsMedian(bodyParamsArray);
                     measureDone();
                 } else {
-                    const bodyParams = await getBodyParamsFromMediapipeResults(results);
+                    let bodyParams;
+                    if (correctMediaPipe) {
+                        bodyParams = await getBodyParamsFromMediapipeResultsWithCorrect(results, overallHeight);
+                    }
+                    else {
+                        bodyParams = await getBodyParamsFromMediapipeResults(results);
+                    }
+
                     bodyParamsArray[measuringProgress.value] = bodyParams;
                 }
                 measuringProgress.value++;

@@ -23,6 +23,7 @@ export class CreateUsersTable1682638592843 implements MigrationInterface {
                 "rightElbowToRightShoulder" integer,
                 "leftElbowToLeftWrist" integer,
                 "rightElbowToRightWrist" integer,
+                "correctMediaPipe" boolean,
                 "shankLength" integer,
                 "thighLength" integer,
                 "shoeSize" integer,
