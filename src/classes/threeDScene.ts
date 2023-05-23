@@ -34,18 +34,34 @@ export class threeDScene {
         floorUnderCrank:    new THREE.Vector3(10, -20, -0.7),
         crankHBelowSeat:    new THREE.Vector3(-27, 12, -0.7),
         seatHUpwardHandleBarGrip:   new THREE.Vector3(45, 78, -0.7),
+
+        aboveSaddle:        new THREE.Vector3(-27, 90, -0.7),
+        aboveHandleBarGrip: new THREE.Vector3(45, 90, -0.7),
     };
 
     animationQueue: Array<[THREE.Vector3, THREE.Vector3]> = [
-        [this.bikeModelPoints.saddle,           this.bikeModelPoints.handleBarGrip],
+        [this.bikeModelPoints.aboveSaddle,      this.bikeModelPoints.aboveHandleBarGrip],
         [this.bikeModelPoints.saddle,           this.bikeModelPoints.floorUnderCrank],
         [this.bikeModelPoints.crankMiddle,      this.bikeModelPoints.crankHBelowSeat],
         [this.bikeModelPoints.handleBarGrip,    this.bikeModelPoints.seatHUpwardHandleBarGrip]
     ];
 
+    helperLines: Array<[THREE.Vector3, THREE.Vector3]> = [
+        [this.bikeModelPoints.saddle,           this.bikeModelPoints.aboveSaddle],
+        [this.bikeModelPoints.handleBarGrip,    this.bikeModelPoints.aboveHandleBarGrip],
+        [this.bikeModelPoints.saddle,           this.bikeModelPoints.crankHBelowSeat],
+        [this.bikeModelPoints.saddle,           this.bikeModelPoints.seatHUpwardHandleBarGrip]
+    ];
+
     _lengthFromMeasuredPointToCamera = 0.9;
 
-    private _line: THREE.Line | null = null;
+    private _lines: Array<THREE.Line> = [];
+    private _cylinder: THREE.Mesh | null = null;
+
+    private _cylinderColor = 0xab0000;
+    private _cylinderRadius = 2;
+
+    private _linesColor = 0x0000ff;
 
     init(elementSelector: string) {
         
@@ -184,7 +200,7 @@ export class threeDScene {
     }
 
 
-    createCameraPositionGSAP(fromPoint: THREE.Vector3, toPoint: THREE.Vector3, duration: number, easing: string, drawLine: boolean) {
+    createCameraPositionGSAP(fromPoint: THREE.Vector3, toPoint: THREE.Vector3, duration: number, easing: string) {
         const midPoint = new THREE.Vector3().addVectors(fromPoint, toPoint).multiplyScalar(0.5);
         const dir = new THREE.Vector3().subVectors(this._camera.position, midPoint);
         const lineDir = new THREE.Vector3().subVectors(toPoint, fromPoint).normalize();
@@ -204,10 +220,7 @@ export class threeDScene {
                 this.setCameraPosition(new THREE.Vector3(proxy.x, proxy.y, proxy.z));
             },
             onComplete: () => {
-                if (this._line)
-                    this._scene.remove(this._line);
-                if (drawLine)
-                    this.drawLinesBetweenPoints(fromPoint, toPoint, 0xff0000);
+                console.log("onComplete");
             }
         });
     }
@@ -247,9 +260,8 @@ export class threeDScene {
                 this._camera.position.set(proxy.x, proxy.y, proxy.z);
                 this.setCameraPosition(new THREE.Vector3(proxy.x, proxy.y, proxy.z));
             },
-            onComplete: () => {
-                if (this._line)
-                    this._scene.remove(this._line);
+            onComplete: () => { 
+                console.log("onComplete");
             }
         });
     }
@@ -281,20 +293,48 @@ export class threeDScene {
         this.goToDefaultCameraLookAtGSAP( 1.5, this._easing );
     }
 
-    // createAnimation(firstPoint: THREE.Vector3, secondPoint: THREE.Vector3, duration: number, drawLine: boolean) {
-
-    //     this.createCameraPositionGSAP( firstPoint, secondPoint, duration, this._easing, drawLine );
-    //     this.createCameraLookAtGSAP( firstPoint, secondPoint, duration, this._easing );
-    // }
-
-    createNextAnimation(i: number, duration: number, drawLine: boolean) {
-        const firstPoint  = this.animationQueue[i][0];
-        const secondPoint = this.animationQueue[i][1];
-        this.createCameraPositionGSAP( firstPoint, secondPoint, duration, this._easing, drawLine );
+    createNextAnimation(animationIndex: number, duration: number) {
+        const firstPoint  = this.animationQueue[animationIndex][0];
+        const secondPoint = this.animationQueue[animationIndex][1];
+        this.createCameraPositionGSAP( firstPoint, secondPoint, duration, this._easing );
         this.createCameraLookAtGSAP( firstPoint, secondPoint, duration, this._easing );
+
+        if (this._lines[1])
+            this._scene.remove(this._lines[1]);
+        if (this._lines[2])
+            this._scene.remove(this._lines[2]);
+
+        this.drawHelperLines(animationIndex);
+        if (this._cylinder)
+            this._scene.remove(this._cylinder);
+        this.drawCylinderBetweenPoints(firstPoint, secondPoint);
     }
 
-    drawLinesBetweenPoints(fromPoint: THREE.Vector3, toPoint: THREE.Vector3, color: number) {
+    drawHelperLines(animationIndex: number) {
+
+        switch (animationIndex) {
+            case 0:
+                this.drawLinesBetweenPoints(this.helperLines[0][0], this.helperLines[0][1], this._linesColor, 1);
+                this.drawLinesBetweenPoints(this.helperLines[1][0], this.helperLines[1][1], this._linesColor, 2);
+                break;
+
+            case 1:
+                break;
+
+            case 2:
+                this.drawLinesBetweenPoints(this.helperLines[2][0], this.helperLines[2][1], this._linesColor, 1);
+                break;
+
+            case 3:
+                this.drawLinesBetweenPoints(this.helperLines[3][0], this.helperLines[3][1], this._linesColor, 1);
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    drawLinesBetweenPoints(fromPoint: THREE.Vector3, toPoint: THREE.Vector3, color: number, numOfLine: number) {
 
         const material = new THREE.LineBasicMaterial({ color: color });
     
@@ -304,8 +344,31 @@ export class threeDScene {
     
         const geometry = new THREE.BufferGeometry().setFromPoints(points);
     
-        this._line = new THREE.Line(geometry, material);
-        this._scene.add(this._line);
+        this._lines[numOfLine] = new THREE.Line(geometry, material);
+        this._scene.add(this._lines[numOfLine]);
+    }
+
+
+    drawCylinderBetweenPoints(fromPoint: THREE.Vector3, toPoint: THREE.Vector3) {
+
+        const direction = new THREE.Vector3().subVectors(toPoint, fromPoint);
+        const orientation = new THREE.Matrix4();
+        
+        // With Quaternion
+        const edgeQuaternion = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction.clone().normalize());
+        orientation.makeRotationFromQuaternion(edgeQuaternion);
+    
+        const length = direction.length();
+        
+        const geometry = new THREE.CylinderGeometry(this._cylinderRadius, this._cylinderRadius, length, 32);
+        geometry.applyMatrix4(new THREE.Matrix4().makeTranslation(0, length / 2, 0));
+        geometry.applyMatrix4(orientation);
+        
+        const material = new THREE.MeshBasicMaterial({ color: this._cylinderColor });
+        this._cylinder = new THREE.Mesh(geometry, material);
+        this._cylinder.position.set(fromPoint.x, fromPoint.y, fromPoint.z);
+        
+        this._scene.add(this._cylinder);
     }
 
 
