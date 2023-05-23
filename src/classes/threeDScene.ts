@@ -64,7 +64,7 @@ export class threeDScene {
         [this.bikeModelPoints.handleBarGrip, this.bikeModelPoints.forwardhandleBarGrip]
     ];
 
-    _lengthFromMeasuredPointToCamera = 0.7;
+    _lengthFromMeasuredPointToCamera = 1;
 
     private _lines: Array<THREE.Line> = [];
     private _cylinder: THREE.Mesh | null = null;
@@ -72,7 +72,7 @@ export class threeDScene {
     private _cylinderColor = 0xab0000;
     private _cylinderRadius = 2;
 
-    private _linesColor = 0x0000ff;
+    private _linesColor = 0x478C6C;
 
     init(elementSelector: string) {
         
@@ -96,7 +96,6 @@ export class threeDScene {
 
         this.lightSetup();
         this.addObjectsToScene();
-        // this.GSAPcreateSetAnimations();
     }
 
 
@@ -211,12 +210,17 @@ export class threeDScene {
     }
 
 
-    createCameraPositionGSAP(fromPoint: THREE.Vector3, toPoint: THREE.Vector3, duration: number, easing: string) {
+    createCameraPositionGSAP(fromPoint: THREE.Vector3, toPoint: THREE.Vector3, duration: number, easing: string, cameraPoint?: THREE.Vector3) {
+        
         const midPoint = new THREE.Vector3().addVectors(fromPoint, toPoint).multiplyScalar(0.5);
         const dir = new THREE.Vector3().subVectors(this._camera.position, midPoint);
         const lineDir = new THREE.Vector3().subVectors(toPoint, fromPoint).normalize();
         const normal = new THREE.Vector3().crossVectors(lineDir, dir).cross(lineDir).normalize();
-        const newCameraPosition = new THREE.Vector3().addVectors(midPoint, normal.multiplyScalar(dir.length() * this._lengthFromMeasuredPointToCamera));
+        let newCameraPosition = new THREE.Vector3().addVectors(midPoint, normal.multiplyScalar(dir.length() * this._lengthFromMeasuredPointToCamera));
+        
+        if (cameraPoint) 
+            newCameraPosition = cameraPoint;
+
 
         const proxy = { x: this.actualCameraPosition.x, y: this.actualCameraPosition.y, z: this.actualCameraPosition.z };
 
@@ -299,6 +303,10 @@ export class threeDScene {
     }
 
     createDefaultCameraPozAnimation() {
+        if (this._lines[1])     this._scene.remove(this._lines[1]);
+        if (this._lines[2])     this._scene.remove(this._lines[2]);
+        if (this._lines[3])     this._scene.remove(this._lines[3]);
+        if (this._cylinder)     this._scene.remove(this._cylinder);
 
         this.goToDefaultCameraPositionGSAP( 1.5, this._easing );
         this.goToDefaultCameraLookAtGSAP( 1.5, this._easing );
@@ -307,16 +315,19 @@ export class threeDScene {
     createNextAnimation(animationIndex: number, duration: number) {
         const firstPoint  = this.animationQueue[animationIndex][0];
         const secondPoint = this.animationQueue[animationIndex][1];
-        this.createCameraPositionGSAP( firstPoint, secondPoint, duration, this._easing );
+        if (animationIndex === 3) 
+            this.createCameraPositionGSAP( firstPoint, secondPoint, duration, this._easing, new THREE.Vector3(267, 82, -267) );
+        else
+            this.createCameraPositionGSAP( firstPoint, secondPoint, duration, this._easing );
+
         this.createCameraLookAtGSAP( firstPoint, secondPoint, duration, this._easing );
 
         if (this._lines[1])     this._scene.remove(this._lines[1]);
         if (this._lines[2])     this._scene.remove(this._lines[2]);
         if (this._lines[3])     this._scene.remove(this._lines[3]);
-
+        if (this._cylinder)     this._scene.remove(this._cylinder);
+        
         this.drawHelperLines(animationIndex);
-        if (this._cylinder)
-            this._scene.remove(this._cylinder);
         this.drawCylinderBetweenPoints(firstPoint, secondPoint);
     }
 
@@ -340,7 +351,7 @@ export class threeDScene {
 
             case 3:
                 this.drawLinesBetweenPoints(this.helperLines[6][0], this.helperLines[6][1], this._linesColor, 1);
-                this.drawLinesBetweenPoints(this.helperLines[7][0], this.helperLines[7][1], this._linesColor, 1);
+                this.drawLinesBetweenPoints(this.helperLines[7][0], this.helperLines[7][1], this._linesColor, 2);
                 break;
 
             default:
