@@ -425,6 +425,6 @@ export class threeDScene {
         requestAnimationFrame(this.animate.bind(this));
     
         this._renderer.render(this._scene, this._camera);
-        console.log("position: ", this._camera.position);
+        // console.log("position: ", this._camera.position);
     }
 }
