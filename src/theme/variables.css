@@ -2,7 +2,8 @@
 http://ionicframework.com/docs/theming/ */
 
 /** Ionic CSS Variables **/
-:root {
+:root {  
+  color-scheme: dark;
   --ion-color-primary: #e48c56;
   --ion-color-primary-rgb: 228, 140, 86;
   --ion-color-primary-contrast: #fff;
