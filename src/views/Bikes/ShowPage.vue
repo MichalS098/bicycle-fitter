@@ -14,19 +14,22 @@
                 <x-mark-icon class="w-8 h-8 text-white" @click="goToHome" />
             </div>
 
-            <ion-modal 
-                :is-open="showModal" 
-                :breakpoints="[0.25, 1]"
-                :initial-breakpoint="0.25" 
-                :backdrop-dismiss="true" 
-                :backdrop-breakpoint="1"
-                :swipe-to-close="true" 
-                :keyboard-close="true" 
-                :showBackdrop="true" 
-                :animated="true"                                
-                >
+            <ion-modal ref="modal" :is-open="showModal" :breakpoints="[0.25, 1]" :initial-breakpoint="0.25"
+                :backdrop-dismiss="true" :backdrop-breakpoint="1" :swipe-to-close="true" :keyboard-close="true"
+                :showBackdrop="true" :animated="true" @ionBreakpointDidChange="ionBreakpointChange()">
                 <ion-content class="ion-padding">
-                    <div class="flex flex-col gap-6 pt-5">
+                    <ion-toolbar>
+                        <ion-buttons slot="end">
+                            <ion-button @click="minimizeModal()" color="primary" mode="ios" :class="{
+                                'opacity-0': isModalMinimized,
+                                'opacity-100': !isModalMinimized,
+                                'transition-opacity': true
+                            }">
+                                Close
+                            </ion-button>
+                        </ion-buttons>
+                    </ion-toolbar>
+                    <div class="flex flex-col gap-6">
                         <div class="w-full flex items-center justify-between gap-6">
                             <button
                                 class="rounded-2xl bg-neutral-700 shadow-lg flex flex-col items-center justify-center gap-[1px] p-2 aspect-square w-full">
@@ -70,9 +73,9 @@
   
 <script lang="ts" setup>
 import {
-    IonPage, useIonRouter, IonModal, IonContent
+    IonPage, useIonRouter, IonModal, IonContent, IonButton, IonButtons, IonToolbar
 } from '@ionic/vue';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { BackwardIcon, ForwardIcon, HeartIcon, PlayIcon, XMarkIcon } from '@heroicons/vue/24/outline';
 import { Bike } from '@/entity/Bike';
 import { Tip } from '@/entity/Tip';
@@ -106,6 +109,22 @@ onMounted(async () => {
     showModal.value = true;
 });
 
+const modal = ref<typeof IonModal>();
+const isModalMinimized = ref<boolean>(true);
+
+const minimizeModal = () => {
+    if (modal.value) {
+        modal.value.$el.setCurrentBreakpoint(0.25);
+    }
+}
+
+const ionBreakpointChange = () => {
+    if (modal.value?.$el.currentBreakpoint == 1) {
+        isModalMinimized.value = false;
+    } else {
+        isModalMinimized.value = true;
+    }
+}
 
 
 const animationIndex = ref<number>(-1);
@@ -181,3 +200,10 @@ const chartOptions = ref<any>({
 
 
 </script>
+
+
+<style  scoped>
+ion-toolbar {
+    --background: transparent;
+}
+</style>
