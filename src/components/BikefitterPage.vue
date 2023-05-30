@@ -1,6 +1,7 @@
 <template>
     <ion-page>
-        <ion-header :translucent="true" class="bikefitter-header">             
+        <ion-header :translucent="true" class="bikefitter-header">
+            <!-- DO NOT REMOVE THIS DIV -->
             <div>
             </div>
         </ion-header>
@@ -19,7 +20,7 @@
 </template>
 <script setup lang="ts">
 import SpaceForTabBarMenu from '@/components/SpaceForTabBarMenu.vue';
-import { IonPage, IonContent, IonHeader, IonToolbar } from '@ionic/vue';
+import { IonPage, IonContent, IonHeader } from '@ionic/vue';
 
 const props = defineProps({
     title: {
@@ -30,11 +31,6 @@ const props = defineProps({
 });
 </script>
 <style scoped>
-ion-toolbar {
-    --background: transparent;
-    --border-color: transparent;
-}
-
 ion-header {
     --background: transparent;
     --border-color: transparent;
