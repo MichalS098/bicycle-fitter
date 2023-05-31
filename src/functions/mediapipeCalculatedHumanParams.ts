@@ -61,6 +61,16 @@ function getDistanceBetweenPoints(point1: NormalizedLandmark, point2: Normalized
     return distance;
 }
 
+function getDistanceBetweenPoints2D(point1: NormalizedLandmark, point2: NormalizedLandmark): number {
+    const x1 = point1.x;
+    const y1 = point1.y;
+    const x2 = point2.x;
+    const y2 = point2.y;
+    const distance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+
+    return distance;
+}
+
 
 function theHeightOfTheTriangle(firstSideOfTriangle: number, secondSideOfTriangle: number, thirdSideOfTriangle: number): number {
     const S = (firstSideOfTriangle + secondSideOfTriangle + thirdSideOfTriangle) / 2
@@ -72,16 +82,39 @@ function theHeightOfTheTriangle(firstSideOfTriangle: number, secondSideOfTriangl
 
 //Returns angle at point1
 //TODO add a check to see if any pair is essentially the same point.
-function getAngleBetweenPoints(point1: NormalizedLandmark, point2: NormalizedLandmark, point3: NormalizedLandmark) {
-    const p12 = getDistanceBetweenPoints(point1, point2); //p12
-    const p23 = getDistanceBetweenPoints(point2, point3); //p23
-    const p31 = getDistanceBetweenPoints(point3, point1); //p31
 
-    const angle = Math.acos((Math.pow(p12, 2) + Math.pow(p31, 2) - Math.pow(p23, 2)) / (2 * p23 * p31));
+// function getAngleBetweenPoints(point1: NormalizedLandmark, point2: NormalizedLandmark, point3: NormalizedLandmark) {
+//     const p12 = getDistanceBetweenPoints(point1, point2); //p12
+//     const p23 = getDistanceBetweenPoints(point2, point3); //p23
+//     const p31 = getDistanceBetweenPoints(point3, point1); //p31
 
-    if (Number.isNaN(angle)) return 0;
+//     const angle = Math.acos((Math.pow(p12, 2) + Math.pow(p31, 2) - Math.pow(p23, 2)) / (2 * p23 * p31));
 
-    return angle * (180.0 / 3.14159);
+//     if (Number.isNaN(angle)) return 0;
+
+//     return angle * (180.0 / 3.14159);
+// }
+
+// function getAngleBetweenPoints(point1: NormalizedLandmark, point2: NormalizedLandmark, point3: NormalizedLandmark) {
+//     const numerator = point2.y*(point1.x-point3.x) + point1.y*(point3.x-point2.x) + point3.y*(point2.x-point1.x);
+//     const denominator = (point2.x-point1.x)*(point1.x-point3.x) + (point2.y-point1.y)*(point1.y-point3.y);
+//     const ratio = numerator/denominator;
+
+//     let angle = (Math.atan(ratio) * 180) / Math.PI
+
+//     if(angle<0) angle = 180+angle;
+
+//     return angle
+
+// }
+
+function getAngleBetweenPoints(point1: NormalizedLandmark, point2: NormalizedLandmark, point3: NormalizedLandmark){
+    const angleRad = Math.atan2(point3.y - point1.y, point3.x - point1.x) - 
+                     Math.atan2(point2.y - point1.y, point2.x - point1.x); 
+
+    let angleDeg = (angleRad * 180) / Math.PI;
+    if (angleDeg < 0) angleDeg = 360 + angleDeg;
+    return angleDeg
 }
 
 
@@ -218,29 +251,32 @@ export function getBodyAnglesFromMediapipeResults(results: Results, side: string
                                                   results.poseLandmarks[POSE_LANDMARKS_RIGHT.RIGHT_WRIST])
     }
     else if (side == "left"){
-        fakeHorizon = {...results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_INDEX]};
-        fakeHorizon.x = results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_HEEL].x;
-        footFloorAngle = getAngleBetweenPoints(results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_INDEX],
-                                               results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_HEEL],
-                                               fakeHorizon);
+        fakeHorizon = {...results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_FOOT_INDEX]};
+        fakeHorizon.x += 0.05
+        footFloorAngle = getAngleBetweenPoints(results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_FOOT_INDEX],
+                                                 results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_HEEL],
+                                                fakeHorizon
+                                                
+                                               );
 
         fakeHorizon = {...results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_HIP]};
-        fakeHorizon.x = results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_SHOULDER].x;
-        torsoFloorAngle = getAngleBetweenPoints(results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_HIP],
-                                                results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_SHOULDER],
-                                                fakeHorizon);
+        fakeHorizon.x -= 0.05; 
+        torsoFloorAngle = getAngleBetweenPoints(results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_HIP], 
+                                                fakeHorizon,
+                                                results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_SHOULDER]
+                                                );
 
         thighShankAngle = getAngleBetweenPoints(results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_KNEE],
                                                 results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_HIP],
                                                 results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_ANKLE])
     
         torsoBicepAngle = getAngleBetweenPoints(results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_SHOULDER],
-                                                results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_ELBOW],
-                                                results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_HIP])
+                                                results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_HIP],
+                                                results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_ELBOW])
     
         bicepForearmAngle = getAngleBetweenPoints(results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_ELBOW],
-                                                results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_SHOULDER],
-                                                results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_WRIST])
+                                                results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_WRIST],
+                                                results.poseLandmarks[POSE_LANDMARKS_LEFT.LEFT_SHOULDER])
     }
 
     return new BodyAnglesFromMediapipe(footFloorAngle,
