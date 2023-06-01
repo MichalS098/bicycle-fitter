@@ -2,6 +2,7 @@
     <ion-page>
         <div class="h-screen w-screen bg-black relative">
             <div id="threejs-container" class="w-full h-full"></div>
+
             <div class="absolute top-0 left-0 right-0 w-full px-6 py-6 xxs:py-12 xs:py-24 z-[10] flex justify-between">
                 <div>
                     <h1 class="text-4xl xs:text-5xl text-white font-bold">
@@ -13,6 +14,10 @@
                 </div>
                 <x-mark-icon class="w-8 h-8 text-white" @click="goToHome" />
             </div>
+<!-- 
+            <div class="absolute top-0 left-0 right-0 w-full px-6 py-6 xxs:py-12 xs:py-24 z-[10] flex justify-between">
+                
+            </div> -->
 
             <ion-modal ref="modal" :is-open="showModal" :breakpoints="[0.25, 1]" :initial-breakpoint="0.25"
                 :backdrop-dismiss="true" :backdrop-breakpoint="1" :swipe-to-close="true" :keyboard-close="true"
@@ -75,7 +80,7 @@
 import {
     IonPage, useIonRouter, IonModal, IonContent, IonButton, IonButtons, IonToolbar
 } from '@ionic/vue';
-import { computed, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { BackwardIcon, ForwardIcon, HeartIcon, PlayIcon, XMarkIcon } from '@heroicons/vue/24/outline';
 import { Bike } from '@/entity/Bike';
 import { Tip } from '@/entity/Tip';

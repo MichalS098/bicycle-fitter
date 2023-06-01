@@ -28,7 +28,7 @@ const tips = [
     {
         title: 'This has primary color',
         description: 'Tip 3 description',
-        content: 'Tip 3 content',
+        content: 'Tip 3 content lorem',
         favourite: true,
         featured_image_path: '../../assets/images/tip-test-4.png',
         color: 'primary'

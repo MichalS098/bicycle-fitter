@@ -18,20 +18,15 @@ import BikefitterPage from '@/components/BikefitterPage.vue';
 import { onMounted, ref } from 'vue';
 import { Tip } from '@/entity/Tip';
 import TipsSwiper from '@/components/TipsSwiper.vue';
+import { onIonViewDidEnter } from '@ionic/vue';
 
 const tips = ref<Tip[]>([]);
 
 onMounted(async () => {
-    // // CREATING NEW TIPS FOR WEB TESTING
-    // for (let i = 0; i < 3; i++) {
-    //     const tip = new Tip();
-    //     tip.title = 'Test';
-    //     tip.description = 'Test';
-    //     tip.color = 'primary';
-    //     tip.featured_image_path = 'https://picsum.photos/seed/picsum/200/300';        
-    //     await tip.save();
-    // }
+    tips.value = await Tip.find();
+});
 
+onIonViewDidEnter(async () => {
     tips.value = await Tip.find();
 });
 </script>

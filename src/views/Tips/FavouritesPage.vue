@@ -13,10 +13,15 @@ import { onMounted, ref } from 'vue';
 import { Tip } from '@/entity/Tip';
 import TipCard from '@/components/TipCard.vue';
 import BikefitterPage from '@/components/BikefitterPage.vue';
+import { onIonViewDidEnter } from '@ionic/vue';
 
 const tips = ref<Tip[]>([]);
 
 onMounted(async () => {
+    tips.value = await Tip.findBy({ favourite: true });
+});
+
+onIonViewDidEnter(async () => {
     tips.value = await Tip.findBy({ favourite: true });
 });
 </script>

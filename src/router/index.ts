@@ -76,7 +76,7 @@ const routes: Array<RouteRecordRaw> = [
             {
                 path: 'tips',
                 component: () => import('@/views/Tips/IndexPage.vue')
-            },
+            },        
             {
                 path: 'favourites',
                 component: () => import('@/views/Tips/FavouritesPage.vue')
@@ -85,12 +85,17 @@ const routes: Array<RouteRecordRaw> = [
                 path: 'profile',
                 component: () => import('@/views/Profile/IndexPage.vue')
             },
-            {
-                path: 'profile/measurements',
-                component: () => import('@/views/Profile/MeasurementsPage.vue')
-            },
+            
         ]
     },
+    {
+        path: '/pages/profile/measurements',
+        component: () => import('@/views/Profile/MeasurementsPage.vue')
+    },
+    {
+        path: '/pages/tips/:id',
+        component: () => import('@/views/Tips/ShowPage.vue')
+    },            
 ]
 
 const router = createRouter({
