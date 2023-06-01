@@ -138,7 +138,7 @@ const goToExampleBikeFitting = async () => {
     user.id = 1;
     // TODO We must add to logic program consideration unit System
     user.unitSystem = 'metric';
-    user.overallHeight = 175;
+    user.overallHeight = 190;
     user.rideTime = 1;
     user.riderStyle = "casual";
     user.shoeSize = 42;
@@ -146,7 +146,7 @@ const goToExampleBikeFitting = async () => {
     user.thighLength = 42;
     user.shankLength = 47;
     user.shoulderHeight = 145;
-    user.armLength = 55;
+    user.armLength = 70;
     await user.save();
 
     const bike = new Bike();

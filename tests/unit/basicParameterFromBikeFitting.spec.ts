@@ -9,7 +9,7 @@ describe('calculatedBikeFittingParams', () => {
   it('should return correct bike and person parameters', () => {
 
     // Przykładowe wartości wejściowe
-    const person = new humanParams(47, 42, 42, 81, 145, 70, 85, 190,0); //static write 
+    const person = new humanParams(47, 42, 42, 81, 145, 70, 55, 175,0); //static write 
     //const person = new humanParams(0.3818923337112611, 0.33762064071644726, 44, 0.7888170281086873, 1.3059663404411772, 0.48638949800378456, 85, 180, 45); //dynamic write from mediapipe 
     const clickPedals = 1;
     const neckOrBackPain = 2;
@@ -22,7 +22,7 @@ describe('calculatedBikeFittingParams', () => {
       false,
       false,
       false,
-      false, false);
+      true, false);
 
     const newBikeParams = new bikeParams(bikeType.Road,ridingStyle.Sport, 18, 10, 10, bikeExpectationsTemp, 1);
 

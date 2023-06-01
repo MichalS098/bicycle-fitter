@@ -47,6 +47,7 @@ class humanParams {
         this.torsoangle = torsoangle;
         this.overallHeight = overallHeight;
         this.torsoHeight = (this._shoulderHeight - (this._legLength)) * 0.9;
+        //this.torsoHeight = this._shoulderHeight - this.inseamLength
     }
 
     get thighLength(): number {
