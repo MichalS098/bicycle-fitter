@@ -5,8 +5,8 @@
             <div>
             </div>
         </ion-header>
-        <ion-content class="ion-padding" :fullscreen="true" :color="props.backgroundColor">
-            <div class="flex flex-col justify-between gap-6 xxs:gap-12">                
+        <ion-content :fullscreen="true" :color="props.backgroundColor" :class="{ 'ion-padding': !props.withoutPadding }">
+            <div class="flex flex-col justify-between gap-6 xxs:gap-12">
                 <div v-if="!withoutTitle" class="px-3 xxs:px-6 pt-3">
                     <h1 class="fitter-h1">
                         <slot name="title">{{ props.title }}</slot>
@@ -42,7 +42,12 @@ const props = defineProps({
         type: Boolean,
         required: false,
         default: false,
-    },    
+    },
+    withoutPadding: {
+        type: Boolean,
+        required: false,
+        default: false,
+    },
 });
 </script>
 <style scoped>

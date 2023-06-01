@@ -1,25 +1,27 @@
 <template>
-    <bikefitter-page :background-color="tip?.color" :without-title="true" :without-tab-bar="true">
+    <bikefitter-page :background-color="tip?.color" :without-title="true" :without-tab-bar="true" :without-padding="true">
         <div>
-            <ion-buttons slot="start">
-                <ion-back-button default-href="/pages/tips" color="light"></ion-back-button>
-            </ion-buttons>
-            <div class="flex flex-col gap-4 pt-4">
-                <ion-img :src="tip?.featured_image_path" class="tip-showpage-img"></ion-img>
-                <h2 class="fitter-h2">
-                    {{ tip?.title }}
-                </h2>
-                <button @click="toggleLike()" type="button" class="ml-auto">
-                    <transition name="fade">
-                        <HeartSolidIcon v-if="tip?.favourite" class="w-8 h-8 text-white shrink-0" />
-                        <HeartIcon v-else class="w-8 h-8 text-white shrink-0" />
-                    </transition>
-                </button>
+            <div class="ion-padding">
+                <ion-buttons slot="start">
+                    <ion-back-button default-href="/pages/tips" color="light"></ion-back-button>
+                </ion-buttons>
+                <div class="flex flex-col gap-4 pt-4">
+                    <h2 class="fitter-h2">
+                        {{ tip?.title }}
+                    </h2>
+                    <ion-img :src="tip?.featured_image_path" class="tip-showpage-img"></ion-img>
+                    <button @click="toggleLike()" type="button" class="ml-auto">
+                        <transition name="fade">
+                            <HeartSolidIcon v-if="tip?.favourite" class="w-8 h-8 text-white shrink-0" />
+                            <HeartIcon v-else class="w-8 h-8 text-white shrink-0" />
+                        </transition>
+                    </button>
+                </div>
             </div>
-        </div>
 
-        <div class="prose">
-            {{ tip?.content }}
+            <div class="prose prose-invert ion-padding">
+                <div v-html="tip?.content"></div>
+            </div>
         </div>
     </bikefitter-page>
 </template>

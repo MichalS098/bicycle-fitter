@@ -137,9 +137,9 @@ const userButtons = [
         text: 'Save',
         role: 'confirm',
         handler: (data: any) => {
-            let keys = Object.keys(data);
-            let values = Object.values(data);
-            let keyString = keys[0];
+            const keys = Object.keys(data);
+            const values = Object.values(data);
+            const keyString = keys[0];
             let valueString = Number(values[0]);
 
             // validation
