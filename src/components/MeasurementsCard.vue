@@ -1,5 +1,5 @@
 <template>
-    <button type="button" @click="goToMeasurePage()" ref="measurementsCard"
+    <button type="button" @click="goToMeasurePage()"
         class="measurements-card rounded-3xl w-full flex items-start px-6 py-4 h-full">
         <div class="grid grid-cols-2 w-full gap-1 justify-items-start">
             <h3 class="text-lg xxs:text-xl col-span-2 pb-3 text-left font-bold">
@@ -50,7 +50,6 @@ const height = ref<number>(0);
 const legLength = ref<number>(0);
 const unitSystem = ref<string>('metric');
 const unit = ref<string>('cm');
-const measurementsCard = ref<HTMLButtonElement>();
 
 onMounted(() => {
     if (props.user) {        

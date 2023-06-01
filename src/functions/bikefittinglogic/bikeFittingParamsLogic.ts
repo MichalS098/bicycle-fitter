@@ -1,4 +1,9 @@
-﻿import { bikeParams, bikeType, ridingStyle } from "../../classes/bikeParams";
+﻿/**
+ * Author of algorithms:
+ * Antonio Blago (2023). Bikefitting App for Cyclists (https://www.mathworks.com/matlabcentral/fileexchange/61912-bikefitting-app-for-cyclists), MATLAB Central File Exchange. Retrieved June 1, 2023.
+ */
+
+import { bikeParams, bikeType, ridingStyle } from "../../classes/bikeParams";
 import { humanParams } from "../../classes/humanParams";
 import { bikeExpectations } from "../../classes/bikeExpectations";
 

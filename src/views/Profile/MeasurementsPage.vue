@@ -1,101 +1,239 @@
 <template>
-    <ion-page>
-        <ion-header>
-            <ion-toolbar>
-                <ion-buttons slot="start">
-                    <ion-back-button default-href="/pages/profile" color="secondary"></ion-back-button>
-                </ion-buttons>
-                <ion-title color="secondary">
-                    Measurements
-                </ion-title>
-            </ion-toolbar>
-        </ion-header>
-        <ion-content class="ion-padding" :fullscreen="true">
-            <div class="flex flex-col justify-between gap-6 xxs:gap-12">
-                <div class="w-full flex flex-col gap-6">
-                    <h2 class="fitter-h2 px-2 xxs:px-3">
-                        Your measurements
-                    </h2>
-                    <ion-list>
-                        <ion-item>
-                            <ion-input type="number" label="Shank Length" label-placement="stacked" :clear-input="true"
-                                placeholder="Enter your shank length" error-text="Please enter a valid shank length"
-                                required step="0.01" min="0" max="250" :value="user?.shankLength"
-                                @ionInput="updateUserModel('shankLength', $event.target.value)">
-                            </ion-input>
+    <bikefitter-page title="Measures" :without-title="true" :without-tab-bar="true" :background-color="'secondary'">
+        <div>
+            <ion-buttons slot="start">
+                <ion-back-button default-href="/pages/tips" color="light"></ion-back-button>
+            </ion-buttons>
+
+            <div class="pt-3">
+                <h1 class="fitter-h1">
+                    Measures
+                </h1>
+            </div>
+
+            <ion-card color="secondary">
+                <ion-card-header>
+                    <ion-card-title>General</ion-card-title>
+                </ion-card-header>
+                <ion-card-content>
+                    <ion-list lines="none" :inset="false">
+                        <ion-item color="secondary">
+                            <ion-chip class="font-bold text-base" id="shoeSize">
+                                Shoe Size: {{ user?.shoeSize }} {{ user?.unitSystem === 'metric' ? 'cm' : 'in' }}
+                            </ion-chip>
+                            <ion-alert trigger="shoeSize" header="Enter your shoe size"
+                                message="Shoe size is the length of your foot" :buttons="userButtons"
+                                :inputs="userInputs.shoeSize">
+                            </ion-alert>
                         </ion-item>
 
-                        <ion-item>
-                            <ion-input type="number" label="Thigh Length" label-placement="stacked" :clear-input="true"
-                                placeholder="Enter your thigh length" error-text="Please enter a valid thigh length"
-                                required step="0.01" min="0" max="250" :value="user?.thighLength"
-                                @ionInput="updateUserModel('thighLength', $event.target.value)">
-                            </ion-input>
+                        <ion-item color="secondary">
+                            <ion-chip class="font-bold text-base" id="shoulderHeight">
+                                Shoulder Height: {{ user?.shoulderHeight }} {{ user?.unitSystem === 'metric' ? 'cm' : 'in'
+                                }}
+                            </ion-chip>
+                            <ion-alert trigger="shoulderHeight" header="Enter your shoulder height"
+                                message="Shoulder height is the distance from the top of your hip to the top of your shoulder"
+                                :buttons="userButtons" :inputs="userInputs.shoulderHeight">
+                            </ion-alert>
                         </ion-item>
-
-                        <ion-item>
-                            <ion-input type="number" label="Shoe Size" label-placement="stacked" :clear-input="true"
-                                placeholder="Enter your shoe size" error-text="Please enter a valid shoe size" required
-                                step="0.01" min="0" max="250" :value="user?.shoeSize"
-                                @ionInput="updateUserModel('shoeSize', $event.target.value)">
-                            </ion-input>
-                        </ion-item>
-
-                        <ion-item>
-                            <ion-input type="number" label="Inseam Length" label-placement="stacked" :clear-input="true"
-                                placeholder="Enter your inseam length" error-text="Please enter a valid inseam length"
-                                required step="0.01" min="0" max="250" :value="user?.inseamLength"
-                                @ionInput="updateUserModel('inseamLength', $event.target.value)">
-                            </ion-input>
-                        </ion-item>
-
-                        <ion-item>
-                            <ion-input type="number" label="Shoulder Height" label-placement="stacked" :clear-input="true"
-                                placeholder="Enter your shoulder height" error-text="Please enter a valid shoulder height"
-                                required step="0.01" min="0" max="250" :value="user?.shoulderHeight"
-                                @ionInput="updateUserModel('shoulderHeight', $event.target.value)">
-                            </ion-input>
-                        </ion-item>
-
-                        <ion-item>
-                            <ion-input type="number" label="Arm Length" label-placement="stacked" :clear-input="true"
-                                placeholder="Enter your arm length" error-text="Please enter a valid arm length" required
-                                step="0.01" min="0" max="250" :value="user?.armLength"
-                                @ionInput="updateUserModel('armLength', $event.target.value)">
-                            </ion-input>
-                        </ion-item>
-
-                        <ion-item>
-                            <ion-input type="number" label="Overall Height" label-placement="stacked" :clear-input="true"
-                                placeholder="Enter your overall height" error-text="Please enter a valid overall height"
-                                required step="0.01" min="0" max="250" :value="user?.overallHeight"
-                                @ionInput="updateUserModel('overallHeight', $event.target.value)">
-                            </ion-input>
+                        <ion-item color="secondary">
+                            <ion-chip class="font-bold text-base" id="overallHeight">
+                                Overall Height: {{ user?.overallHeight }} {{ user?.unitSystem === 'metric' ? 'cm' : 'in' }}
+                            </ion-chip>
+                            <ion-alert trigger="overallHeight" header="Enter your overall height"
+                                message="Overall height is the distance from the bottom of your foot to the top of your head"
+                                :buttons="userButtons" :inputs="userInputs.overallHeight">
+                            </ion-alert>
                         </ion-item>
                     </ion-list>
-                    <ion-button expand="block" color="light" @click="saveChanges">
-                        Save
-                    </ion-button>
-                    <ion-toast :is-open="savingSuccess" message="Your changes have been saved" :duration="3000"
-                        @didDismiss="savingSuccess = false"></ion-toast>
-                </div>
-            </div>
-            <space-for-tab-bar-menu />
-        </ion-content>
-    </ion-page>
+                </ion-card-content>
+            </ion-card>
+
+            <ion-card color="secondary">
+                <ion-card-header>
+                    <ion-card-title>Leg</ion-card-title>
+                </ion-card-header>
+                <ion-card-content>
+                    <ion-list lines="none" :inset="false">
+                        <ion-item color="secondary">
+                            <ion-chip class="font-bold text-base" id="shankLength">
+                                Shank Length: {{ user?.shankLength }} {{ user?.unitSystem === 'metric' ? 'cm' : 'in' }}
+                            </ion-chip>
+                            <ion-alert trigger="shankLength" header="Enter your shank length"
+                                message="Shank length is the distance from the bottom of your foot to the top of your knee cap"
+                                :buttons="userButtons" :inputs="userInputs.shankLength">
+                            </ion-alert>
+                        </ion-item>
+                        <ion-item color="secondary">
+                            <ion-chip class="font-bold text-base" id="thighLength">
+                                Thigh Length: {{ user?.thighLength }} {{ user?.unitSystem === 'metric' ? 'cm' : 'in' }}
+                            </ion-chip>
+                            <ion-alert trigger="thighLength" header="Enter your thigh length"
+                                message="Thigh length is the distance from the top of your knee cap to the top of your hip"
+                                :buttons="userButtons" :inputs="userInputs.thighLength">
+                            </ion-alert>
+                        </ion-item>
+                        <ion-item color="secondary">
+                            <ion-chip class="font-bold text-base" id="inseamLength">
+                                Inseam Length: {{ user?.inseamLength }} {{ user?.unitSystem === 'metric' ? 'cm' : 'in' }}
+                            </ion-chip>
+                            <ion-alert trigger="inseamLength" header="Enter your inseam length"
+                                message="Inseam length is the distance from the bottom of your foot to the top of your hip measured along the inside of your leg"
+                                :buttons="userButtons" :inputs="userInputs.inseamLength">
+                            </ion-alert>
+                        </ion-item>
+                    </ion-list>
+                </ion-card-content>
+            </ion-card>
+
+            <ion-card color="secondary">
+                <ion-card-header>
+                    <ion-card-title>Arm</ion-card-title>
+                </ion-card-header>
+                <ion-card-content>
+                    <ion-list lines="none" :inset="false">
+                        <ion-item color="secondary">
+                            <ion-chip class="font-bold text-base" id="armLength">
+                                Arm Length: {{ user?.armLength }} {{ user?.unitSystem === 'metric' ? 'cm' : 'in' }}
+                            </ion-chip>
+                            <ion-alert trigger="armLength" header="Enter your arm length"
+                                message="Arm length is the distance from the top of your shoulder to the tip of your middle finger"
+                                :buttons="userButtons" :inputs="userInputs.armLength">
+                            </ion-alert>
+                        </ion-item>
+                    </ion-list>
+                </ion-card-content>
+            </ion-card>
+
+
+            <ion-button expand="block" color="light" @click="saveChanges">
+                Save
+            </ion-button>
+            <ion-toast position="top" :is-open="savingSuccess" message="Your changes have been saved" :duration="3000"
+                @didDismiss="savingSuccess = false"></ion-toast>
+        </div>
+    </bikefitter-page>
 </template>
   
 <script setup lang="ts">
 import {
-    IonPage, IonContent, IonList, IonItem, IonInput, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonButton, IonToast
+    IonButtons, IonBackButton, IonButton, IonToast, IonAlert, IonChip, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonList, IonItem
 } from '@ionic/vue';
-import SpaceForTabBarMenu from '@/components/SpaceForTabBarMenu.vue';
 import { onMounted, ref } from 'vue';
 import { getUserFromDatabase } from '@/helpers/helpersDataBase';
 import { User } from '@/entity/User';
+import BikefitterPage from '@/components/BikefitterPage.vue';
 
 const user = ref<User>();
 const savingSuccess = ref(false);
+
+const userButtons = [
+    {
+        text: 'Cancel',
+        role: 'cancel',
+    },
+    {
+        text: 'Save',
+        role: 'confirm',
+        handler: (data: any) => {
+            const keys = Object.keys(data);
+            const values = Object.values(data);
+            const keyString = keys[0];
+            let valueString = Number(values[0]);
+
+            // validation
+            if (valueString < 0) {
+                valueString = 0;
+            } else if (valueString > 250) {
+                valueString = 250;
+            }
+
+            updateUserModel(keyString, valueString);
+        }
+    },
+];
+
+const userInputs = {
+    shankLength: [
+        {
+            name: 'shankLength',
+            type: 'number',
+            placeholder: 'Enter your shank length',
+            value: user.value?.shankLength,
+            min: 0,
+            max: 250,
+            step: 0.01,
+        }
+    ],
+    thighLength: [
+        {
+            name: 'thighLength',
+            type: 'number',
+            placeholder: 'Enter your thigh length',
+            value: user.value?.thighLength,
+            min: 0,
+            max: 250,
+            step: 0.01,
+        }
+    ],
+    shoeSize: [
+        {
+            name: 'shoeSize',
+            type: 'number',
+            placeholder: 'Enter your shoe size',
+            value: user.value?.shoeSize,
+            min: 0,
+            max: 250,
+            step: 0.01,
+        }
+    ],
+    inseamLength: [
+        {
+            name: 'inseamLength',
+            type: 'number',
+            placeholder: 'Enter your inseam length',
+            value: user.value?.inseamLength,
+            min: 0,
+            max: 250,
+            step: 0.01,
+        }
+    ],
+    shoulderHeight: [
+        {
+            name: 'shoulderHeight',
+            type: 'number',
+            placeholder: 'Enter your shoulder height',
+            value: user.value?.shoulderHeight,
+            min: 0,
+            max: 250,
+            step: 0.01,
+        }
+    ],
+    armLength: [
+        {
+            name: 'armLength',
+            type: 'number',
+            placeholder: 'Enter your arm length',
+            value: user.value?.armLength,
+            min: 0,
+            max: 250,
+            step: 0.01,
+        }
+    ],
+    overallHeight: [
+        {
+            name: 'overallHeight',
+            type: 'number',
+            placeholder: 'Enter your overall height',
+            value: user.value?.overallHeight,
+            min: 0,
+            max: 250,
+            step: 0.01,
+        }
+    ],
+};
+
 onMounted(async () => {
     user.value = await getUserFromDatabase();
 });
@@ -106,29 +244,22 @@ const updateUserModel = (key: string, value: any) => {
 
 const saveChanges = async () => {
     await user.value?.save();
-    console.log(user.value);
     savingSuccess.value = true;
 }
 </script>
 
 <style scoped>
-ion-content::part(background) {
-    background-image: linear-gradient(to top right, var(--tw-gradient-stops));
-    --tw-gradient-from: var(--ion-color-secondary-shade) var(--tw-gradient-from-position);
-    --tw-gradient-from-position: ;
-    --tw-gradient-to: rgb(255 255 255 / 0) var(--tw-gradient-from-position);
-    --tw-gradient-to-position: ;
-    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
-    --tw-gradient-to: var(--ion-color-secondary) var(--tw-gradient-to-position);
-    --tw-gradient-to-position:
+ion-card {
+    --background: transparent;
+    margin: 0px;
+    box-shadow: none;
+}
+
+ion-card-content {
+    padding-bottom: 0px;
 }
 
 ion-list {
-    --ion-item-background: transparent;
-}
-
-ion-input {
-    --color: var(--ion-color-white);
-    --highlight-color-focused: transparent;
+    border: none;
 }
 </style>

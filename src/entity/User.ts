@@ -1,6 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToMany, JoinTable, BaseEntity } from "typeorm";
 import { Bike } from "@/entity/Bike";
-import { Tip } from "@/entity/Tip";
 
 @Entity('user')
 export class User extends BaseEntity {
@@ -36,10 +35,4 @@ export class User extends BaseEntity {
 
     @OneToMany(type => Bike, bike => bike.user, { cascade: true, eager: true })
     bikes!: Bike[];
-
-    @ManyToMany(type => Tip, {
-        cascade: ['insert']
-    })
-    @JoinTable()
-    tips!: Tip[];
 }
