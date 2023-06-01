@@ -6,13 +6,14 @@ import { CreateBikesTable1682638602865 } from '@/migration/1682638602865-CreateB
 import { CreateTipsTable1682638608288 } from '@/migration/1682638608288-CreateTipsTable';
 import { DataSource } from 'typeorm';
 import sqliteConnection from '@/database';
+import { Category } from '@/entity/Category';
 
 export default new DataSource({
     name: 'sqlite',
     type: 'capacitor',
     driver: sqliteConnection,
     database: 'app-bicycle-fitter',
-    entities: [User, Bike, Tip],
+    entities: [User, Bike, Tip, Category],
     migrations: [CreateUsersTable1682638592843, CreateBikesTable1682638602865, CreateTipsTable1682638608288],
     logging: ['error', 'query', 'schema'],
     synchronize: false,

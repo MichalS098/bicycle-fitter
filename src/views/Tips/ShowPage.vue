@@ -4,12 +4,12 @@
             <ion-buttons slot="start">
                 <ion-back-button default-href="/pages/tips" color="light"></ion-back-button>
             </ion-buttons>
-            <div class="flex flex-col gap-3 pt-3">
+            <div class="flex flex-col gap-4 pt-4">
                 <ion-img :src="tip?.featured_image_path" class="tip-showpage-img"></ion-img>
                 <h2 class="fitter-h2">
-                    {{ tip?.title }} lorem ipsum dolor sid amet
+                    {{ tip?.title }}
                 </h2>
-                <button @click="toggleLike()" type="button">
+                <button @click="toggleLike()" type="button" class="ml-auto">
                     <transition name="fade">
                         <HeartSolidIcon v-if="tip?.favourite" class="w-8 h-8 text-white shrink-0" />
                         <HeartIcon v-else class="w-8 h-8 text-white shrink-0" />

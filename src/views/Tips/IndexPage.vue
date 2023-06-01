@@ -1,14 +1,12 @@
 <template>
     <bikefitter-page title="Tips">
         <div class="w-full">
-            <h2 class="fitter-h2 px-2 xxs:px-3 pb-3">
-                Crucial in b-fitting
-            </h2>
-            <tips-swiper :tips="tips" />
-            <h2 class="fitter-h2 px-2 xxs:px-3 pb-3 pt-6">
-                Crucial in b-fitting
-            </h2>
-            <tips-swiper :tips="tips" />
+            <div v-for="category in tipCategories" :key="category.id">
+                <h2 class="fitter-h2 px-2 xxs:px-3 pb-3">
+                    {{ category.name }}
+                </h2>
+                <tips-swiper :tips="category.tips" />
+            </div>
         </div>
     </bikefitter-page>
 </template>
@@ -17,16 +15,22 @@
 import BikefitterPage from '@/components/BikefitterPage.vue';
 import { onMounted, ref } from 'vue';
 import { Tip } from '@/entity/Tip';
+import { Category } from '@/entity/Category';
 import TipsSwiper from '@/components/TipsSwiper.vue';
 import { onIonViewDidEnter } from '@ionic/vue';
 
-const tips = ref<Tip[]>([]);
+const tipCategories = ref<Category[]>([]);
 
 onMounted(async () => {
-    tips.value = await Tip.find();
+    tipCategories.value = await Category.find({
+        relations: {
+            tips: true
+        }
+    });
+    console.log(tipCategories.value)
 });
 
 onIonViewDidEnter(async () => {
-    tips.value = await Tip.find();
+    tipCategories.value = await Category.find();
 });
 </script>
