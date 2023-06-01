@@ -60,6 +60,7 @@ export class Bike extends BaseEntity {
     stack2ReachIndex2!: number;
     @Column()
     stack2ReachIndex3!: number;
+    
     @Column()
     messageFromFlexibilitySurvey !: string;
     @Column()

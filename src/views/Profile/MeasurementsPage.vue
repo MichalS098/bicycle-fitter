@@ -76,7 +76,7 @@
                     <ion-button expand="block" color="light" @click="saveChanges">
                         Save
                     </ion-button>
-                    <ion-toast :is-open="savingSuccess" message="Your changes have been saved" :duration="3000"
+                    <ion-toast position="top" :is-open="savingSuccess" message="Your changes have been saved" :duration="3000"
                         @didDismiss="savingSuccess = false"></ion-toast>
                 </div>
             </div>
