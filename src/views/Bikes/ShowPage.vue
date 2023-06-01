@@ -72,7 +72,7 @@
   
 <script lang="ts" setup>
 import {
-    IonPage, useIonRouter, IonModal, IonContent, IonButton, IonButtons, IonToolbar, IonHeader
+    IonPage, useIonRouter, IonModal, IonContent, IonButton, IonButtons, IonToolbar, IonHeader, onIonViewWillLeave, onIonViewWillEnter
 } from '@ionic/vue';
 import { onMounted, ref } from 'vue';
 import { XMarkIcon } from '@heroicons/vue/24/outline';
@@ -128,7 +128,7 @@ const currentBikeMeasureInfo = ref<{
     content: '',
     lengthCm: 0,
 });
-const showingBikeMeasurePopover = ref<boolean>(true);
+const showingBikeMeasurePopover = ref<boolean>(false);
 
 
 onMounted(async () => {
@@ -136,10 +136,15 @@ onMounted(async () => {
         id: bike_id
     })
 
-    measureOptions[0].lengthCm = bike.value?.seatLength ?? 0;
-    measureOptions[1].lengthCm = bike.value?.seatHeight ?? 0;
-    measureOptions[2].lengthCm = bike.value?.seatDrop ?? 0;
-    measureOptions[3].lengthCm = bike.value?.seatSetback ?? 0;
+    if (!bike.value) {
+        goToHome();
+        return;
+    }
+
+    measureOptions[0].lengthCm = bike.value?.seatLength;
+    measureOptions[1].lengthCm = bike.value?.seatHeight;
+    measureOptions[2].lengthCm = bike.value?.seatDrop;
+    measureOptions[3].lengthCm = bike.value?.seatSetback;
 
     currentBikeMeasureInfo.value = measureOptions[0];
 
@@ -147,17 +152,13 @@ onMounted(async () => {
     tips.value = await Tip.find();
 
     threeDS.init('#threejs-container');
-    showModal.value = true;
 });
 
 
 
 const goToHome = () => {
-    // TODO: destroy 3d model here
-    showModal.value = false;
     router.navigate('/pages/home', 'none', 'replace');
 };
-
 
 const modal = ref<typeof IonModal>();
 const isModalMinimized = ref<boolean>(true);
@@ -238,6 +239,21 @@ function resetBikeMeasureInfo() {
 function resetAnimationIndex() {
     animationIndex.value = 0;
 }
+
+
+onIonViewWillEnter(() => {
+    showModal.value = true;
+});
+
+onIonViewWillLeave(() => {
+    // TODO: destroy 3d model here    
+    // destroy3DModel();
+    resetAnimationIndex();
+    resetBikeMeasureInfo();
+    hideBikeMeasurePopover();
+    showModal.value = false;
+    isModalMinimized.value = true;
+});
 </script>
 
 

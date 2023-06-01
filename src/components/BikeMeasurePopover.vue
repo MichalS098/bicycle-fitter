@@ -10,7 +10,7 @@
                     <div
                         class="text-center text-red-600 font-black leading-none flex items-center justify-center flex-col pr-3 mr-3 border-r border-gray-400">
                         <span class="text-4xl text-red-500 font-bold leading-[36px]">
-                            {{ length }}
+                            {{ length.toFixed(1) }}
                         </span>
                         <span class="text-4xl text-red-500 font-bold  leading-[36px]">
                             {{ unitSystem === 'metric' ? 'cm' : 'in' }}
@@ -33,7 +33,7 @@
     </div>
 </template>
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { computed } from 'vue';
 import { XMarkIcon } from '@heroicons/vue/24/outline';
 
 interface BikeMeasureInfo {
@@ -57,14 +57,17 @@ const props = defineProps({
     },
 })
 
-const length = ref<number>(0);
-onMounted(() => {
+const length = computed(() => {
     if (props.unitSystem === 'metric') {
-        length.value = props.bikeMeasureInfo.lengthCm;
+        return props.bikeMeasureInfo.lengthCm;
     } else {
-        length.value = props.bikeMeasureInfo.lengthCm * 0.393701;
+        return toImperial(props.bikeMeasureInfo.lengthCm);
     }
 });
+
+function toImperial(value: number) {
+    return value * 0.393701;
+}
 </script>
 
 <style scoped>
