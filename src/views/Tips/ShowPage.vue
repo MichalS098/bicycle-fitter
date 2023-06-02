@@ -19,7 +19,7 @@
                 </div>
             </div>
 
-            <div class="prose prose-invert ion-padding">
+            <div :class="contentClass">
                 <div v-html="tip?.content"></div>
             </div>
         </div>
@@ -38,11 +38,19 @@ import { HeartIcon } from '@heroicons/vue/24/outline';
 const route = useRoute();
 const tip_id = Number(route.params.id);
 const tip = ref<Tip | null>();
+const contentClass = ref('prose ion-padding');
 
 onMounted(async () => {
     tip.value = await Tip.findOneBy({
         id: tip_id
     });
+
+    if (tip.value?.color == 'tertiary') {
+        contentClass.value += ' prose-invert';
+    }
+    else {
+        contentClass.value += ' prose-white';
+    }
 });
 
 const toggleLike = async () => {
