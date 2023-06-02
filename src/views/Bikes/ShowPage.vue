@@ -62,6 +62,10 @@
                                 Your bike fit
                             </h2>
                             <bikefitting-chart />
+                            <ion-button @click="goToAngleMeasure()" expand="block" shape="round" color="primary" mode="ios" type="button"
+                                class="font-bold text-lg">
+                                Measure your angles
+                            </ion-button>
                         </div>
                     </div>
                 </ion-content>
@@ -129,6 +133,15 @@ const currentBikeMeasureInfo = ref<{
     lengthCm: 0,
 });
 const showingBikeMeasurePopover = ref<boolean>(false);
+
+const goToAngleMeasure = () => {
+    // router.navigate('/angles', 'none', 'replace');
+    if (bike.value != null)
+        router.navigate('/bikes/' + bike.value.id + '/measure', 'none', 'replace');
+    else {
+        console.log("goToAngleMeasure(): bike entity is null")
+    }
+};
 
 
 onMounted(async () => {
