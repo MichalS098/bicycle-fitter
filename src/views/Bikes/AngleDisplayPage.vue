@@ -19,16 +19,16 @@
 
             <ul>
                 <li v-for="set in angles" :key="set.id">
-                    footFloorMax: {{ set?.footFloorAngleMax }}
-                    footFloorMin: {{ set?.footFloorAngleMin }}
-                    torsoFloorMax: {{ set?.torsoFloorAngleMax }}
-                    torsoFloorMin: {{ set?.torsoFloorAngleMin }}
-                    thighshankMax: {{ set?.thighShankAngleMax }}
-                    thighshankMin: {{ set?.thighShankAngleMin }}
-                    torsoBicepMax: {{ set?.torsoBicepAngleMax }}
-                    torsoBicepMin: {{ set?.torsoBicepAngleMin }}
-                    bicepForearmMax: {{ set?.bicepForearmAngleMax }}
-                    bicepForearmMin: {{ set?.bicepForearmAngleMin }}
+                    footFloorMax: {{ set?.footFloorAngleMax }} <br>
+                    footFloorMin: {{ set?.footFloorAngleMin }}<br>
+                    torsoFloorMax: {{ set?.torsoFloorAngleMax }}<br>
+                    torsoFloorMin: {{ set?.torsoFloorAngleMin }}<br>
+                    thighshankMax: {{ set?.thighShankAngleMax }}<br>
+                    thighshankMin: {{ set?.thighShankAngleMin }}<br>
+                    torsoBicepMax: {{ set?.torsoBicepAngleMax }}<br>
+                    torsoBicepMin: {{ set?.torsoBicepAngleMin }}<br>
+                    bicepForearmMax: {{ set?.bicepForearmAngleMax }}<br>
+                    bicepForearmMin: {{ set?.bicepForearmAngleMin }}<br>
                 </li>
             </ul>
 

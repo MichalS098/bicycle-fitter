@@ -42,17 +42,14 @@
                 </div>
             </transition>
 
-            <!--attempt at a vertical progress bar-->
-            <!-- <div class=" rotate-90 absolute top-96 -right-40 rounded-2xl bg-primary w-96 p-3">
-                <ion-progress-bar color="light" type="indeterminate"></ion-progress-bar>
-            </div> -->
+            <ion-button @click="if (sideVisible=='right') sideVisible='left'; else sideVisible='right';">current: {{ sideVisible }}</ion-button>
 
         </ion-content>
     </ion-page>
 </template>
 
 <script lang="ts" setup>
-import { IonPage, IonContent, IonIcon, IonProgressBar } from '@ionic/vue';
+import { IonPage, IonContent, IonIcon, IonProgressBar, IonButton } from '@ionic/vue';
 import { ref, onMounted, Transition, watch, WatchOptions } from "vue";
 import useMediapipe from '@/composables/useMediapipe';
 import { Camera } from '@mediapipe/camera_utils';
@@ -60,7 +57,7 @@ import { alertCircleOutline, hourglassOutline, options } from 'ionicons/icons';
 import { getBodyAnglesFromMediapipeResults, BodyAnglesFromMediapipe, BodyAnglesMaxMin, getMaxMinEveryAngle } from '@/functions/mediapipeCalculatedHumanParams';
 import { useIonRouter } from '@ionic/vue';
 import { getUserFromDatabase } from '@/helpers/helpersDataBase'
-import { areAllBodyPointsVisible, areAllLeftBodyPointsVisible, areAllRightBodyPointsVisible } from '@/helpers/mediapipeHelpers';
+import { areAllBodyPointsVisible, areAllSideBodyPointsVisible, getAllRelevantRightBodyPointIndexes, getAllRelevantLeftBodyPointIndexes } from '@/helpers/mediapipeHelpers';
 import MeasureFinishedModal from './MeasureFinishedModal.vue';
 import { useRoute } from 'vue-router';
 import { Bike } from '@/entity/Bike';
@@ -75,6 +72,7 @@ const measuringDone = ref(false);
 const allBodyPointsVisible = ref(false);
 const measuringProgress = ref(0);
 const counter = ref(5);
+const sideVisible = ref<string>('left')
 
 const route = useRoute(); //shouldnt we use IonicRouter?
 const bike_id = Number(route.params.id);
@@ -146,14 +144,12 @@ const measureDone = async () => {
 
 const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
     const { pose, drawResults } = useMediapipe();
-    
+
     pose.onResults((results) => {
         drawResults(results, canvas);
 
         if (results.poseLandmarks !== undefined){
-            //TODO???: Those functions could have gotten switched - areAllLEft check for right points and areAllRight check for lefts.
-            //Confusion is due to the camera feed being mirrored. Probably.
-            if (areAllLeftBodyPointsVisible(results.poseLandmarks)) { //HARDCODED, ONLY CHECK FOR LEFT SIDE
+            if (areAllSideBodyPointsVisible(results.poseLandmarks, sideVisible.value)) { 
                 allBodyPointsVisible.value = true;
 
                 if (counter.value == 0){
@@ -164,7 +160,7 @@ const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
                         measureDone()
                     } 
                     else{
-                        bodyAnglesArray[measuringProgress.value] = getBodyAnglesFromMediapipeResults(results, "left") //!!!
+                        bodyAnglesArray[measuringProgress.value] = getBodyAnglesFromMediapipeResults(results, sideVisible.value) 
                     }
                     measuringProgress.value++
                 }
