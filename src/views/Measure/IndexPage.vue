@@ -123,6 +123,7 @@ const androidPermission = async () => {
 }*/
 
 const measureDone = async () => {
+    camera.value?.stop();
     measuringDone.value = true;
     showMeasureFinishedModal.value = true;
 
@@ -171,10 +172,8 @@ const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
         if (results.poseLandmarks !== undefined) {
             if (areAllBodyPointsVisible(results.poseLandmarks)) {
                 allBodyPointsVisible.value = true;
-                if (measuringProgress.value > 60) {
-                    camera.value?.stop();
-                    bodyParams.value = getBodyParamsMedian(bodyParamsArray);
-                    console.log("armLength: " + bodyParams.value.armLength * 100);
+                if (measuringProgress.value > 60) {                    
+                    bodyParams.value = getBodyParamsMedian(bodyParamsArray);                    
                     measureDone();
                 } else {
                     const bodyParams = getBodyParamsFromMediapipeResults(results);
