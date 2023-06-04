@@ -62,6 +62,7 @@
                                 Your bike fit
                             </h2>
                             <bikefitting-chart />
+                            <angle-bar-chart :angles="anglesFirst" />
                             <ion-button @click="goToAngleMeasure()" expand="block" shape="round" color="primary" mode="ios" type="button"
                                 class="font-bold text-lg">
                                 Measure your angles
@@ -87,6 +88,8 @@ import TipsSwiper from '@/components/TipsSwiper.vue';
 import { threeDScene } from '@/classes/threeDScene';
 import BikeMeasurePopover from '@/components/BikeMeasurePopover.vue';
 import BikefittingChart from '@/components/BikefittingChart.vue';
+import AngleBarChart from '@/components/AngleBarChart.vue';
+import { Angles } from '@/entity/Angles';
 
 const route = useRoute();
 const bike_id = Number(route.params.id);
@@ -95,6 +98,7 @@ const tips = ref<Tip[]>([]);
 const showModal = ref<boolean>(true);
 const router = useIonRouter();
 const threeDS = new threeDScene;
+const anglesFirst = ref<Angles | null>(null);
 
 /**
  * Bike measure popover options
@@ -153,6 +157,10 @@ onMounted(async () => {
         goToHome();
         return;
     }
+
+    anglesFirst.value = await Angles.findOneBy({
+        bike: bike.value
+    });
 
     measureOptions[0].lengthCm = bike.value?.seatLength;
     measureOptions[1].lengthCm = bike.value?.seatHeight;

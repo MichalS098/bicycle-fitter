@@ -15,7 +15,7 @@
                         <p class="text-lg text-left">
                             As with real bike fitting, we will start
                             with a short survey about you, your
-                            riding style and your expectations
+                            riding style and your expectations.
                         </p>
                     </div>
                     <ion-button @click="nextStep()" expand="block" shape="round" color="primary" mode="ios" type="button"
