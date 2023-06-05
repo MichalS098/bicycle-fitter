@@ -9,7 +9,7 @@ describe('calculatedBikeFittingParams', () => {
   it('should return correct bike and person parameters', () => {
 
     // Przykładowe wartości wejściowe
-    const person = new humanParams(47, 42, 42, 81, 145, 70, 55, 175,0); //static write 
+    const person = new humanParams(47, 42, 42, 81, 145, 70, 55, 190,0, 1); //static write 
     //const person = new humanParams(0.3818923337112611, 0.33762064071644726, 44, 0.7888170281086873, 1.3059663404411772, 0.48638949800378456, 85, 180, 45); //dynamic write from mediapipe 
     const clickPedals = 1;
     const neckOrBackPain = 2;
@@ -24,7 +24,7 @@ describe('calculatedBikeFittingParams', () => {
       false,
       true, false);
 
-    const newBikeParams = new bikeParams(bikeType.Road,ridingStyle.Sport, 18, 10, 10, bikeExpectationsTemp, 1);
+    const newBikeParams = new bikeParams(bikeType.Road,ridingStyle.Sport, 18, 10, 10, bikeExpectationsTemp);
 
     // Wywołanie funkcji z przykładowymi wartościami wejściowymi
     const [returnedBike, returnedPerson] = calculatedBikeFittingParams(
@@ -47,6 +47,9 @@ describe('calculatedBikeFittingParams', () => {
 
     const handleX = armX + (sind(person.armTorsoangle + H - 90) * (person.armLength * 0.8))
     const handleY = armY - (cosd(person.armTorsoangle + H - 90) * (person.armLength * 0.8))
+
+    const seatLength = handleX - pelvisX
+    const drop = handleY - pelvisY
 
     const kgX = pelvisX + sind((180 - S) / 2) * person.thighLength
     const kgY = pelvisY - cosd((180 - S) / 2) * person.thighLength
@@ -82,10 +85,14 @@ describe('calculatedBikeFittingParams', () => {
     expect(newBikeParams.crankLength).toEqual(18);
     expect(seatHeight).toEqual(85.03382177554003);
     expect(cosd(74)).toEqual(0.27563735581699916);
+    expect(sind(74)).toEqual(0.9612616959383189);
     expect(pelvisX).toEqual(11.522974615482166);
     expect(pelvisY).toEqual(64.43704520518263);
     expect(footTipX).toEqual(36.93119303323638);
     expect(pelvisX).toEqual(11.522974615482166);
+    //expect(drop).toEqual(11.522974615482166);
+    //expect(seatLength).toEqual(36.93119303323638);
+    
 
     // Sprawdzanie czy zwrócone wartości są prawidłowe
     expect(returnedBike.seatDrop).toEqual(-12.6);

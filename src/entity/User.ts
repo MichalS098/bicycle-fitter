@@ -32,6 +32,8 @@ export class User extends BaseEntity {
     armTorsoAngle!: number;
     @Column()
     torsoAngle!: number;
+    @Column()
+    choiceFlexibilitySurvey!: number;
 
     @OneToMany(type => Bike, bike => bike.user, { cascade: true, eager: true })
     bikes!: Bike[];

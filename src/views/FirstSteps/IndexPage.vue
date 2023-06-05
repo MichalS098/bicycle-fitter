@@ -72,9 +72,23 @@
                 <InformationCircleIcon class="mx-3 h-8 w-8 text-secondary" @click="isRiderStyleInfoVisible = true" />
             </step-card>
 
+            <step-card title="Sit and Reach Test" sub-title="Sit and Reach Test" :this-step="5" :current-step="currentStep"
+                :number-of-steps="numberOfSteps" @prev="prevStep" @next="nextStep" color="primary">
+                <steps-radio-button @click="nextStep()" v-model="form.additionalSurvey" label="palm to
+                                ground" value="4" color="primary" />
+                <steps-radio-button @click="nextStep()" v-model="form.additionalSurvey" label="finger tips to
+                                ground" value="3" color="primary" />
+                <steps-radio-button @click="nextStep()" v-model="form.additionalSurvey" label="more than 5 cm to
+                                ground" value="2"
+                    color="primary" />
+                <steps-radio-button @click="nextStep()" v-model="form.additionalSurvey" label="more than 10 cm to
+                                ground" value="1"
+                    color="primary" />
+            </step-card>
+
             <rider-styles-info-modal :is-open="isRiderStyleInfoVisible" @close="isRiderStyleInfoVisible = false" />
 
-            <div v-if="currentStep == 5"
+            <div v-if="currentStep == 6"
                 class="ion-padding overflow-y-scroll py-6 xxs:py-12 xs:py-24 flex flex-col justify-between gap-6 h-full bg-secondary-shade">
                 <h2 class="text-left xs:text-right text-4xl xxs:text-5xl xs:text-6xl">
                     Bike fitting
@@ -114,7 +128,7 @@ import { Bike } from '@/entity/Bike';
 import { saveDbForWeb } from '@/composables/useSqliteOnWeb';
 import { getBikefittingParams } from '@/functions/calculatedBikeFittingParams';
 
-const numberOfSteps = 5; // from 0 to 6
+const numberOfSteps = 6; // from 0 to 6
 const currentStep = ref(0);
 const isRiderStyleInfoVisible = ref(false);
 
@@ -124,6 +138,7 @@ const form = ref({
     rideTime: 0,
     riderStyle: '',
     shoeSize: 0,
+    additionalSurvey: 0,
     errors: {
         unitSystem: "",
         height: "",
@@ -147,23 +162,23 @@ const goToExampleBikeFitting = async () => {
     user.shankLength = 47;
     user.shoulderHeight = 145;
     user.armLength = 70;
+    user.choiceFlexibilitySurvey = 1;
     await user.save();
 
     const bike = new Bike();
     bike.brand = "Romet";
     bike.model = "MTB";
     bike.type = "road";
-    bike.style = "sportslike";
+    bike.style = "aerodynamic";
     bike.stemLength = 10;
     bike.crankLength = 18;
 
-    bike.expectationsBackOrNeckPain = false;
-    bike.expectationsButPain = false;
+    bike.expectationsBackOrNeckPain = true;
+    bike.expectationsButPain = true;
     bike.expectationsClickPedals = true;
-    bike.expectationsFeetPain = false;
-    bike.expectationsKneePain = false;
-    bike.expectationsNothing = false;
-    bike.choiceFlexibilitySurvey = 1;
+    bike.expectationsFeetPain = true;
+    bike.expectationsKneePain = true;
+    bike.expectationsNothing = true;
 
     bike.user = user;
 
@@ -236,6 +251,14 @@ const nextStep = () => {
             form.value.errors.riderStyle = "Please select ride style";
             return;
         }
+        if (form.value.additionalSurvey == 0) {
+            form.value.additionalSurvey = 4;
+        }
+    }else if (currentStep.value === 5) {
+        if (form.value.additionalSurvey == 0) {
+            return;
+        }
+
     }
 
     if (currentStep.value < numberOfSteps) {
@@ -254,6 +277,7 @@ const goToMeasure = async () => {
     user.rideTime = form.value.rideTime;
     user.riderStyle = form.value.riderStyle;
     user.shoeSize = form.value.shoeSize;
+    user.choiceFlexibilitySurvey = form.value.additionalSurvey;
     await user.save();
     saveDbForWeb();
 

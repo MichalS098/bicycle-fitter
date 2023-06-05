@@ -18,7 +18,8 @@ export class CreateUsersTable1682638592843 implements MigrationInterface {
                 "armLength" integer,
                 "armTorsoAngle" integer,
                 "overallHeight" integer,
-                "torsoAngle" integer
+                "torsoAngle" integer,
+                "choiceFlexibilitySurvey" integer
             )
         `)
     }

@@ -25,6 +25,7 @@ export class BodyParamsFromMediapipe {
 }
 
 let overallHeight: number;
+//const shankLengthMultiplier = new multiplierForMediaPipe(1.18, 1.045, 1.047, 1.089, 1.1)
 const thighLengthMultiplier = new multiplierForMediaPipe(1.18, 1.045, 1.047, 1.089, 1.1)
 //const inseamLengthMultiplier = new multiplierForMediaPipe(0.9, 0.98, 0.93, 0.92, 0.9)
 const inseamLengthMultiplier = new multiplierForMediaPipe(0.9, 0.98, 1, 0.92, 0.9)

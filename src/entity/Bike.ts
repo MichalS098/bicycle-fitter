@@ -25,8 +25,6 @@ export class Bike extends BaseEntity {
     @Column()
     expectationsNothing!: boolean;
     @Column()
-    choiceFlexibilitySurvey!: number;
-    @Column()
     style!: string;
     @Column()
     crankLength!: number;

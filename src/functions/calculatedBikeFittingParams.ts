@@ -17,7 +17,7 @@ export function calculatedBikeFittingParams(person: humanParams, bike: bikeParam
 
     [person, bike] = calcFrameHeight(person, bike);
 
-    const [SWnew, messageFromFlexibilitySurvey] = flexibilitySurvey(SWa, bike.bikeExpectationsParms.backOrNeckPain, bike.choiceFlexibilitySurvey)
+    const [SWnew, messageFromFlexibilitySurvey] = flexibilitySurvey(SWa, bike.bikeExpectationsParms.backOrNeckPain, person.choiceFlexibilitySurvey)
 
     bike.messageFromFlexibilitySurvey = messageFromFlexibilitySurvey;
 
@@ -59,7 +59,30 @@ export async function getBikefittingParams(bike: Bike, user: User): Promise<bike
     const shoulderHeight = user.shoulderHeight;
     const armLength = user.armLength;
     const overallHeight = user.overallHeight;
-    const person = new humanParams(shankLength, thighLength, shoeSize, inseamLength, shoulderHeight, armLength, 0, overallHeight, 37.5);
+    const flexibilitySurvey = user.choiceFlexibilitySurvey;
+    /*console.log("To calculated Bike Fitting params:")
+    console.log("shankLength: ", shankLength)
+    console.log("typeof shankLength: ", typeof(shankLength))
+
+    console.log("thighLength: ", thighLength)
+    console.log("typeof thighLength: ", typeof(thighLength))
+
+    console.log("shoeSize: ", shoeSize)
+    console.log("typeof shoeSize: ", typeof(shoeSize))
+
+    console.log("inseamLength: ", inseamLength)
+    console.log("typeof inseamLength: ", typeof(inseamLength))
+
+    console.log("shoulderHeight: ", shoulderHeight)
+    console.log("typeof shoulderHeight: ", typeof(shoulderHeight))
+
+    console.log("armLength: ", armLength)
+    console.log("typeof armLength: ", typeof(armLength))
+
+    console.log("overallHeight: ", overallHeight)
+    console.log("typeof overallHeight: ", typeof(overallHeight))*/
+    //const person = new humanParams(47, 42, 42, 81, 145, 70, 55, 190,0);
+    const person = new humanParams(shankLength, thighLength, shoeSize, inseamLength, shoulderHeight, armLength, 55, overallHeight, 0, flexibilitySurvey);
     //const person = new humanParams(user.shankLength, user.thighLength, user.shoeSize, user.inseamLength, user.shoulderHeight, user.armLength, 85, user.overallHeight, 37.5);
 
     const bikeExpectationsTemp = new bikeExpectations(bike.expectationsBackOrNeckPain,
@@ -67,8 +90,19 @@ export async function getBikefittingParams(bike: Bike, user: User): Promise<bike
         bike.expectationsKneePain,
         bike.expectationsFeetPain,
         bike.expectationsClickPedals, bike.expectationsNothing);
+        
+        console.log("typeof bike.crankLength ", typeof(bike.crankLength))
+        console.log("typeof bike.stemLength ", typeof(bike.stemLength))
+        const crankLength = Number(bike.crankLength);
+        const stemLength = Number(bike.stemLength);
+      const newBikeParams = new bikeParams(bikeTypeFromStr(bike.type), ridingStyleFromStr(bike.style), crankLength, stemLength, 10, bikeExpectationsTemp);
+    /*const bikeExpectationsTemp = new bikeExpectations(bike.expectationsBackOrNeckPain,
+        bike.expectationsButPain,
+        bike.expectationsKneePain,
+        bike.expectationsFeetPain,
+        bike.expectationsClickPedals, bike.expectationsNothing);
 
-    const newBikeParams = new bikeParams(bikeTypeFromStr(bike.type), ridingStyleFromStr(bike.style), bike.crankLength, bike.stemLength, 10, bikeExpectationsTemp, bike.choiceFlexibilitySurvey);
+    const newBikeParams = new bikeParams(bikeTypeFromStr(bike.type), ridingStyleFromStr(bike.style), bike.crankLength, bike.stemLength, 10, bikeExpectationsTemp, bike.choiceFlexibilitySurvey);*/
 
     console.log("humanParams to bike fitting calculated: ", person)
     console.log("bikeParams to bike fitting calculated: ", newBikeParams)
