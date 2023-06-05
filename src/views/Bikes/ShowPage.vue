@@ -115,13 +115,13 @@ const measureOptions = [
         lengthCm: 0,
     },
     {
-        title: 'Drop',
-        content: 'Vertical direction of seat length.',
-        lengthCm: 0,
-    },
-    {
         title: 'Setback',
         content: 'From middle of the crank to crossing point of saddle',
+        lengthCm: 0
+    },
+    {
+        title: 'Drop',
+        content: 'Vertical direction of seat length.',
         lengthCm: 0,
     }
 ]
@@ -164,8 +164,8 @@ onMounted(async () => {
 
     measureOptions[0].lengthCm = bike.value?.seatLength;
     measureOptions[1].lengthCm = bike.value?.seatHeight;
-    measureOptions[2].lengthCm = bike.value?.seatDrop;
-    measureOptions[3].lengthCm = bike.value?.seatSetback;
+    measureOptions[2].lengthCm = bike.value?.seatSetback;
+    measureOptions[3].lengthCm = bike.value?.seatDrop;
 
     currentBikeMeasureInfo.value = measureOptions[0];
 

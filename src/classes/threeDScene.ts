@@ -336,7 +336,7 @@ export class threeDScene {
                 this.createCameraPositionGSAP( firstPoint, secondPoint, duration, this._easing );
                 break;
             case 3:
-                this.createCameraPositionGSAP( firstPoint, secondPoint, duration, this._easing, new THREE.Vector3(267, 82, -267) );
+                this.createCameraPositionGSAP( firstPoint, secondPoint, duration, this._easing, new THREE.Vector3(30, 61, -400) );
                 break;
             default:
                 this.createCameraPositionGSAP( firstPoint, secondPoint, duration, this._easing );
@@ -425,6 +425,6 @@ export class threeDScene {
         requestAnimationFrame(this.animate.bind(this));
     
         this._renderer.render(this._scene, this._camera);
-        // console.log("position: ", this._camera.position);
+        console.log("position: ", this._camera.position);
     }
 }
