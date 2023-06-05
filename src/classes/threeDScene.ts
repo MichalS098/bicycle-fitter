@@ -330,10 +330,10 @@ export class threeDScene {
                 this.createCameraPositionGSAP( firstPoint, secondPoint, duration, this._easing);
                 break;
             case 1:
-                this.createCameraPositionGSAP( firstPoint, secondPoint, duration, this._easing );
+                this.createCameraPositionGSAP( firstPoint, secondPoint, duration, this._easing, new THREE.Vector3(-8, 50, -330) );
                 break;
             case 2:
-                this.createCameraPositionGSAP( firstPoint, secondPoint, duration, this._easing );
+                this.createCameraPositionGSAP( firstPoint, secondPoint, duration, this._easing, new THREE.Vector3(-15, 30, -330) );
                 break;
             case 3:
                 this.createCameraPositionGSAP( firstPoint, secondPoint, duration, this._easing, new THREE.Vector3(30, 61, -400) );
