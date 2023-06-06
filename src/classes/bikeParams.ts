@@ -32,7 +32,7 @@ enum ridingStyle {
 function ridingStyleFromStr(str: string): ridingStyle {
     switch (str) {
         case "ergonomic": return ridingStyle.Ergonomic;
-        case "sport": return ridingStyle.Sport;
+        case "sportslike": return ridingStyle.Sport;
         case "aerodynamic": return ridingStyle.Aerodynamic;
         default: return ridingStyle.Ergonomic;
     }
@@ -47,7 +47,6 @@ class bikeParams {
     stemLength; //dl. wspornika (ger. Vorbau)
     stemAngle;
     bikeExpectationsParms: bikeExpectations;
-    choiceFlexibilitySurvey;
 
     //to calculations
     seatHeight;
@@ -77,8 +76,7 @@ class bikeParams {
         crankLength: number,
         stemLength: number,
         stemAngle: number,
-        bikeExpectationsParms: bikeExpectations,
-        choiceFlexibilitySurvey: number) {
+        bikeExpectationsParms: bikeExpectations) {
 
         this.type =  type;
         this.style = style;
@@ -88,7 +86,6 @@ class bikeParams {
 
         this.bikeExpectationsParms = bikeExpectationsParms;
 
-        this.choiceFlexibilitySurvey = choiceFlexibilitySurvey;
 
         //to calculations
         this.seatHeight = 0;

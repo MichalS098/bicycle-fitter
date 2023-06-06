@@ -19,6 +19,7 @@ class humanParams {
     /*OPIS DZIAŁANIA SUWAKA AERODYNAMIC <> ERGONOMIC <> COMFORTABLE 
  SUWAK STERUJE WARTOSCIA H(Torsoangle) w zakresie 25.0(AERODYNAMIC) 42.5(ERGONOMIC) 60(COMFORTABLE) */
     torsoangle;
+    choiceFlexibilitySurvey;
 
 
 
@@ -33,7 +34,8 @@ class humanParams {
         armLength: number,
         armTorsoangle: number,
         overallHeight: number,
-        torsoangle: number
+        torsoangle: number,
+        choiceFlexibilitySurvey: number
     ) {
         this._shankLength = shankLength;
         this._thighLength = thighLength * 0.83;
@@ -47,6 +49,7 @@ class humanParams {
         this.torsoangle = torsoangle;
         this.overallHeight = overallHeight;
         this.torsoHeight = (this._shoulderHeight - (this._legLength)) * 0.9;
+        this.choiceFlexibilitySurvey = choiceFlexibilitySurvey;
         //this.torsoHeight = this._shoulderHeight - this.inseamLength
     }
 

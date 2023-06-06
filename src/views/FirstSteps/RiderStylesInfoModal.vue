@@ -1,5 +1,5 @@
 <template>
-    <ion-modal :is-open="isOpen">
+    <ion-modal :is-open="isOpen" @ionModalDidDismiss="closeModal()">
         <ion-content :fullscreen="true">
             <ion-header :translucent="true" class="sticky top-0">
                 <ion-toolbar>

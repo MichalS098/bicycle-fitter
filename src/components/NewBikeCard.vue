@@ -22,7 +22,7 @@ import {
 import { ref } from 'vue';
 
 const bikeButton = ref<HTMLButtonElement | null>(null);
-const createBikeAnimation: AnimationBuilder = (baseEl: any, opts?: any) => {
+const createBikeAnimation: AnimationBuilder = () => {
     if (bikeButton.value) {
         return createAnimation()
             .addElement(bikeButton.value)

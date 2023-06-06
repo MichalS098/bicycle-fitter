@@ -2,7 +2,11 @@ import { Pose } from '@mediapipe/pose';
 import { DrawingOptions, drawConnectors, drawLandmarks } from '@mediapipe/drawing_utils';
 import { Results, Options } from '@mediapipe/pose';
 import { POSE_CONNECTIONS } from '@mediapipe/pose';
-import {getAllRelevantRightBodyPointIndexes, getAllRelevantLeftBodyPointIndexes, getAllRigthFingerPointIndexes, getAllFacePointIndexes} from '@/helpers/mediapipeHelpers'
+import {getAllRelevantRightBodyPointIndexes,
+        getAllRelevantLeftBodyPointIndexes, 
+        getAllRightFingerPointIndexes, 
+        getAllLeftFingerPointIndexes,
+        getAllFacePointIndexes} from '@/helpers/mediapipeHelpers'
 
 export default function useMediapipePose() {
     const pose = new Pose({
@@ -80,7 +84,7 @@ function excludeLandmarks(side: string){
     switch (side){
         case 'left': { //if left side is visible, exclude right side from drawing.
             landmarksToExclude = landmarksToExclude.concat(
-                getAllRigthFingerPointIndexes(),
+                getAllRightFingerPointIndexes(),
                 getAllRelevantRightBodyPointIndexes(),
                 getAllFacePointIndexes());
             break;
@@ -88,7 +92,7 @@ function excludeLandmarks(side: string){
         case 'right': { //and vice versa
             landmarksToExclude = landmarksToExclude.concat(
                 getAllRelevantLeftBodyPointIndexes(),
-                getAllRigthFingerPointIndexes(),
+                getAllLeftFingerPointIndexes(),
                 getAllFacePointIndexes());
             break;
         }

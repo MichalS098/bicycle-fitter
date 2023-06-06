@@ -10,8 +10,6 @@ export class User extends BaseEntity {
     @Column()
     language!: string;  // en || pl    
     @Column()
-    rideTime!: number;
-    @Column()
     riderStyle!: string;
     // Human body parameters
     @Column()
@@ -32,6 +30,8 @@ export class User extends BaseEntity {
     armTorsoAngle!: number;
     @Column()
     torsoAngle!: number;
+    @Column()
+    choiceFlexibilitySurvey!: number;
 
     @OneToMany(type => Bike, bike => bike.user, { cascade: true, eager: true })
     bikes!: Bike[];

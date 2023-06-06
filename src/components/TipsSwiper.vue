@@ -1,5 +1,5 @@
 <template>
-    <swiper :slides-per-view="2.1" :space-between="10" :breakpoints="swiperBreakpoints">
+    <swiper :breakpoints="swiperBreakpoints">
         <swiper-slide v-for="tip in tips" :key="tip.id">
             <tip-card :tip="tip" />
         </swiper-slide>
@@ -24,18 +24,30 @@ const props = defineProps({
     }
 });
 
-const swiperBreakpoints = {
+const swiperBreakpoints = {    
+    310: {
+        slidesPerView: 1.7,
+        spaceBetween: 20
+    },
+    320: {
+        slidesPerView: 1.9,
+        spaceBetween: 20
+    },
+    350: {
+        slidesPerView: 2,
+        spaceBetween: 20
+    },
     375: {
-        slidesPerView: 2.1,
-        spaceBetween: 10
+        slidesPerView: 2.15,
+        spaceBetween: 20
     },
     390: {
-        slidesPerView: 2.1,
-        spaceBetween: 10
+        slidesPerView: 2.3,
+        spaceBetween: 20
     },
     420: {
-        slidesPerView: 2.3,
-        spaceBetween: 10
-    },
+        slidesPerView: 2.5,
+        spaceBetween: 20
+    }
 };
 </script>

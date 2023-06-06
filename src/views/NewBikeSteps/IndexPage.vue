@@ -46,22 +46,8 @@
                 <steps-check-box v-model="form.expectations.nothing" label="Nothing" color="primary" 
                     :disabled="anyExpectationSelected()" />
             </step-card>
-            
-            <step-card title="Your bike problem" sub-title="What is your bike problem?" :this-step="5" :current-step="currentStep"
-                :number-of-steps="numberOfSteps" @prev="goBackHome()" @next="nextStep()" color="primary">
-                <steps-radio-button @click="nextStep()" v-model="form.additionalSurvey" label="foot to
-                                ground" value="4" color="primary" />
-                <steps-radio-button @click="nextStep()" v-model="form.additionalSurvey" label="finger tips to
-                                ground" value="3" color="primary" />
-                <steps-radio-button @click="nextStep()" v-model="form.additionalSurvey" label="more than 5 cm to
-                                ground" value="2"
-                    color="primary" />
-                <steps-radio-button @click="nextStep()" v-model="form.additionalSurvey" label="more than 10 cm to
-                                ground" value="1"
-                    color="primary" />
-            </step-card>
 
-            <step-card title="Your bike stem and crank length" sub-title="Please add bike params" :this-step="6"
+            <step-card title="Your bike stem and crank length" sub-title="Please add bike params" :this-step="5"
                 :current-step="currentStep" :number-of-steps="numberOfSteps" @prev="prevStep()" @next="nextStep()"
                 color="primary">
                 <button-input v-model="form.stemLength" type="number" inputmode="numeric"
@@ -100,7 +86,7 @@ import { bikeExpectations } from '@/classes/bikeExpectations';
 
 
 
-const numberOfSteps = 6;
+const numberOfSteps = 5;
 const currentStep = ref(1);
 const router = useIonRouter();
 
@@ -121,7 +107,6 @@ const form = ref({
     suggestNewBike: false,
     stemLength: 0,
     crankLength: 0,
-    additionalSurvey: 0,
     userUnitSystem: 'cm',
     errors: {
         crankLength: "",
@@ -179,17 +164,8 @@ const nextStep = async () => {
             return;
         }
 
-        if (form.value.additionalSurvey == 0) {
-            form.value.additionalSurvey = 4;
-        }
-
-    } else if (currentStep.value === 5) {
-        if (form.value.additionalSurvey == 0) {
-            return;
-        }
-
-    }
-    else if (currentStep.value === 6) {
+    } 
+    else if (currentStep.value === 5) {
         if (form.value.userUnitSystem == 'metric') {
             if (form.value.stemLength < 5 || form.value.stemLength > 14) {
                 form.value.errors.stemLength = "Stem length must be between 5 and 14 cm";
@@ -258,7 +234,6 @@ const createBike = async () => {
     bike.expectationsFeetPain = form.value.expectations.feetPain;
     bike.expectationsKneePain = form.value.expectations.kneePain;
     bike.expectationsNothing = form.value.expectations.nothing;
-    bike.choiceFlexibilitySurvey = form.value.additionalSurvey;
 
 
     console.log("expectations", form.value.expectations)

@@ -1,6 +1,6 @@
 <template>
     <button type="button" :class="colorClass" @click="goToBike()" ref="bikeButton"
-        class="bike-button w-full aspect-[1.54] rounded-[30px] p-5 sm:p-6 md:p-8 lg:p-12 relative flex flex-col justify-between items-start overflow-hidden">
+        class="bike-button w-full aspect-[1.54] rounded-[30px] p-5 sm:p-6 md:p-8 lg:p-12 relative flex flex-col justify-between items-start overflow-hidden z-[1]">
         <div>
             <h2 class="text-3xl xs:text-4xl text-white font-bold text-left">
                 {{ bike.brand ?? 'No brand' }}
@@ -9,22 +9,27 @@
                 {{ bike.model ?? 'No model' }}
             </p>
         </div>
-        <div class="w-[45%]">
-            <ion-progress-bar class="h-4 rounded-full" color="dark" :value="0.3"></ion-progress-bar>
+        <div class="flex flex-row gap-2 relative z-[1]">
+            <span v-if="bike.type" class="bg-neutral-900/50 px-3 py-1 text-xs rounded-full capitalize">
+                {{ bike.type }}            
+            </span>                          
+            <span v-if="bike.style" class="bg-neutral-900/50 px-3 py-1 text-xs rounded-full capitalize">
+                {{ bike.style }}            
+            </span>                                      
         </div>
         <img src="@/../resources/images/bike.png" alt="realistic bike"
-            class="absolute object-contain top-[-25%] h-[145%] right-[-25%]" />
+            class="absolute object-contain top-[-25%] h-[145%] right-[-25%] z-[0]" />
     </button>
 </template>
 <script setup lang="ts">
 import {
-    IonProgressBar, useIonRouter, createAnimation, AnimationBuilder
+    useIonRouter, createAnimation, AnimationBuilder
 } from '@ionic/vue';
 import { Bike } from '@/entity/Bike';
 import { defineProps, ref } from 'vue';
 
 const bikeButton = ref<HTMLButtonElement | null>(null);
-const goToBikeAnimation: AnimationBuilder = (baseEl: any, opts?: any) => {
+const goToBikeAnimation: AnimationBuilder = () => {
     if (bikeButton.value) {
         return createAnimation()
             .addElement(bikeButton.value)

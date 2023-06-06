@@ -49,7 +49,7 @@ export function getAllLeftFingerPointIndexes(): number[]{
     ]
     return joints_readable;
 }
-export function getAllRigthFingerPointIndexes(): number[]{
+export function getAllRightFingerPointIndexes(): number[]{
     const joints_readable = [
         POSE_LANDMARKS_RIGHT.RIGHT_THUMB,
         POSE_LANDMARKS_RIGHT.RIGHT_INDEX,
