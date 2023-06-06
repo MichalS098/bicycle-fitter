@@ -107,7 +107,7 @@
             </ion-card>
 
 
-            <ion-button expand="block" color="light" @click="saveChanges">
+            <ion-button expand="block" color="light" @click="saveChanges" class="mt-6">
                 Save
             </ion-button>
             <ion-toast position="top" :is-open="savingSuccess" message="Your changes have been saved" :duration="3000"
@@ -261,5 +261,7 @@ ion-card-content {
 
 ion-list {
     border: none;
+    --background: transparent;
+    background: transparent;
 }
 </style>

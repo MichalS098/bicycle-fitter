@@ -9,7 +9,6 @@ const firstStepsCompleted = async () => {
     if (user != null) {
         if ((user.unitSystem != null) &&
             (user.overallHeight != null) &&
-            (user.rideTime != null) &&
             (user.riderStyle != null)) {
             return true;
         }
@@ -59,23 +58,16 @@ const routes: Array<RouteRecordRaw> = [
     },
     {
         path: '/bikes/:id',
-        component: () => import('@/views/Bikes/BikeLayout.vue'),
-        children: [
-            {
-                path: '',
-                component: () => import('@/views/Bikes/ShowPage.vue')
-            },
-            {
-                path: 'measure',
-                component: () => import('@/views/Bikes/AngleMeasurePage.vue')
-            },
-            {
-                path: 'display',
-                component: () => import('@/views/Bikes/AngleDisplayPage.vue')
-            }
-   
-        ]
+        component: () => import('@/views/Bikes/ShowPage.vue')
     },
+    {
+        path: '/bikes/:id/measure',
+        component: () => import('@/views/Bikes/AngleMeasurePage.vue')
+    },
+    {
+        path: '/bikes/:id/display',
+        component: () => import('@/views/Bikes/AngleDisplayPage.vue')
+    },    
     {
         path: '/pages',
         component: () => import('@/views/HomeLayout.vue'),
@@ -91,7 +83,7 @@ const routes: Array<RouteRecordRaw> = [
             {
                 path: 'tips',
                 component: () => import('@/views/Tips/IndexPage.vue')
-            },        
+            },
             {
                 path: 'favourites',
                 component: () => import('@/views/Tips/FavouritesPage.vue')
@@ -100,7 +92,7 @@ const routes: Array<RouteRecordRaw> = [
                 path: 'profile',
                 component: () => import('@/views/Profile/IndexPage.vue')
             },
-            
+
         ]
     },
     {
@@ -110,7 +102,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/pages/tips/:id',
         component: () => import('@/views/Tips/ShowPage.vue')
-    },            
+    },
 ]
 
 const router = createRouter({

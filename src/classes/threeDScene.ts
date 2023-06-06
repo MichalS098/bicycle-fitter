@@ -8,6 +8,7 @@ export class threeDScene {
 
     private _bikeUrl: URL =  new URL('/resources/3d_models/city_bike/bicycle.glb', import.meta.url);
     
+    private _initialized = false;
     private _scene!: THREE.Scene;
     private _camera!:   THREE.PerspectiveCamera;
     private _controls!: OrbitControls;
@@ -75,6 +76,7 @@ export class threeDScene {
     private _linesColor = 0x478C6C;
 
     init(elementSelector: string) {
+        console.log("init");
         
         this._renderer = new THREE.WebGLRenderer();
         this._renderer.setSize( window.innerWidth, window.innerHeight );
@@ -96,8 +98,12 @@ export class threeDScene {
 
         this.lightSetup();
         this.addObjectsToScene();
+        this._initialized = true;
     }
-
+    
+    isInitialized() {
+        return this._initialized;
+    }
 
     cameraSetup() {
 
@@ -189,7 +195,7 @@ export class threeDScene {
                 this.animate();
             },
             (xhr) => {
-                console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+                console.log(Math.floor(xhr.loaded/15009652*100) + ' % loaded');                
             },
             (error) => {
                 console.log('An error occured: ', error);

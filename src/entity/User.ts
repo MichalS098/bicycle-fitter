@@ -10,8 +10,6 @@ export class User extends BaseEntity {
     @Column()
     language!: string;  // en || pl    
     @Column()
-    rideTime!: number;
-    @Column()
     riderStyle!: string;
     // Human body parameters
     @Column()

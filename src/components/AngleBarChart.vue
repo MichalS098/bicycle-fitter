@@ -1,10 +1,10 @@
 <template>
-    <div class="p-3 flex flex-col gap-3 bg-neutral-800 rounded-[20px]">
+    <div class="p-5 flex flex-col gap-3 bg-neutral-800 rounded-[30px]">
         <h3 class="text-lg font-bold">
             Last session
         </h3>
         <ul class="flex flex-col gap-3">
-            <li class="gap-3 bg-neutral-900 p-3 rounded-[20px] grid grid-cols-12 h-[58px]">
+            <li class="gap-3 bg-neutral-900 p-3 rounded-[15px] grid grid-cols-12 h-[58px]">
                 <h3 class="text-xs col-span-3">
                     Knee angle
                 </h3>
@@ -16,7 +16,7 @@
                     </div>
                 </div>
             </li>
-            <li class="gap-3 bg-neutral-900 p-3 rounded-[20px] grid grid-cols-12 h-[58px]">
+            <li class="gap-3 bg-neutral-900 p-3 rounded-[15px] grid grid-cols-12 h-[58px]">
                 <h3 class="text-xs col-span-3">
                     Torso angle
                 </h3>
@@ -34,7 +34,7 @@
                     </div>
                 </div>
             </li>
-            <li class="gap-3 bg-neutral-900 p-3 rounded-[20px] grid grid-cols-12 h-[58px]">
+            <li class="gap-3 bg-neutral-900 p-3 rounded-[15px] grid grid-cols-12 h-[58px]">
                 <h3 class="text-xs col-span-3">
                     Bicep angle
                 </h3>
@@ -46,7 +46,7 @@
                     </div>
                 </div>
             </li>
-            <li class="gap-3 bg-neutral-900 p-3 rounded-[20px] grid grid-cols-12 h-[58px]">
+            <li class="gap-3 bg-neutral-900 p-3 rounded-[15px] grid grid-cols-12 h-[58px]">
                 <h3 class="text-xs col-span-3">
                     Foot angle
                 </h3>

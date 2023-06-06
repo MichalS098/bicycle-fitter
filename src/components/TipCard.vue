@@ -1,12 +1,11 @@
 <template>
-    <button type="button" @click="goToTip" :class="colorClass" class="rounded-[10px] flex flex-col gap-3 p-3 aspect-[0.75]">
+    <button type="button" @click="goToTip" :class="colorClass" class="rounded-[10px] flex flex-col gap-3 p-3 aspect-[0.75] h-[210px] overflow-hidden">
         <ion-img :src="tip.featured_image_path" class="tip-ion-img"></ion-img>
         <div class="flex flex-col gap-1">
             <div class="flex items-center justify-between gap-1">
-                <h2 class="text-xl text-white font-bold leading-6 line-clamp-2 text-left">
+                <h2 class="text-xl text-white font-bold leading-6 line-clamp-1 text-left">
                     {{ tip.title ?? 'No title' }}
                 </h2>
-
                 <HeartSolidIcon v-if="tip.favourite" class="w-5 h-5 text-white shrink-0" />
                 <HeartIcon v-else class="w-5 h-5 text-white shrink-0" />
             </div>
