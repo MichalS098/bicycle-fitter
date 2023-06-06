@@ -7,13 +7,13 @@
         </ion-header>
         <ion-content :fullscreen="true" class="relative">
             <video playsinline="true" muted="true" loop="true" class="hidden" ref="video"
-                style="position: absolute; z-index: -1;" ></video>
+                style="position: absolute; z-index: -1;"></video>
             <canvas class="absolute inset-0 w-full my-auto pd-15" ref="canvas"></canvas>
 
             <div class="fixed w-full h-full top-0 left-0 bg-transparent">
                 <div class="absolute top-3/4 text-center text-base">Imagine this is a bike</div>
             </div>
-            
+
             <transition>
                 <div v-show="!allBodyPointsVisible"
                     class="absolute top-6 left-3 right-3 rounded-2xl bg-[#1f1f1f] border-gray-900 p-3 flex gap-3 items-start shadow-lg overflow-hidden">
@@ -27,20 +27,28 @@
                         </p>
                     </div>
                 </div>
-                
+
             </transition>
 
-            <ion-button @click="if (sideVisible=='right') sideVisible='left'; else sideVisible='right';">
-                    current: {{ sideVisible }}
-            </ion-button>
-            
+
+            <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+                <ion-fab-button>
+                    <ion-icon :icon="chevronUpCircle"></ion-icon>
+                </ion-fab-button>
+                <ion-fab-list side="top">
+                    <ion-fab-button @click="if (sideVisible == 'right') sideVisible = 'left'; else sideVisible = 'right';">
+                        <ion-icon :icon="chevronBackOutline"></ion-icon>
+                    </ion-fab-button>                    
+                </ion-fab-list>
+            </ion-fab>
+
             <!--5s coundownd-->
             <transition>
                 <div v-show="allBodyPointsVisible && counter > 0"
                     class="absolute bottom-6 left-3 right-3 rounded-2xl bg-secondary border-gray-900 p-3 flex gap-3 items-start shadow-lg overflow-hidden">
                     <ion-icon :icon="hourglassOutline" class="text-white h-8 w-16"></ion-icon>
                     <div class="text-4xl">
-                        {{counter}}
+                        {{ counter }}
                     </div>
                 </div>
             </transition>
@@ -48,7 +56,8 @@
             <transition>
                 <div v-show="allBodyPointsVisible && counter == 0"
                     class="absolute bottom-6 left-3 right-3 h-10 rounded-2xl bg-secondary border-gray-900 p-3 flex gap-3 items-start shadow-lg overflow-hidden">
-                    <ion-progress-bar :value="measuringProgress / (samples)" class="w-full h-full" color="light"></ion-progress-bar>
+                    <ion-progress-bar :value="measuringProgress / (samples)" class="w-full h-full"
+                        color="light"></ion-progress-bar>
                 </div>
             </transition>
 
@@ -57,11 +66,11 @@
 </template>
 
 <script lang="ts" setup>
-import { IonPage, IonHeader,IonContent, IonIcon, IonProgressBar, IonButton } from '@ionic/vue';
+import { IonPage, IonHeader, IonContent, IonIcon, IonProgressBar, IonButton, IonFabButton, IonFabList, IonFab } from '@ionic/vue'; 
 import { ref, onMounted, Transition, watch, WatchOptions } from "vue";
 import useMediapipe from '@/composables/useMediapipe';
 import { Camera } from '@mediapipe/camera_utils';
-import { alertCircleOutline, hourglassOutline, options } from 'ionicons/icons';
+import { alertCircleOutline, chevronUpCircle, chevronBackOutline, hourglassOutline, options } from 'ionicons/icons';
 import { getBodyAnglesFromMediapipeResults, BodyAnglesFromMediapipe, BodyAnglesMaxMin, getMaxMinEveryAngle } from '@/functions/mediapipeCalculatedHumanParams';
 import { useIonRouter } from '@ionic/vue';
 import { getUserFromDatabase } from '@/helpers/helpersDataBase'
@@ -70,6 +79,7 @@ import MeasureFinishedModal from './MeasureFinishedModal.vue';
 import { useRoute } from 'vue-router';
 import { Bike } from '@/entity/Bike';
 import { Angles } from '@/entity/Angles';
+import { ChevronLeftIcon } from '@heroicons/vue/24/outline';
 
 const router = useIonRouter();
 const video = ref<HTMLVideoElement>();
@@ -86,7 +96,7 @@ const route = useRoute(); //shouldnt we use IonicRouter?
 const bike_id = Number(route.params.id);
 const bike = ref<Bike | null>();
 
-const samples = 60*5;
+const samples = 60 * 5;
 
 const bodyAngles = ref<BodyAnglesMaxMin>({
     footFloorAngleMax: 0,
@@ -123,14 +133,14 @@ const measureDone = async () => {
     console.log("footFloorAngleMin: ", angles.footFloorAngleMin = bodyAngles.value.footFloorAngleMin)
     console.log("torsoFloorAngleMax: ", angles.torsoFloorAngleMax = bodyAngles.value.torsoFloorAngleMax)
     console.log("torsoFloorAngleMin: ", angles.torsoFloorAngleMin = bodyAngles.value.torsoFloorAngleMin)
-    console.log("thighShankAngleMax: ", angles.thighShankAngleMax = bodyAngles.value.thighShankAngleMax) 
-    console.log("thighShankAngleMin: ", angles.thighShankAngleMin = bodyAngles.value.thighShankAngleMin) 
+    console.log("thighShankAngleMax: ", angles.thighShankAngleMax = bodyAngles.value.thighShankAngleMax)
+    console.log("thighShankAngleMin: ", angles.thighShankAngleMin = bodyAngles.value.thighShankAngleMin)
     console.log("torsoBicepAngleMax: ", angles.torsoBicepAngleMax = bodyAngles.value.torsoBicepAngleMax)
     console.log("torsoBicepAngleMin: ", angles.torsoBicepAngleMin = bodyAngles.value.torsoBicepAngleMin)
     console.log("bicepForearmAngleMax: ", angles.bicepForearmAngleMax = bodyAngles.value.bicepForearmAngleMax)
     console.log("bicepForearmAngleMin: ", angles.bicepForearmAngleMin = bodyAngles.value.bicepForearmAngleMin)
 
-    if (bike.value != null){
+    if (bike.value != null) {
         angles.footFloorAngleMax = bodyAngles.value.footFloorAngleMax
         angles.footFloorAngleMin = bodyAngles.value.footFloorAngleMin
         angles.thighShankAngleMax = bodyAngles.value.thighShankAngleMax
@@ -145,7 +155,7 @@ const measureDone = async () => {
         // getMaxMinEveryAngle() doesnt calculate it either, remove later.
         angles.bike = bike.value
         await angles.save();
-    
+
         router.navigate('/bikes/' + bike.value.id, 'none', 'replace')
     }
 }
@@ -156,23 +166,23 @@ const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
     pose.onResults((results) => {
         drawResults(results, canvas);
 
-        if (results.poseLandmarks !== undefined){
-            if (areAllSideBodyPointsVisible(results.poseLandmarks, sideVisible.value)) { 
+        if (results.poseLandmarks !== undefined) {
+            if (areAllSideBodyPointsVisible(results.poseLandmarks, sideVisible.value)) {
                 allBodyPointsVisible.value = true;
 
-                if (counter.value == 0){
-                    if (measuringProgress.value > samples){
+                if (counter.value == 0) {
+                    if (measuringProgress.value > samples) {
                         measuringDone.value = true
                         camera.value?.stop()
                         bodyAngles.value = getMaxMinEveryAngle(bodyAnglesArray)
                         measureDone()
-                    } 
-                    else{
-                        bodyAnglesArray[measuringProgress.value] = getBodyAnglesFromMediapipeResults(results, sideVisible.value) 
+                    }
+                    else {
+                        bodyAnglesArray[measuringProgress.value] = getBodyAnglesFromMediapipeResults(results, sideVisible.value)
                     }
                     measuringProgress.value++
                 }
-            } 
+            }
             else {
                 allBodyPointsVisible.value = false;
                 measuringProgress.value = 0;
@@ -195,14 +205,14 @@ const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
 
 let timer = 0;
 //cur = current
-watch( [allBodyPointsVisible, counter], function([curVis, curCounter], [oldVis, oldCounter]){
+watch([allBodyPointsVisible, counter], function ([curVis, curCounter], [oldVis, oldCounter]) {
     if (timer != 0) clearTimeout(timer);
-    if (curVis && curCounter > 0){
+    if (curVis && curCounter > 0) {
         timer = setTimeout(() => {
             counter.value--;
         }, 1000);
     }
-    else if (!curVis){
+    else if (!curVis) {
         counter.value = 5;
     }
 })
