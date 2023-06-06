@@ -65,6 +65,7 @@ import MeasureFinishedModal from './MeasureFinishedModal.vue';
 import { useRoute } from 'vue-router';
 import { Bike } from '@/entity/Bike';
 import { Angles } from '@/entity/Angles';
+import useMediapipePose from '@/composables/useMediapipe';
 
 const router = useIonRouter();
 const video = ref<HTMLVideoElement>();
@@ -147,9 +148,11 @@ const measureDone = async () => {
 
 const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
     const { pose, drawResults } = useMediapipe();
+    // the above fun is executed only once during the lifetime of this view. 
+    // therefore, it will not react to changes in the sideVisible variable.
 
     pose.onResults((results) => {
-        drawResults(results, canvas);
+        drawResults(results, canvas, sideVisible.value); // pass the sideVisible value to this function and go from there.
 
         if (results.poseLandmarks !== undefined){
             if (areAllSideBodyPointsVisible(results.poseLandmarks, sideVisible.value)) { 

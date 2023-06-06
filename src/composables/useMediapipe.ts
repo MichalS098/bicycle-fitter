@@ -1,7 +1,8 @@
 import { Pose } from '@mediapipe/pose';
-import { drawConnectors, drawLandmarks } from '@mediapipe/drawing_utils';
+import { DrawingOptions, drawConnectors, drawLandmarks } from '@mediapipe/drawing_utils';
 import { Results, Options } from '@mediapipe/pose';
 import { POSE_CONNECTIONS } from '@mediapipe/pose';
+import {getAllRelevantRightBodyPointIndexes, getAllRelevantLeftBodyPointIndexes, getAllRigthFingerPointIndexes, getAllFacePointIndexes} from '@/helpers/mediapipeHelpers'
 
 export default function useMediapipePose() {
     const pose = new Pose({
@@ -20,12 +21,28 @@ export default function useMediapipePose() {
     };
     pose.setOptions(options);
 
-    const drawResults = (results: Results, canvas: HTMLCanvasElement) => {
+    /**
+     * Draw landmarks and their connections
+     * @param results Posible results from Pose
+     * @param canvas HTMLCanvasElement. Provides properties and methods for manipulating the layout and presentation of elements
+     * @param side side of the body which sould be excluded from rendering: 'right'/'left'/'none'
+     */
+    const drawResults = (results: Results, canvas: HTMLCanvasElement, side: string) => {
         const ctx = canvas.getContext('2d');
         const canvasWidth = canvas.width;
         const scaleFactor = canvasWidth / results.image.width;
         canvas.width = results.image.width * scaleFactor;
         canvas.height = results.image.height * scaleFactor;
+
+        const landmarksToExclude = excludeLandmarks(side);
+        let i: number;
+        for (i of landmarksToExclude){
+            const x = results?.poseLandmarks?.at(i)
+            if (x !== undefined){
+                results.poseLandmarks[i].visibility = 0;
+                results.poseLandmarks[i].visibility = 0;
+            }
+        }
 
         if (ctx) {
             ctx.save();
@@ -56,4 +73,32 @@ export default function useMediapipePose() {
         pose,
         drawResults
     }
+}
+
+function excludeLandmarks(side: string){
+    let landmarksToExclude: number[] = []
+    switch (side){
+        case 'left': { //if left side is visible, exclude right side from drawing.
+            landmarksToExclude = landmarksToExclude.concat(
+                getAllRigthFingerPointIndexes(),
+                getAllRelevantRightBodyPointIndexes(),
+                getAllFacePointIndexes());
+            break;
+        }
+        case 'right': { //and vice versa
+            landmarksToExclude = landmarksToExclude.concat(
+                getAllRelevantLeftBodyPointIndexes(),
+                getAllRigthFingerPointIndexes(),
+                getAllFacePointIndexes());
+            break;
+        }
+        case 'none': {
+            break;
+        }
+        default: {
+            console.log(`Unknown 'side' parameter: ${side}`);
+            throw new Error(`Unknown 'side' parameter: ${side}`);
+        }
+    }
+    return landmarksToExclude;
 }

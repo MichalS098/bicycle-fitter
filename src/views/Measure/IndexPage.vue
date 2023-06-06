@@ -167,7 +167,8 @@ onMounted(async () => {
 const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
     const { pose, drawResults } = useMediapipe();
     pose.onResults((results) => {
-        drawResults(results, canvas);
+        drawResults(results, canvas, 'none');
+        // third argument - which landmarks should be excluded from rendering.
 
         if (results.poseLandmarks !== undefined) {
             if (areAllBodyPointsVisible(results.poseLandmarks)) {
