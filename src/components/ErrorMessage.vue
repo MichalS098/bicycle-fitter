@@ -6,8 +6,7 @@
     </transition>
 </template>
 <script setup lang="ts">
-import { Transition } from 'vue';
-const props = defineProps({
+defineProps({
     message: {
         type: String,
         default: '',

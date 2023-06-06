@@ -1,5 +1,10 @@
 <template>
     <ion-page>
+        <ion-header :translucent="true" class="bikefitter-header">
+            <!-- DO NOT REMOVE THIS DIV -->
+            <div>
+            </div>
+        </ion-header>
         <ion-content class="ion-padding" :fullscreen="true">
             <div class="flex flex-col justify-between gap-6 xxs:gap-12 pt-12">
                 <button class="absolute top-0 right-0 p-2 xxs:p-4" @click="goToHome">X</button>
@@ -37,7 +42,7 @@
 </template>
   
 <script lang="ts" setup>
-import { IonPage, IonContent, useIonRouter} from '@ionic/vue';
+import { IonPage, IonHeader,IonContent, useIonRouter} from '@ionic/vue';
 import { onMounted, ref } from 'vue';
 import { Bike } from '@/entity/Bike';
 import { Angles } from '@/entity/Angles'

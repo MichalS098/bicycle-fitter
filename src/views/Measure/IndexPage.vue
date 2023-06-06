@@ -1,5 +1,10 @@
 <template>
     <ion-page>
+        <ion-header :translucent="true" class="bikefitter-header">
+            <!-- DO NOT REMOVE THIS DIV -->
+            <div>
+            </div>
+        </ion-header>
         <ion-content :fullscreen="true" class="relative">
             <video playsinline="true" muted="true" loop="true" class="hidden" ref="video"
                 style="position: absolute; z-index: -1;"></video>
@@ -33,16 +38,18 @@
                 </div>
             </transition>
 
-            <!--THIS IS A DEBUG FEATURE, REMOVE IN PRODUCTION-->
-            <button class=" absolute bottom-0 right-0 text-lg" @click="skip()" >SKIP</button>
+            <!-- TODO: THIS IS A DEBUG FEATURE, REMOVE IN PRODUCTION-->
+            <button class=" absolute bottom-0 right-0 text-lg" @click="skip()">SKIP</button>
 
             <measure-finished-modal :isOpen="showMeasureFinishedModal" @close="goToTheApp()" :bodyParams="bodyParams" />
+            
+
         </ion-content>
     </ion-page>
 </template>
   
 <script lang="ts" setup>
-import { IonPage, IonContent, IonIcon, IonProgressBar } from '@ionic/vue';
+import { IonPage, IonContent, IonHeader, IonIcon, IonProgressBar } from '@ionic/vue';
 import { ref, onMounted, Transition } from "vue";
 import useMediapipe from '@/composables/useMediapipe';
 import { Camera } from '@mediapipe/camera_utils';
@@ -54,7 +61,7 @@ import { areAllBodyPointsVisible } from '@/helpers/mediapipeHelpers';
 import MeasureFinishedModal from './MeasureFinishedModal.vue';
 
 import { Platforms } from '@ionic/vue';
-import { Plugins} from '@capacitor/core';
+import { Plugins } from '@capacitor/core';
 
 const { Filesystem, Permissions } = Plugins;
 
@@ -102,7 +109,7 @@ function goToTheApp() {
     router.replace('/pages/home');
 }
 
-function skip(){
+function skip() {
     camera.value?.stop()
     bodyParams.value = {
         shoulderHeight: 150,
@@ -135,8 +142,8 @@ const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
         if (results.poseLandmarks !== undefined) {
             if (areAllBodyPointsVisible(results.poseLandmarks)) {
                 allBodyPointsVisible.value = true;
-                if (measuringProgress.value > 60) {                    
-                    bodyParams.value = getBodyParamsMedian(bodyParamsArray);                    
+                if (measuringProgress.value > 60) {
+                    bodyParams.value = getBodyParamsMedian(bodyParamsArray);
                     measureDone();
                 } else {
                     const bodyParams = getBodyParamsFromMediapipeResultsWithCorrect(results, overallHeight);

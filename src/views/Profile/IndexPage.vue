@@ -22,7 +22,7 @@
                         <ion-select-option value="imperial">Imperial</ion-select-option>
                     </ion-select>
                 </ion-item>
-                <ion-item>
+                <!-- <ion-item>
                     <ion-label>
                         <ion-icon :icon="languageOutline"></ion-icon>
                         Language
@@ -32,7 +32,7 @@
                         <ion-select-option value="en">English</ion-select-option>
                         <ion-select-option value="pl">Polski</ion-select-option>
                     </ion-select>
-                </ion-item>
+                </ion-item> -->
             </ion-list>
 
             <h2 class="fitter-h2 px-2 xxs:px-3">

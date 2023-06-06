@@ -1,5 +1,10 @@
 <template>
     <ion-page>
+        <ion-header :translucent="true" class="bikefitter-header">
+            <!-- DO NOT REMOVE THIS DIV -->
+            <div>
+            </div>
+        </ion-header>
         <ion-content :fullscreen="true" class="relative">
             <video playsinline="true" muted="true" loop="true" class="hidden" ref="video"
                 style="position: absolute; z-index: -1;" ></video>
@@ -52,7 +57,7 @@
 </template>
 
 <script lang="ts" setup>
-import { IonPage, IonContent, IonIcon, IonProgressBar, IonButton } from '@ionic/vue';
+import { IonPage, IonHeader,IonContent, IonIcon, IonProgressBar, IonButton } from '@ionic/vue';
 import { ref, onMounted, Transition, watch, WatchOptions } from "vue";
 import useMediapipe from '@/composables/useMediapipe';
 import { Camera } from '@mediapipe/camera_utils';
