@@ -51,16 +51,7 @@
                 <ion-alert :is-open="form.errors.shoeSize != ''" header="Wrong shoe size" :message="form.errors.shoeSize"
                     :buttons="['OK']" @did-dismiss="form.errors.shoeSize = ''">
                 </ion-alert>
-            </step-card>
-
-            <step-card title="Your ride time" sub-title="Typically how much time per week do you spend on the bike?"
-                :this-step="3" :current-step="currentStep" :number-of-steps="numberOfSteps" @prev="prevStep"
-                @next="nextStep" :error-message="form.errors.rideTime">
-                <steps-radio-button @click="nextStep()" v-model="form.rideTime" label="1 hour or less" value="1" />
-                <steps-radio-button @click="nextStep()" v-model="form.rideTime" label="1 - 3 hours" value="2" />
-                <steps-radio-button @click="nextStep()" v-model="form.rideTime" label="3 - 6 hours" value="3" />
-                <steps-radio-button @click="nextStep()" v-model="form.rideTime" label="6 hours or more" value="4" />
-            </step-card>
+            </step-card>            
 
             <step-card title="Your rider level" sub-title="At what level of cycling would you define yourself?"
                 :this-step="4" :current-step="currentStep" :number-of-steps="numberOfSteps" @prev="prevStep"

@@ -38,7 +38,7 @@
 
 <script lang="ts" setup>
 import { defineProps, defineEmits } from 'vue';
-import { IonModal, IonHeader, IonToolbar, IonButtons, IonButton, IonTitle, IonContent, IonList, IonItem, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonIcon, IonFooter } from '@ionic/vue';
+import { IonModal, IonHeader, IonToolbar, IonButtons, IonButton, IonTitle, IonContent, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonIcon } from '@ionic/vue';
 import { arrowBackOutline } from 'ionicons/icons';
 
 const emits = defineEmits(['close']);
