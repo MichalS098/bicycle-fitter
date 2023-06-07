@@ -69,13 +69,13 @@
             <step-card title="Sit and Reach Test" sub-title="Sit and Reach Test" :this-step="4" :current-step="currentStep"
                 :number-of-steps="numberOfSteps" @prev="prevStep" @next="nextStep"
                 :error-message="form.errors.additionalSurvey">
-                <steps-radio-button @click="nextStep()" v-model="form.additionalSurvey" label="palm to
+                <steps-radio-button @click="nextStep()" v-model="form.additionalSurvey" label="Palm to
                                 ground" value="4" />
-                <steps-radio-button @click="nextStep()" v-model="form.additionalSurvey" label="finger tips to
+                <steps-radio-button @click="nextStep()" v-model="form.additionalSurvey" label="Finger tips to
                                 ground" value="3" />
-                <steps-radio-button @click="nextStep()" v-model="form.additionalSurvey" label="more than 5 cm to
+                <steps-radio-button @click="nextStep()" v-model="form.additionalSurvey" label="More than 5 cm to
                                 ground" value="2" />
-                <steps-radio-button @click="nextStep()" v-model="form.additionalSurvey" label="more than 10 cm to
+                <steps-radio-button @click="nextStep()" v-model="form.additionalSurvey" label="More than 10 cm to
                                 ground" value="1" />
                 <InformationCircleIcon class="mx-3 h-8 w-8 text-secondary" @click="isSitAndReachInfoVisible = true" />
             </step-card>
