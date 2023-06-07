@@ -1,10 +1,5 @@
 <template>
-    <ion-page>
-        <ion-header :translucent="true" class="bikefitter-header">
-            <!-- DO NOT REMOVE THIS DIV -->
-            <div>
-            </div>
-        </ion-header>
+    <ion-page> 
         <ion-content :fullscreen="true" class="relative">
             <video playsinline="true" muted="true" loop="true" class="hidden" ref="video"
                 style="position: absolute; z-index: -1;"></video>
@@ -12,6 +7,7 @@
 
             <transition>
                 <div v-show="!allBodyPointsVisible"
+                    id="bodypoints-alert"
                     class="absolute top-6 left-3 right-3 rounded-2xl bg-[#1f1f1f] border-gray-900 p-3 flex gap-3 items-start shadow-lg overflow-hidden">
                     <ion-icon :icon="alertCircleOutline" class="text-red-400 h-12 w-12 shrink-0"></ion-icon>
                     <div class="flex flex-col gap-3">
@@ -42,7 +38,44 @@
             <button class=" absolute bottom-0 right-0 text-lg" @click="skip()">SKIP</button>
 
             <measure-finished-modal :isOpen="showMeasureFinishedModal" @close="goToTheApp()" :bodyParams="bodyParams" />
-            
+
+            <instruction-modal 
+                :show="instructionFirst"                 
+                prev-button-text="" 
+                next-button-text="Next"
+                @next-button-action="instructionFirst=false; instructionSecond=true;"                
+                title="Measure your body" 
+                image="../../assets/images/instructions/instruction-measure.png" 
+                content="Now with your phone camera we will
+                measure your body for perfect bike fit.
+                You can take the measurement by putting 
+                the phone on a tripod or leaning it against 
+                a bookshelf." 
+            />
+            <instruction-modal 
+                :show="instructionSecond"            
+                prev-button-text="Back" 
+                next-button-text="Next"
+                @next-button-action="instructionSecond=false; instructionThird=true;"
+                @prev-button-action="instructionSecond=false; instructionFirst=true;"
+                title="Fit in camera frame" 
+                image="../../assets/images/instructions/instruction-woman.png" 
+                content="In order for the app to measure your body correctly we ask that you fit all the way into the camera frame."
+             />
+             <instruction-modal 
+                :show="instructionThird"                
+                prev-button-text="Back" 
+                next-button-text="Next"
+                @next-button-action="instructionThird=false;"
+                @prev-button-action="instructionSecond=true; instructionThird=false;"
+                title="Your safety comes first"
+                image="../../assets/images/instructions/instruction-woman-2.png" 
+                content="The most important thing is your safety, 
+                    so if you are not in the right place now 
+                    to take the measurement, postpone it 
+                    until later. Our app won't go anywhere."
+             />
+
 
         </ion-content>
     </ion-page>
@@ -59,6 +92,7 @@ import { useIonRouter } from '@ionic/vue';
 import { getUserFromDatabase } from '@/helpers/helpersDataBase'
 import { areAllBodyPointsVisible } from '@/helpers/mediapipeHelpers';
 import MeasureFinishedModal from './MeasureFinishedModal.vue';
+import InstructionModal from '@/components/InstructionModal.vue';
 
 import { Platforms } from '@ionic/vue';
 import { Plugins } from '@capacitor/core';
@@ -85,6 +119,10 @@ const measuringDone = ref(false);
 const showMeasureFinishedModal = ref(false);
 const allBodyPointsVisible = ref(false);
 const measuringProgress = ref(0);
+
+const instructionFirst = ref(true);
+const instructionSecond = ref(false)
+const instructionThird= ref(false)
 
 let overallHeight: number;
 
@@ -199,5 +237,8 @@ const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
 .fade-from-down-leave-from {
     opacity: 1;
     transform: translateY(0);
+}
+#bodypoints-alert {
+    top: calc(var(--ion-safe-area-top, 0) + 24px);
 }
 </style>

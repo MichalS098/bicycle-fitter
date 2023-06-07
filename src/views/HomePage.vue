@@ -5,7 +5,7 @@
             <br>
             Bikes
         </template>
-        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 xxs:gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 xxs:gap-6">            
             <bike-card v-for="bike in user?.bikes" :key="bike.id" :bike="bike" />
             <new-bike-card />
         </div>
