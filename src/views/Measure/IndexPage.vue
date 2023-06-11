@@ -32,10 +32,7 @@
                         <ion-progress-bar :value="measuringProgress / 60" class="w-full" color="light"></ion-progress-bar>
                     </div>
                 </div>
-            </transition>
-
-            <!-- TODO: THIS IS A DEBUG FEATURE, REMOVE IN PRODUCTION-->
-            <button class=" absolute bottom-6 right-6 text-lg" @click="skip()">SKIP</button>
+            </transition>            
 
             <measure-finished-modal :isOpen="showMeasureFinishedModal" @close="goToTheApp()" :bodyParams="bodyParams" />
             <measure-instructions-modal @skipMeasure="skipMeasure()" />            
