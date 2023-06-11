@@ -95,11 +95,11 @@ const measureDone = async () => {
 
     const user = await getUserFromDatabase();
     if (user != null) {
-        user.shoulderHeight = bodyParams.value.shoulderHeight * 100;
-        user.armLength = bodyParams.value.armLength * 100;
-        user.shankLength = bodyParams.value.shankLength * 100;
-        user.thighLength = bodyParams.value.thighLength * 100;
-        user.inseamLength = bodyParams.value.inseamLength * 100;
+        user.shoulderHeight = parseFloat((bodyParams.value.shoulderHeight * 100).toFixed(1));
+        user.armLength = parseFloat((bodyParams.value.armLength * 100).toFixed(1));
+        user.shankLength = parseFloat((bodyParams.value.shankLength * 100).toFixed(1));
+        user.thighLength = parseFloat((bodyParams.value.thighLength * 100).toFixed(1));
+        user.inseamLength = parseFloat((bodyParams.value.inseamLength * 100).toFixed(1));
         await user.save();
     }
 }
