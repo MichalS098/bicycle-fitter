@@ -7,6 +7,8 @@ export class CreateUsersTable1682638592843 implements MigrationInterface {
             CREATE TABLE IF NOT EXISTS "user" (
                 "id" integer PRIMARY KEY AUTOINCREMENT NOT NULL,
                 "unitSystem" varchar,
+                "hasMeasuredWithCamera" boolean,
+                "measurementsInstructionShown" boolean,
                 "language" varchar,                                
                 "riderStyle" varchar,
                 "shankLength" integer,

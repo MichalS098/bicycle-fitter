@@ -28,7 +28,7 @@
     </ion-modal>
 </template>
 <script setup lang="ts">
-import { IonButton, IonButtons, IonModal, IonToolbar, IonImg, IonContent } from "@ionic/vue";
+import { IonButton, IonButtons, IonModal, IonToolbar, IonImg } from "@ionic/vue";
 const props = defineProps({
     show: Boolean,
     title: String,

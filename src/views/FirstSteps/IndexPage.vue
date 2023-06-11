@@ -146,6 +146,8 @@ const goToExampleBikeFitting = async () => {
     const user = new User();
     user.id = 1;
     // TODO We must add to logic program consideration unit System
+    user.hasMeasuredWithCamera = false;
+    user.measurementsInstructionShown = false;
     user.unitSystem = 'metric';
     user.overallHeight = 190;
     user.riderStyle = "casual";

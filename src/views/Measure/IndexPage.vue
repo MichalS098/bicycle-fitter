@@ -33,7 +33,7 @@
                 </div>
             </transition>
 
-            <measure-finished-modal :isOpen="showMeasureFinishedModal" @close="goToTheApp()" />
+            <measure-finished-modal :isOpen="showMeasureFinishedModal" @close="goToTheAppAfterMeasure()" />
             <measure-instructions-modal @skipMeasure="skipMeasure()" />
         </ion-content>
     </ion-page>
@@ -146,24 +146,34 @@ const saveUserToDatabase = async () => {
     }
 }
 
-const goToTheApp = () => {
-    showMeasureFinishedModal.value = false;
-    router.replace('/pages/home');
+const goToTheAppAfterMeasure = async () => {
+    if (user.value != null) {
+        showMeasureFinishedModal.value = false;
+        user.value.hasMeasuredWithCamera = true;
+        user.value.measurementsInstructionShown = false;
+        await user.value.save();
+        router.replace('/pages/profile/measurements');
+    }
 }
 
 const skipMeasure = async () => {
-    measuringDone.value = true;
-    bodyParams.value = {
-        shoulderHeight: 0,
-        footLength: 0,
-        armLength: 0,
-        shankLength: 0,
-        thighLength: 0,
-        inseamLength: 0,
+    if (user.value != null) {
+        measuringDone.value = true;
+        bodyParams.value = {
+            shoulderHeight: 0,
+            footLength: 0,
+            armLength: 0,
+            shankLength: 0,
+            thighLength: 0,
+            inseamLength: 0,
+        }
+        await camera.value?.stop();
+        await saveUserToDatabase();
+        user.value.hasMeasuredWithCamera = false;
+        user.value.measurementsInstructionShown = false;
+        await user.value.save();
+        router.replace('/pages/profile/measurements');
     }
-    await camera.value?.stop();
-    await saveUserToDatabase();
-    goToTheApp();
 }
 
 </script>

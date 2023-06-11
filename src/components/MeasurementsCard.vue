@@ -10,19 +10,19 @@
                     No measurements
                 </span>
             </h3>
-            <p v-if="!height && !legLength" class="text-white text-sm text-left col-span-2 pr-3">
+            <p v-if="!(height && legLength)" class="text-white text-sm text-left col-span-2 pr-3">
                 Add your measurements to get more accurate results!
             </p>
-            <span v-if="height" class="text-white font-bold text-2xl xxs:text-3xl text-left">
+            <span v-if="height && legLength" class="text-white font-bold text-2xl xxs:text-3xl text-left">
                 {{ height + unit }}
             </span>
-            <span v-if="legLength" class="text-white font-bold text-2xl xxs:text-3xl text-left">
+            <span v-if="height && legLength" class="text-white font-bold text-2xl xxs:text-3xl text-left">
                 {{ legLength + unit }}
             </span>
-            <span v-if="height" class="text-white text-sm text-left">
+            <span v-if="height && legLength" class="text-white text-sm text-left">
                 height
             </span>
-            <span v-if="legLength" class="text-white text-sm text-left">
+            <span v-if="height && legLength" class="text-white text-sm text-left">
                 leg length
             </span>
         </div>

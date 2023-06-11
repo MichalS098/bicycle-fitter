@@ -11,6 +11,17 @@
                 </h1>
             </div>
 
+            <instruction-modal :show="checkYourMeasuresInstructionShow" prev-button-text="" next-button-text="Ok"
+                @next-button-action="checkYourMeasuresInstructionShow = false;" title="Check your measures"
+                image="../../assets/images/instructions/instruction-measure.png"
+                content="Now after you have measured your body, you can check your measures here and adjust them if needed." />
+
+            <instruction-modal :show="fillInYourDimensionsInstructionShow" prev-button-text="" next-button-text="Ok"
+                @next-button-action="fillInYourDimensionsInstructionShow = false;" title="Fill in your dimensions"
+                image="../../assets/images/instructions/instruction-measure.png" content="
+                If you haven't measured your body with a camera,
+                you can fill in your dimensions here." />
+
             <ion-card color="secondary">
                 <ion-card-header>
                     <ion-card-title>General</ion-card-title>
@@ -124,6 +135,10 @@ import { onMounted, ref } from 'vue';
 import { getUserFromDatabase } from '@/helpers/helpersDataBase';
 import { User } from '@/entity/User';
 import BikefitterPage from '@/components/BikefitterPage.vue';
+import InstructionModal from '@/components/InstructionModal.vue';
+
+const checkYourMeasuresInstructionShow = ref(false);
+const fillInYourDimensionsInstructionShow = ref(false);
 
 const user = ref<User>();
 const savingSuccess = ref(false);
@@ -134,7 +149,7 @@ const userButtons = [
         role: 'cancel',
     },
     {
-        text: 'Save',
+        text: 'Ok',
         role: 'confirm',
         handler: (data: any) => {
             const keys = Object.keys(data);
@@ -235,7 +250,20 @@ const userInputs = {
 };
 
 onMounted(async () => {
-    user.value = await getUserFromDatabase();
+    user.value = await getUserFromDatabase();    
+    if (user.value != null) {
+        if (!user.value.measurementsInstructionShown) {
+            if (user.value.hasMeasuredWithCamera) {
+                checkYourMeasuresInstructionShow.value = true;
+            } else {
+                
+                fillInYourDimensionsInstructionShow.value = true;     
+            }
+
+            user.value.measurementsInstructionShown = true;
+            await user.value.save();
+        }
+    }    
 });
 
 const updateUserModel = (key: string, value: any) => {
