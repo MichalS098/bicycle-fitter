@@ -1,13 +1,12 @@
 <template>
-    <ion-page> 
+    <ion-page>
         <ion-content :fullscreen="true" class="relative">
             <video playsinline="true" muted="true" loop="true" class="hidden" ref="video"
                 style="position: absolute; z-index: -1;"></video>
             <canvas class="absolute inset-0 w-full my-auto pd-15" ref="canvas"></canvas>
 
             <transition>
-                <div v-show="!allBodyPointsVisible"
-                    id="bodypoints-alert"
+                <div v-show="!allBodyPointsVisible" id="bodypoints-alert"
                     class="absolute top-6 left-3 right-3 rounded-2xl bg-[#1f1f1f] border-gray-900 p-3 flex gap-3 items-start shadow-lg overflow-hidden">
                     <ion-icon :icon="alertCircleOutline" class="text-red-400 h-12 w-12 shrink-0"></ion-icon>
                     <div class="flex flex-col gap-3">
@@ -32,16 +31,16 @@
                         <ion-progress-bar :value="measuringProgress / 60" class="w-full" color="light"></ion-progress-bar>
                     </div>
                 </div>
-            </transition>            
+            </transition>
 
-            <measure-finished-modal :isOpen="showMeasureFinishedModal" @close="goToTheApp()" :bodyParams="bodyParams" />
-            <measure-instructions-modal @skipMeasure="skipMeasure()" />            
+            <measure-finished-modal :isOpen="showMeasureFinishedModal" @close="goToTheApp()" />
+            <measure-instructions-modal @skipMeasure="skipMeasure()" />
         </ion-content>
     </ion-page>
 </template>
   
 <script lang="ts" setup>
-import { IonPage, IonContent, IonHeader, IonIcon, IonProgressBar } from '@ionic/vue';
+import { IonPage, IonContent, IonIcon, IonProgressBar } from '@ionic/vue';
 import { ref, onMounted, Transition } from "vue";
 import useMediapipe from '@/composables/useMediapipe';
 import { Camera } from '@mediapipe/camera_utils';
@@ -52,6 +51,7 @@ import { getUserFromDatabase } from '@/helpers/helpersDataBase'
 import { areAllBodyPointsVisible } from '@/helpers/mediapipeHelpers';
 import MeasureFinishedModal from './MeasureFinishedModal.vue';
 import MeasureInstructionsModal from './MeasureInstructionsModal.vue';
+import { User } from '@/entity/User';
 
 const router = useIonRouter();
 const video = ref<HTMLVideoElement>();
@@ -73,51 +73,21 @@ const showMeasureFinishedModal = ref(false);
 const allBodyPointsVisible = ref(false);
 const measuringProgress = ref(0);
 
+const user = ref<User | null>(null);
 let overallHeight: number;
 
-const measureDone = async () => {
-    camera.value?.stop();
-    measuringDone.value = true;
-    showMeasureFinishedModal.value = true;
-
-    const user = await getUserFromDatabase();
-    if (user != null) {
-        user.shoulderHeight = bodyParams.value.shoulderHeight * 100;
-        user.armLength = bodyParams.value.armLength * 100;
-        user.shankLength = bodyParams.value.shankLength * 100;
-        user.thighLength = bodyParams.value.thighLength * 100;
-        user.inseamLength = bodyParams.value.inseamLength * 100;
-        await user.save();
-    }
-}
-
-function goToTheApp() {
-    showMeasureFinishedModal.value = false;
-    router.replace('/pages/home');
-}
-
-function skip() {
-    camera.value?.stop()
-    bodyParams.value = {
-        shoulderHeight: 150,
-        footLength: 40,
-        armLength: 80,
-        shankLength: 50,
-        thighLength: 50,
-        inseamLength: 40,
-    }
-    measureDone()
-}
 
 onMounted(async () => {
     if (video.value === undefined || canvas.value === undefined) {
         return;
     }
 
-    const user = await getUserFromDatabase();
-    if (user != null) {
-        overallHeight = user.overallHeight;
+    user.value = await getUserFromDatabase();
+
+    if (user.value != null) {
+        overallHeight = user.value.overallHeight;
     }
+
     setupMediaPipe(video.value, canvas.value);
 });
 
@@ -158,21 +128,42 @@ const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
     camera.value?.start();
 }
 
-const skipMeasure = async () => {
-    camera.value?.stop();
+const measureDone = async () => {
+    await camera.value?.stop();
     measuringDone.value = true;
     showMeasureFinishedModal.value = true;
+    await saveUserToDatabase();
+}
 
-    const user = await getUserFromDatabase();
-    if (user != null) {
-        user.shoulderHeight = 0;
-        user.armLength = 0;
-        user.shankLength = 0;
-        user.thighLength = 0;
-        user.inseamLength = 0;
-        await user.save();
+const saveUserToDatabase = async () => {
+    if (user.value != null) {
+        user.value.shoulderHeight = bodyParams.value.shoulderHeight * 100;
+        user.value.armLength = bodyParams.value.armLength * 100;
+        user.value.shankLength = bodyParams.value.shankLength * 100;
+        user.value.thighLength = bodyParams.value.thighLength * 100;
+        user.value.inseamLength = bodyParams.value.inseamLength * 100;
+        await user.value.save();
     }
+}
+
+const goToTheApp = () => {
+    showMeasureFinishedModal.value = false;
     router.replace('/pages/home');
+}
+
+const skipMeasure = async () => {
+    measuringDone.value = true;
+    bodyParams.value = {
+        shoulderHeight: 0,
+        footLength: 0,
+        armLength: 0,
+        shankLength: 0,
+        thighLength: 0,
+        inseamLength: 0,
+    }
+    await camera.value?.stop();
+    await saveUserToDatabase();
+    goToTheApp();
 }
 
 </script>
@@ -204,6 +195,7 @@ const skipMeasure = async () => {
     opacity: 1;
     transform: translateY(0);
 }
+
 #bodypoints-alert {
     top: calc(var(--ion-safe-area-top, 0) + 24px);
 }
