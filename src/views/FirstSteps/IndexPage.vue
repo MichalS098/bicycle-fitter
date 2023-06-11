@@ -8,9 +8,7 @@
                     fit <span class="text-primary font-semibold">you</span>
                 </h2>
                 <div class="flex flex-col gap-8 xs:gap-12 px-3">
-                    <div class="flex flex-col gap-4 xs:gap-6">
-                        <img src="@/../resources/images/person_on_a_bike_first_steps.png" alt="person on a bike"
-                            class="w-full h-48 xs:h-64 object-contain" />
+                    <div class="flex flex-col gap-4 xs:gap-6">                        
                         <h3 class="text-xl xs:text-2xl font-semibold text-left">
                             Tell us about yourself!
                         </h3>
@@ -24,10 +22,10 @@
                         class="font-bold text-lg">
                         Get started!
                     </ion-button>
-                    <ion-button @click="goToExampleBikeFitting()" expand="block" shape="round" color="primary" mode="ios" type="button"
+                    <!-- <ion-button @click="goToExampleBikeFitting()" expand="block" shape="round" color="primary" mode="ios" type="button"
                         class="font-bold text-lg">
                         Example Bike Fitting
-                    </ion-button>
+                    </ion-button> -->
                 </div>
             </div>
 

@@ -64,7 +64,7 @@ const goToTip = () => {
 }
 </script>
 
-<style>
+<style scoped>
 .tip-ion-img::part(image) {
     object-fit: cover;
     width: 100%;
