@@ -14,10 +14,10 @@
                 Add your measurements to get more accurate results!
             </p>
             <span v-if="height && legLength" class="text-white font-bold text-2xl xxs:text-3xl text-left">
-                {{ height + unit }}
+                {{ humanDimension(height) + unit }}
             </span>
             <span v-if="height && legLength" class="text-white font-bold text-2xl xxs:text-3xl text-left">
-                {{ legLength + unit }}
+                {{ humanDimension(legLength) + unit }}
             </span>
             <span v-if="height && legLength" class="text-white text-sm text-left">
                 height
@@ -52,7 +52,7 @@ const unitSystem = ref<string>('metric');
 const unit = ref<string>('cm');
 
 onMounted(() => {
-    if (props.user) {        
+    if (props.user) {
         height.value = props.user.overallHeight;
         legLength.value = props.user.shankLength + props.user.thighLength;
         unitSystem.value = props.user.unitSystem;
@@ -73,6 +73,15 @@ const router = useIonRouter();
 const goToMeasurePage = () => {
     router.navigate('/pages/profile/measurements', 'forward', 'push');
 };
+
+const humanDimension = (dimension: number | undefined) => {
+    const unitSystem = props.user?.unitSystem ?? 'metric';
+    if (unitSystem === 'metric') {
+        return Number(dimension).toFixed(0);
+    } else {
+        return (Number(dimension) * 0.393701).toFixed(0);
+    }
+}
 </script>
 <style scoped>
 .measurements-card {

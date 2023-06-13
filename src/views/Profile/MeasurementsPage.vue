@@ -30,7 +30,7 @@
                     <ion-list lines="none" :inset="false">
                         <ion-item color="secondary">
                             <ion-chip class="font-bold text-base" id="shoeSize">
-                                Shoe Size: {{ user?.shoeSize }} {{ user?.unitSystem === 'metric' ? 'cm' : 'in' }}
+                                Shoe Size: {{ Number(user?.shoeSize).toFixed(0) }} EU
                             </ion-chip>
                             <ion-alert trigger="shoeSize" header="Enter your shoe size"
                                 message="Shoe size is the length of your foot" :buttons="userButtons"
@@ -40,8 +40,8 @@
 
                         <ion-item color="secondary">
                             <ion-chip class="font-bold text-base" id="shoulderHeight">
-                                Shoulder Height: {{ user?.shoulderHeight }} {{ user?.unitSystem === 'metric' ? 'cm' : 'in'
-                                }}
+                                Shoulder Height: {{ humanDimension(user?.shoulderHeight) }} {{ user?.unitSystem === 'metric'
+                                    ? 'cm' : 'in' }}
                             </ion-chip>
                             <ion-alert trigger="shoulderHeight" header="Enter your shoulder height"
                                 message="Shoulder height is the distance from the top of your hip to the top of your shoulder"
@@ -50,7 +50,8 @@
                         </ion-item>
                         <ion-item color="secondary">
                             <ion-chip class="font-bold text-base" id="overallHeight">
-                                Overall Height: {{ user?.overallHeight }} {{ user?.unitSystem === 'metric' ? 'cm' : 'in' }}
+                                Overall Height: {{ humanDimension(user?.overallHeight) }} {{ user?.unitSystem ===
+                                    'metric' ? 'cm' : 'in' }}
                             </ion-chip>
                             <ion-alert trigger="overallHeight" header="Enter your overall height"
                                 message="Overall height is the distance from the bottom of your foot to the top of your head"
@@ -69,7 +70,8 @@
                     <ion-list lines="none" :inset="false">
                         <ion-item color="secondary">
                             <ion-chip class="font-bold text-base" id="shankLength">
-                                Shank Length: {{ user?.shankLength }} {{ user?.unitSystem === 'metric' ? 'cm' : 'in' }}
+                                Shank Length: {{ humanDimension(user?.shankLength) }} {{ user?.unitSystem === 'metric' ?
+                                    'cm' : 'in' }}
                             </ion-chip>
                             <ion-alert trigger="shankLength" header="Enter your shank length"
                                 message="Shank length is the distance from the bottom of your foot to the top of your knee cap"
@@ -78,7 +80,8 @@
                         </ion-item>
                         <ion-item color="secondary">
                             <ion-chip class="font-bold text-base" id="thighLength">
-                                Thigh Length: {{ user?.thighLength }} {{ user?.unitSystem === 'metric' ? 'cm' : 'in' }}
+                                Thigh Length: {{ humanDimension(user?.thighLength) }} {{ user?.unitSystem === 'metric' ?
+                                    'cm' : 'in' }}
                             </ion-chip>
                             <ion-alert trigger="thighLength" header="Enter your thigh length"
                                 message="Thigh length is the distance from the top of your knee cap to the top of your hip"
@@ -87,7 +90,8 @@
                         </ion-item>
                         <ion-item color="secondary">
                             <ion-chip class="font-bold text-base" id="inseamLength">
-                                Inseam Length: {{ user?.inseamLength }} {{ user?.unitSystem === 'metric' ? 'cm' : 'in' }}
+                                Inseam Length: {{ humanDimension(user?.inseamLength) }} {{ user?.unitSystem === 'metric'
+                                    ? 'cm' : 'in' }}
                             </ion-chip>
                             <ion-alert trigger="inseamLength" header="Enter your inseam length"
                                 message="Inseam length is the distance from the bottom of your foot to the top of your hip measured along the inside of your leg"
@@ -106,7 +110,8 @@
                     <ion-list lines="none" :inset="false">
                         <ion-item color="secondary">
                             <ion-chip class="font-bold text-base" id="armLength">
-                                Arm Length: {{ user?.armLength }} {{ user?.unitSystem === 'metric' ? 'cm' : 'in' }}
+                                Arm Length: {{ humanDimension(user?.armLength) }} {{ user?.unitSystem === 'metric' ? 'cm'
+                                    : 'in' }}
                             </ion-chip>
                             <ion-alert trigger="armLength" header="Enter your arm length"
                                 message="Arm length is the distance from the top of your shoulder to the tip of your middle finger"
@@ -163,6 +168,13 @@ const userButtons = [
             } else if (valueString > 250) {
                 valueString = 250;
             }
+
+            if (user?.value?.unitSystem === 'imperial') {                
+                valueString = Number((valueString / 0.393701).toFixed(0));
+            } else {
+                valueString = Number(valueString.toFixed(0));
+            }
+
 
             updateUserModel(keyString, valueString);
         }
@@ -267,12 +279,21 @@ onMounted(async () => {
 });
 
 const updateUserModel = (key: string, value: any) => {
-    (user.value as any)[key] = Number(value);
+    (user.value as any)[key] = value;
 }
 
 const saveChanges = async () => {
     await user.value?.save();
     savingSuccess.value = true;
+}
+
+const humanDimension = (dimension: number | undefined) => {
+    const unitSystem = user.value?.unitSystem ?? 'metric';
+    if (unitSystem === 'metric') {
+        return Number(dimension).toFixed(0);
+    } else {
+        return (Number(dimension) * 0.393701).toFixed(0);
+    }
 }
 </script>
 
@@ -285,6 +306,8 @@ ion-card {
 
 ion-card-content {
     padding-bottom: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
 }
 
 ion-list {
