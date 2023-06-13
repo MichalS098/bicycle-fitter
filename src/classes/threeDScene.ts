@@ -46,7 +46,7 @@ export class threeDScene {
 
     animationQueue: Array<[THREE.Vector3, THREE.Vector3]> = [
         [this.bikeModelPoints.aboveSaddle,          this.bikeModelPoints.aboveHandleBarGrip],
-        [this.bikeModelPoints.forwardSaddle,        this.bikeModelPoints.forwardfloorUnderCrank],
+        [this.bikeModelPoints.forwardSaddle,        this.bikeModelPoints.forwardcrankMiddle],
         [this.bikeModelPoints.forwardcrankMiddle,   this.bikeModelPoints.forwardcrankHBelowSeat],
         [this.bikeModelPoints.forwardhandleBarGrip, this.bikeModelPoints.seatHUpwardHandleBarGrip]
     ];
