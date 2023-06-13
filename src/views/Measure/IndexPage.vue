@@ -76,22 +76,6 @@ const measuringProgress = ref(0);
 const user = ref<User | null>(null);
 let overallHeight: number;
 
-const measureDone = async () => {
-    camera.value?.stop();
-    measuringDone.value = true;
-    showMeasureFinishedModal.value = true;
-
-    const user = await getUserFromDatabase();
-    if (user != null) {
-        user.shoulderHeight = parseFloat((bodyParams.value.shoulderHeight * 100).toFixed(1));
-        user.armLength = parseFloat((bodyParams.value.armLength * 100).toFixed(1));
-        user.shankLength = parseFloat((bodyParams.value.shankLength * 100).toFixed(1));
-        user.thighLength = parseFloat((bodyParams.value.thighLength * 100).toFixed(1));
-        user.inseamLength = parseFloat((bodyParams.value.inseamLength * 100).toFixed(1));
-        await user.save();
-    }
-}
-
 function goToTheApp() {
     showMeasureFinishedModal.value = false;
     router.replace('/pages/home');
@@ -170,11 +154,11 @@ const measureDone = async () => {
 
 const saveUserToDatabase = async () => {
     if (user.value != null) {
-        user.value.shoulderHeight = bodyParams.value.shoulderHeight * 100;
-        user.value.armLength = bodyParams.value.armLength * 100;
-        user.value.shankLength = bodyParams.value.shankLength * 100;
-        user.value.thighLength = bodyParams.value.thighLength * 100;
-        user.value.inseamLength = bodyParams.value.inseamLength * 100;
+        user.value.shoulderHeight = Number(bodyParams.value.shoulderHeight * 100);
+        user.value.armLength      = Number(bodyParams.value.armLength * 100);
+        user.value.shankLength    = Number(bodyParams.value.shankLength * 100);
+        user.value.thighLength    = Number(bodyParams.value.thighLength * 100);
+        user.value.inseamLength   = Number(bodyParams.value.inseamLength * 100);
         await user.value.save();
     }
 }
