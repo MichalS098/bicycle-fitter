@@ -76,6 +76,39 @@ const measuringProgress = ref(0);
 const user = ref<User | null>(null);
 let overallHeight: number;
 
+const measureDone = async () => {
+    camera.value?.stop();
+    measuringDone.value = true;
+    showMeasureFinishedModal.value = true;
+
+    const user = await getUserFromDatabase();
+    if (user != null) {
+        user.shoulderHeight = parseFloat((bodyParams.value.shoulderHeight * 100).toFixed(1));
+        user.armLength = parseFloat((bodyParams.value.armLength * 100).toFixed(1));
+        user.shankLength = parseFloat((bodyParams.value.shankLength * 100).toFixed(1));
+        user.thighLength = parseFloat((bodyParams.value.thighLength * 100).toFixed(1));
+        user.inseamLength = parseFloat((bodyParams.value.inseamLength * 100).toFixed(1));
+        await user.save();
+    }
+}
+
+function goToTheApp() {
+    showMeasureFinishedModal.value = false;
+    router.replace('/pages/home');
+}
+
+function skip() {
+    camera.value?.stop()
+    bodyParams.value = {
+        shoulderHeight: 150,
+        footLength: 40,
+        armLength: 80,
+        shankLength: 50,
+        thighLength: 50,
+        inseamLength: 40,
+    }
+    measureDone()
+}
 
 onMounted(async () => {
     if (video.value === undefined || canvas.value === undefined) {

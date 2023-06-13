@@ -4,15 +4,15 @@
 
             <step-card title="Your bike type" sub-title="What is your bike type?" :this-step="1" :current-step="currentStep"
                 :number-of-steps="numberOfSteps" @prev="goBackHome()" @next="nextStep()" color="primary">
-                <steps-radio-button @click="nextStep()" v-model="form.bikeType" label="city" value="city" color="primary" />
-                <steps-radio-button @click="nextStep()" v-model="form.bikeType" label="road" value="road" color="primary" />
-                <steps-radio-button @click="nextStep()" v-model="form.bikeType" label="gravel" value="gravel"
+                <steps-radio-button @click="nextStep()" v-model="form.bikeType" label="City" value="city" color="primary" />
+                <steps-radio-button @click="nextStep()" v-model="form.bikeType" label="Road" value="road" color="primary" />
+                <steps-radio-button @click="nextStep()" v-model="form.bikeType" label="Gravel" value="gravel"
                     color="primary" />
-                <steps-radio-button @click="nextStep()" v-model="form.bikeType" label="cross" value="cross"
+                <steps-radio-button @click="nextStep()" v-model="form.bikeType" label="Cross" value="cross"
                     color="primary" />
-                <steps-radio-button @click="nextStep()" v-model="form.bikeType" label="electric" value="electric"
+                <steps-radio-button @click="nextStep()" v-model="form.bikeType" label="Electric" value="electric"
                     color="primary" />
-                <steps-radio-button @click="nextStep()" v-model="form.bikeType" label="mtb" value="mtb" color="primary" />
+                <steps-radio-button @click="nextStep()" v-model="form.bikeType" label="Mtb" value="mtb" color="primary" />
             </step-card>
 
             <step-card title="Your bike model" sub-title="What is your bike model?" :this-step="2"
@@ -27,11 +27,11 @@
             <step-card title="Your goal" sub-title="How do you want to sit on your bike?" :this-step="3"
                 :current-step="currentStep" :number-of-steps="numberOfSteps" @prev="prevStep()" @next="nextStep()"
                 color="primary">
-                <steps-radio-button @click="nextStep()" v-model="form.bikeFittingGoal" label="ergonomic" value="ergonomic"
+                <steps-radio-button @click="nextStep()" v-model="form.bikeFittingGoal" label="Ergonomic" value="ergonomic"
                     color="primary" />
-                <steps-radio-button @click="nextStep()" v-model="form.bikeFittingGoal" label="sportslike" value="sportslike"
+                <steps-radio-button @click="nextStep()" v-model="form.bikeFittingGoal" label="Sportslike" value="sportslike"
                     color="primary" />
-                <steps-radio-button @click="nextStep()" v-model="form.bikeFittingGoal" label="aerodynamic"
+                <steps-radio-button @click="nextStep()" v-model="form.bikeFittingGoal" label="Aerodynamic"
                     value="aerodynamic" color="primary" />
             </step-card>
 

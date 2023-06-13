@@ -192,6 +192,8 @@ onMounted(async () => {
     if (!threeDS.isInitialized()) {
         // console.log("threeDS is not initialized, creating new instance")        
         threeDS.init('#threejs-container');
+        // threeDS.createAnimation(threeDS.bikeModelPoints.handleBarGrip, threeDS.bikeModelPoints.handleBar, 2);
+        // threeDS.drawCylinderBetweenPoints(threeDS.bikeModelPoints.handleBar, threeDS.bikeModelPoints.handleBarGrip);
     }
 });
 
