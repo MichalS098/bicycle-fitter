@@ -2,11 +2,11 @@
     <ion-modal :is-open="props.show" :backdrop-dismiss="false">
         <div class="h-full flex flex-col justify-between">
             <div class="p-6">
-                <h1 class="text-5xl leading-[48px] mb-3 font-bold text-black">
+                <h1 class="text-3xl xs:text-5xl leading-tight xs:leading-[48px] mb-3 font-bold text-black">
                     {{ title }}
                 </h1>
-                <ion-img :src="props.image" class="instruction-ion-img" height="250" width="250"/>
-                <p class="text-lg text-gray-900 mt-3">
+                <ion-img :src="props.image" class="instruction-ion-img" height="250" width="250" />
+                <p class="text-sm xs:text-lg text-gray-900 mt-3">
                     {{ content }}
                 </p>
             </div>
@@ -71,8 +71,16 @@ ion-content {
 ion-toolbar {
     --background: #fff;
 }
+
 .instruction-ion-img::part(image) {
-    object-fit: contain;        
-    height: 250px;      
+    object-fit: contain;
+    height: 120px;
+}
+
+@media (min-width: 390px) {
+    .instruction-ion-img::part(image) {
+        object-fit: contain;
+        height: 250px;
+    }
 }
 </style>

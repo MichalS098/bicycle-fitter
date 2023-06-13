@@ -137,8 +137,8 @@ import { User } from '@/entity/User';
 import BikefitterPage from '@/components/BikefitterPage.vue';
 import InstructionModal from '@/components/InstructionModal.vue';
 
-const checkYourMeasuresInstructionShow = ref(false);
-const fillInYourDimensionsInstructionShow = ref(false);
+const checkYourMeasuresInstructionShow = ref<boolean>(false);
+const fillInYourDimensionsInstructionShow = ref<boolean>(false);
 
 const user = ref<User>();
 const savingSuccess = ref(false);
@@ -250,20 +250,20 @@ const userInputs = {
 };
 
 onMounted(async () => {
-    user.value = await getUserFromDatabase();    
+    user.value = await getUserFromDatabase();
     if (user.value != null) {
         if (!user.value.measurementsInstructionShown) {
             if (user.value.hasMeasuredWithCamera) {
                 checkYourMeasuresInstructionShow.value = true;
             } else {
-                
-                fillInYourDimensionsInstructionShow.value = true;     
+
+                fillInYourDimensionsInstructionShow.value = true;
             }
 
             user.value.measurementsInstructionShown = true;
             await user.value.save();
         }
-    }    
+    }
 });
 
 const updateUserModel = (key: string, value: any) => {
