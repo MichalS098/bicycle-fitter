@@ -47,7 +47,7 @@ const createBikeAnimation: AnimationBuilder = () => {
 };
 
 const router = useIonRouter();
-const create = () => {
+const create = () => {    
     router.navigate('/new-bike-steps', 'none', 'replace', createBikeAnimation);
 };
 </script>

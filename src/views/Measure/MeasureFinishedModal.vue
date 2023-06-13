@@ -7,7 +7,7 @@
                 </h1>
                 <p class="text-lg">
                     Now you can go to the app and add some bikes!
-                </p>                                
+                </p>
                 <ion-button @click="closeModal()" expand="block" shape="round" mode="ios" type="button" color="sand-desert"
                     class="font-bold text-lg">
                     Go to the app!
@@ -19,20 +19,15 @@
 
 <script lang="ts" setup>
 import { defineProps, defineEmits } from 'vue';
-import { IonModal, IonButton, IonContent, IonList, IonItem, IonLabel } from '@ionic/vue';
-import { BodyParamsFromMediapipe } from '@/functions/mediapipeCalculatedHumanParams';
+import { IonModal, IonButton, IonContent } from '@ionic/vue';
 
 const emits = defineEmits(['close']);
 
-const props = defineProps({
+defineProps({
     isOpen: {
         type: Boolean,
         default: false,
-    },
-    bodyParams: {
-        type: BodyParamsFromMediapipe,
-        required: true,
-    },
+    }
 });
 
 const closeModal = () => {

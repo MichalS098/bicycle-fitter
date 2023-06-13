@@ -8,6 +8,10 @@ export class User extends BaseEntity {
     @Column()
     unitSystem!: string;  // metric || imperial
     @Column()
+    hasMeasuredWithCamera!: boolean;
+    @Column()
+    measurementsInstructionShown!: boolean;    
+    @Column()
     language!: string;  // en || pl    
     @Column()
     riderStyle!: string;

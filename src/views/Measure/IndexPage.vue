@@ -1,17 +1,12 @@
 <template>
     <ion-page>
-        <ion-header :translucent="true" class="bikefitter-header">
-            <!-- DO NOT REMOVE THIS DIV -->
-            <div>
-            </div>
-        </ion-header>
         <ion-content :fullscreen="true" class="relative">
             <video playsinline="true" muted="true" loop="true" class="hidden" ref="video"
                 style="position: absolute; z-index: -1;"></video>
             <canvas class="absolute inset-0 w-full my-auto pd-15" ref="canvas"></canvas>
 
             <transition>
-                <div v-show="!allBodyPointsVisible"
+                <div v-show="!allBodyPointsVisible" id="bodypoints-alert"
                     class="absolute top-6 left-3 right-3 rounded-2xl bg-[#1f1f1f] border-gray-900 p-3 flex gap-3 items-start shadow-lg overflow-hidden">
                     <ion-icon :icon="alertCircleOutline" class="text-red-400 h-12 w-12 shrink-0"></ion-icon>
                     <div class="flex flex-col gap-3">
@@ -38,18 +33,14 @@
                 </div>
             </transition>
 
-            <!-- TODO: THIS IS A DEBUG FEATURE, REMOVE IN PRODUCTION-->
-            <button class=" absolute bottom-0 right-0 text-lg" @click="skip()">SKIP</button>
-
-            <measure-finished-modal :isOpen="showMeasureFinishedModal" @close="goToTheApp()" :bodyParams="bodyParams" />
-            
-
+            <measure-finished-modal :isOpen="showMeasureFinishedModal" @close="goToTheAppAfterMeasure()" />
+            <measure-instructions-modal @skipMeasure="skipMeasure()" />
         </ion-content>
     </ion-page>
 </template>
   
 <script lang="ts" setup>
-import { IonPage, IonContent, IonHeader, IonIcon, IonProgressBar } from '@ionic/vue';
+import { IonPage, IonContent, IonIcon, IonProgressBar } from '@ionic/vue';
 import { ref, onMounted, Transition } from "vue";
 import useMediapipe from '@/composables/useMediapipe';
 import { Camera } from '@mediapipe/camera_utils';
@@ -59,12 +50,8 @@ import { useIonRouter } from '@ionic/vue';
 import { getUserFromDatabase } from '@/helpers/helpersDataBase'
 import { areAllBodyPointsVisible } from '@/helpers/mediapipeHelpers';
 import MeasureFinishedModal from './MeasureFinishedModal.vue';
-
-import { Platforms } from '@ionic/vue';
-import { Plugins } from '@capacitor/core';
-
-const { Filesystem, Permissions } = Plugins;
-
+import MeasureInstructionsModal from './MeasureInstructionsModal.vue';
+import { User } from '@/entity/User';
 
 const router = useIonRouter();
 const video = ref<HTMLVideoElement>();
@@ -86,6 +73,7 @@ const showMeasureFinishedModal = ref(false);
 const allBodyPointsVisible = ref(false);
 const measuringProgress = ref(0);
 
+const user = ref<User | null>(null);
 let overallHeight: number;
 
 const measureDone = async () => {
@@ -127,10 +115,12 @@ onMounted(async () => {
         return;
     }
 
-    const user = await getUserFromDatabase();
-    if (user != null) {
-        overallHeight = user.overallHeight;
+    user.value = await getUserFromDatabase();
+
+    if (user.value != null) {
+        overallHeight = user.value.overallHeight;
     }
+
     setupMediaPipe(video.value, canvas.value);
 });
 
@@ -171,6 +161,54 @@ const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
     camera.value?.start();
 }
 
+const measureDone = async () => {
+    await camera.value?.stop();
+    measuringDone.value = true;
+    showMeasureFinishedModal.value = true;
+    await saveUserToDatabase();
+}
+
+const saveUserToDatabase = async () => {
+    if (user.value != null) {
+        user.value.shoulderHeight = bodyParams.value.shoulderHeight * 100;
+        user.value.armLength = bodyParams.value.armLength * 100;
+        user.value.shankLength = bodyParams.value.shankLength * 100;
+        user.value.thighLength = bodyParams.value.thighLength * 100;
+        user.value.inseamLength = bodyParams.value.inseamLength * 100;
+        await user.value.save();
+    }
+}
+
+const goToTheAppAfterMeasure = async () => {
+    if (user.value != null) {
+        showMeasureFinishedModal.value = false;
+        user.value.hasMeasuredWithCamera = true;
+        user.value.measurementsInstructionShown = false;
+        await user.value.save();
+        router.replace('/pages/profile/measurements');
+    }
+}
+
+const skipMeasure = async () => {
+    if (user.value != null) {
+        measuringDone.value = true;
+        bodyParams.value = {
+            shoulderHeight: 0,
+            footLength: 0,
+            armLength: 0,
+            shankLength: 0,
+            thighLength: 0,
+            inseamLength: 0,
+        }
+        await camera.value?.stop();
+        await saveUserToDatabase();
+        user.value.hasMeasuredWithCamera = false;
+        user.value.measurementsInstructionShown = false;
+        await user.value.save();
+        router.replace('/pages/profile/measurements');
+    }
+}
+
 </script>
 
 <style scoped>
@@ -199,5 +237,9 @@ const setupMediaPipe = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
 .fade-from-down-leave-from {
     opacity: 1;
     transform: translateY(0);
+}
+
+#bodypoints-alert {
+    top: calc(var(--ion-safe-area-top, 0) + 24px);
 }
 </style>
