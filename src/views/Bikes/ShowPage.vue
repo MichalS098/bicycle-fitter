@@ -122,7 +122,7 @@ const anglesFirst = ref<Angles | null>(null);
  */
 const measureOptions = [
     {
-        title: 'Seat length',
+        title: 'Reach',
         content: 'From the crossing point of saddle and seatpost to the middle of bar.',
         lengthCm: 0,
     },

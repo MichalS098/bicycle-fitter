@@ -47,7 +47,7 @@
                     :disabled="anyExpectationSelected()" />
             </step-card>
 
-            <step-card title="Your bike stem and crank length" sub-title="Please add bike params" :this-step="5"
+            <step-card title="Bike stem and crank length" sub-title="Insert your bike stem and crank length. If you dont know these values click info button." :this-step="5"
                 :current-step="currentStep" :number-of-steps="numberOfSteps" @prev="prevStep()" @next="nextStep()"
                 color="primary">
                 <button-input v-model="form.stemLength" type="number" inputmode="numeric"
@@ -60,7 +60,13 @@
                     <ion-alert :is-open="form.errors.crankLength != ''" header="Wrong crank length" :message="form.errors.crankLength"
                     :buttons="['OK']" @did-dismiss="form.errors.crankLength = ''">
                 </ion-alert>
+
+                <InformationCircleIcon class="mx-3 h-8 w-8 text-primary" @click="isCrankInfoModal = true" />
+
             </step-card>
+
+            <crank-info-modal :is-open="isCrankInfoModal" @close="isCrankInfoModal = false" />
+
         </ion-content>
     </ion-page>
 </template>
@@ -70,6 +76,7 @@ import { ref } from 'vue';
 import { IonList, IonItem, IonSelect, IonSelectOption, IonAlert } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { IonPage, IonContent, useIonRouter } from '@ionic/vue';
+import { InformationCircleIcon } from "@heroicons/vue/24/outline"
 import ButtonInput from '@/components/ButtonInput.vue';
 import StepsRadioButton from '@/components/StepsRadioButton.vue';
 import StepsCheckBox from '@/components/StepsCheckBox.vue';
@@ -84,9 +91,10 @@ import { onMounted, watch } from "vue";
 
 import { bikeExpectations } from '@/classes/bikeExpectations';
 
+import CrankInfoModal from '@/views/NewBikeSteps/CrankInfoModal.vue';
 
-
-const numberOfSteps = 5;
+const isCrankInfoModal = ref(false);
+const numberOfSteps = 6;
 const currentStep = ref(1);
 const router = useIonRouter();
 
