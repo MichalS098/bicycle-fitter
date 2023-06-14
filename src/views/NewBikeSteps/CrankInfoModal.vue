@@ -5,8 +5,8 @@
                 <ion-toolbar>
                     <ion-buttons slot="start">
                         <ion-button @click="closeModal()" color="primary" fill="clear">
-                            <ion-icon slot="start" :icon="arrowBackOutline"></ion-icon>
-                            Go back
+                            <ion-icon slot="start" :icon="chevronBackOutline"></ion-icon>
+                            Back
                         </ion-button>
                     </ion-buttons>
                     <ion-title>Bike dimentions</ion-title>
@@ -63,7 +63,7 @@
 <script lang="ts" setup>
 import { defineProps, defineEmits } from 'vue';
 import { IonModal, IonHeader, IonToolbar, IonButtons, IonButton, IonTitle, IonContent, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonIcon } from '@ionic/vue';
-import { arrowBackOutline } from 'ionicons/icons';
+import { chevronBackOutline } from 'ionicons/icons';
 
 const emits = defineEmits(['close']);
 

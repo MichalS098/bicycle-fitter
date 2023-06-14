@@ -2,7 +2,7 @@
     <bikefitter-page title="Measures" :without-title="true" :without-tab-bar="true" :background-color="'secondary'">
         <div>
             <ion-buttons slot="start">
-                <ion-back-button default-href="/pages/tips" color="light"></ion-back-button>
+                <ion-back-button default-href="/pages/profile" color="light"></ion-back-button>
             </ion-buttons>
 
             <div class="pt-3">
@@ -122,6 +122,8 @@
                 </ion-card-content>
             </ion-card>
 
+            <InformationCircleIcon class="mx-3 h-8 w-8 text-white" @click="isMeasureInfoModal = true" />
+            <measure-info-modal :is-open="isMeasureInfoModal" @close="isMeasureInfoModal = false" />
 
             <ion-button expand="block" color="light" @click="saveChanges" class="mt-6">
                 Save
@@ -141,6 +143,8 @@ import { getUserFromDatabase } from '@/helpers/helpersDataBase';
 import { User } from '@/entity/User';
 import BikefitterPage from '@/components/BikefitterPage.vue';
 import InstructionModal from '@/components/InstructionModal.vue';
+import { InformationCircleIcon } from "@heroicons/vue/24/outline"
+import MeasureInfoModal from '@/views/Profile/MeasureInfoModal.vue';
 
 const checkYourMeasuresInstructionShow = ref<boolean>(false);
 const fillInYourDimensionsInstructionShow = ref<boolean>(false);
@@ -148,6 +152,8 @@ const fillInYourDimensionsInstructionShow = ref<boolean>(false);
 const user = ref<User>();
 const savingSuccess = ref(false);
 
+
+const isMeasureInfoModal = ref(false);
 const userButtons = [
     {
         text: 'Cancel',
