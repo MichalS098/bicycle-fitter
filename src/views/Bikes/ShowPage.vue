@@ -24,7 +24,6 @@
             <BikeMeasurePopover :show="showingBikeMeasurePopover" :bikeMeasureInfo="currentBikeMeasureInfo"
                 @close="hideBikeMeasurePopover()" />
 
-
             <ion-modal ref="modal" :is-open="showModal" :breakpoints="[0.25, 1]" :initial-breakpoint="0.25"
                 :backdrop-dismiss="true" :backdrop-breakpoint="1" :swipe-to-close="true" :keyboard-close="true"
                 :showBackdrop="true" :animated="true" @ionBreakpointDidChange="ionBreakpointChange()">
@@ -95,9 +94,9 @@
   
 <script lang="ts" setup>
 import {
-    IonPage, useIonRouter, IonModal, IonContent, IonButton, IonHeader, onIonViewWillLeave, onIonViewWillEnter
+    IonPage, useIonRouter, IonModal, IonContent, IonButton, IonHeader, onIonViewWillLeave, onIonViewWillEnter, IonActionSheet
 } from '@ionic/vue';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, nextTick } from 'vue';
 import { XMarkIcon } from '@heroicons/vue/24/outline';
 import { Bike } from '@/entity/Bike';
 import { Tip } from '@/entity/Tip';
@@ -164,6 +163,8 @@ const goToAngleMeasure = () => {
     }
 };
 
+const modal = ref<typeof IonModal>();
+const isModalMinimized = ref<boolean>(true);
 
 onMounted(async () => {
     bike.value = await Bike.findOneBy({
@@ -195,6 +196,19 @@ onMounted(async () => {
         // threeDS.createAnimation(threeDS.bikeModelPoints.handleBarGrip, threeDS.bikeModelPoints.handleBar, 2);
         // threeDS.drawCylinderBetweenPoints(threeDS.bikeModelPoints.handleBar, threeDS.bikeModelPoints.handleBarGrip);
     }
+
+    console.log("shouldDisplayModal: ", localStorage.getItem('shouldDisplayModal'));
+    if (localStorage.getItem('shouldDisplayModal') === 'true') {
+
+        /*if (modal.value) {
+            await nextTick();
+            showModal.value = true;
+            isModalMinimized.value = false;
+            modal.value.$el.setCurrentBreakpoint(1.0);
+        }*/
+        localStorage.removeItem('shouldDisplayModal');
+
+    }
 });
 
 
@@ -203,11 +217,9 @@ const goToHome = () => {
     router.navigate('/pages/home', 'back', 'replace');
 };
 
-const modal = ref<typeof IonModal>();
-const isModalMinimized = ref<boolean>(true);
-
 const minimizeModal = () => {
     if (modal.value) {
+        console.log("HALOOOOOOOO minialize modal :modal.value?.$el.currentBreakpoint ", modal.value?.$el.currentBreakpoint)
         modal.value.$el.setCurrentBreakpoint(0.25);
     }
 }

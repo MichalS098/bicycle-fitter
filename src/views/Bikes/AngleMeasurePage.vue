@@ -12,6 +12,7 @@
 
             <div class="fixed w-full h-full top-0 left-0 bg-transparent">
                 <div class="absolute top-3/4 text-center text-base">Imagine this is a bike</div>
+                <button class="absolute top-0 right-0 p-2 xxs:p-4" @click="measureDone()">X</button>
             </div>
 
             <transition>
@@ -157,6 +158,7 @@ const measureDone = async () => {
         angles.bike = bike.value
         await angles.save();
 
+        localStorage.setItem('shouldDisplayModal', 'true');
         router.navigate('/bikes/' + bike.value.id, 'none', 'replace')
     }
 }

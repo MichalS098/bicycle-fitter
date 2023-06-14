@@ -9,6 +9,12 @@
                     Knee angle
                 </h3>
                 <div class="col-span-9 bg-[#7B1919] w-full h-[20px] relative rounded-[5px]">
+                    <span class="absolute left-0 top-[110%] text-xs text-gray-500">
+                        130°
+                    </span>
+                    <span class="absolute right-0 top-[110%] text-xs text-gray-500">
+                        165°
+                    </span>
                     <div class="absolute left-[10%] w-[40%] top-0 bottom-0 h-full bg-[#C1B015] rounded-[5px]">
                         <div class="absolute left-[10%] w-[40%] top-0 bottom-0 h-full bg-[#287853] rounded-[5px]">
 
@@ -39,9 +45,18 @@
                     Bicep angle
                 </h3>
                 <div class="col-span-9 bg-[#7B1919] w-full h-[20px] relative rounded-[5px]">
+                    <span class="absolute left-0 top-[110%] text-xs text-gray-500">
+                        0°
+                    </span>
+                    <span class="absolute right-0 top-[110%] text-xs text-gray-500">
+                        180°
+                    </span>
+
+                    
+                    <div class="triangle"></div>
                     <div class="absolute left-[10%] w-[40%] top-0 bottom-0 h-full bg-[#C1B015] rounded-[5px]">
                         <div class="absolute left-[10%] w-[40%] top-0 bottom-0 h-full bg-[#287853] rounded-[5px]">
-
+                            
                         </div>
                     </div>
                 </div>
@@ -51,6 +66,12 @@
                     Foot angle
                 </h3>
                 <div class="col-span-9 bg-[#7B1919] w-full h-[20px] relative rounded-[5px]">
+                    <span class="absolute left-0 top-[110%] text-xs text-gray-500">
+                        0°
+                    </span>
+                    <span class="absolute right-0 top-[110%] text-xs text-gray-500">
+                        180°
+                    </span>
                     <div class="absolute left-[10%] w-[40%] top-0 bottom-0 h-full bg-[#C1B015] rounded-[5px]">
                         <div class="absolute left-[10%] w-[40%] top-0 bottom-0 h-full bg-[#287853] rounded-[5px]">
 
@@ -61,6 +82,33 @@
         </ul>        
     </div>
 </template>
+<style>
+.triangle {
+  width: 0;
+  height: 0;
+  position: relative;
+}
+
+.triangle::before {
+  content: '';
+  position: absolute;
+  border: 10px solid transparent;
+  border-bottom-color: #FFFFFF;
+  top: 0;
+  left: 0;
+}
+
+.triangle::after {
+  content: '';
+  position: absolute;
+  border: 10px solid transparent;
+  border-left-color: #FFFFFF;
+  top: -10px;
+  left: -10px;
+}
+
+</style>
+
 <script lang="ts" setup>
 import { Angles } from '@/entity/Angles';
 

@@ -113,8 +113,8 @@ const form = ref({
     },
     noBikeModel: false,
     suggestNewBike: false,
-    stemLength: 0,
-    crankLength: 0,
+    stemLength: null,
+    crankLength: null,
     userUnitSystem: 'cm',
     errors: {
         crankLength: "",
@@ -175,7 +175,7 @@ const nextStep = async () => {
     } 
     else if (currentStep.value === 5) {
         if (form.value.userUnitSystem == 'metric') {
-            if (form.value.stemLength < 5 || form.value.stemLength > 14) {
+            if (form.value.stemLength == null || form.value.stemLength < 5 || form.value.stemLength > 14) {
                 form.value.errors.stemLength = "Stem length must be between 5 and 14 cm";
                 return;
             }
@@ -183,21 +183,21 @@ const nextStep = async () => {
 
 
         if (form.value.userUnitSystem == 'imperial') {
-            if (form.value.stemLength <  1.97 || form.value.stemLength > 5.51 ) {
+            if (form.value.stemLength == null ||form.value.stemLength <  1.97 || form.value.stemLength > 5.51 ) {
                 form.value.errors.stemLength = "Stem length must be between 1.97 and 5.51  inches";
                 return;
             }
         }
 
         if (form.value.userUnitSystem == 'metric') {
-            if (form.value.crankLength < 16 || form.value.crankLength > 18.5) {
+            if (form.value.crankLength == null || form.value.crankLength < 16 || form.value.crankLength > 18.5) {
                 form.value.errors.crankLength = "Crank length must be between 16 and 18.5 cm";
                 return;
             }
         }
 
         if (form.value.userUnitSystem == 'imperial') {
-            if (form.value.crankLength < 6.3 || form.value.crankLength > 7.28) {
+            if (form.value.crankLength == null || form.value.crankLength < 6.3 || form.value.crankLength > 7.28) {
                 form.value.errors.crankLength = "Crank length must be between  6.3 and 7.28 inches";
                 return;
             }
@@ -206,8 +206,10 @@ const nextStep = async () => {
         createBike();
     }
     if (currentStep.value < numberOfSteps) {
-        currentStep.value++;
-    }
+        setTimeout(() => {
+            currentStep.value++;
+        }, 200);
+    } 
 }
 
 const prevStep = () => {
@@ -229,12 +231,42 @@ const createBike = async () => {
 
     // Interview bike params
     const bike = new Bike();
-    bike.brand = form.value.bikeCompany;
-    bike.model = form.value.bikeModel;
+    if(form.value.bikeCompany == '')
+    {
+        bike.brand = "Unknow"
+    }
+    else
+    {
+        bike.brand = form.value.bikeCompany;
+    }
+    
+    if(form.value.bikeModel == '')
+    {
+        bike.model = "Unknow"
+    }
+    else
+    {
+        bike.model = form.value.bikeModel;
+    }
+    
     bike.type = form.value.bikeType;
     bike.style = form.value.bikeFittingGoal;
+    if(form.value.stemLength != null) {
     bike.stemLength = form.value.stemLength;
-    bike.crankLength = form.value.crankLength;
+    }
+    else 
+    {
+        bike.stemLength = 10;
+    }
+
+    if(form.value.crankLength != null) {
+        bike.crankLength = form.value.crankLength;
+    
+    }
+    else{
+        bike.crankLength = 18;
+    }
+    
 
     bike.expectationsBackOrNeckPain = form.value.expectations.backOrNeckPain;
     bike.expectationsButPain = form.value.expectations.butPain;
