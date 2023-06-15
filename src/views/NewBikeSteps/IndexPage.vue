@@ -226,7 +226,7 @@ const createBike = async () => {
     const bike = new Bike();
     if(form.value.bikeCompany == '')
     {
-        bike.brand = "Unknow"
+        bike.brand = form.value.bikeType + " bike";
     }
     else
     {
@@ -235,7 +235,7 @@ const createBike = async () => {
     
     if(form.value.bikeModel == '')
     {
-        bike.model = "Unknow"
+        bike.model = form.value.bikeFittingGoal;
     }
     else
     {
