@@ -44,6 +44,19 @@ export async function getUserFromDatabase(): Promise<User> {
     return user;
 }
 
+export async function checkIfUserHasMeasuredUp(): Promise<boolean> {
+    const user = await getUserFromDatabase();
+    return (
+        !!user.shankLength && 
+        !!user.thighLength &&
+        !!user.shoeSize &&
+        !!user.inseamLength &&
+        !!user.shoulderHeight &&
+        !!user.armLength &&
+        !!user.overallHeight
+    );
+}
+
 export async function dropDatabase(): Promise<void> {
     await AppDataSource.dropDatabase();        
 }
