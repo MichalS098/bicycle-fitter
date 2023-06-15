@@ -11,8 +11,7 @@
             <canvas class="absolute inset-0 w-full my-auto pd-15" ref="canvas"></canvas>
 
             <div class="fixed w-full h-full top-0 left-0 bg-transparent">
-                <div class="absolute top-3/4 text-center text-base">Imagine this is a bike</div>
-                <button class="absolute top-0 right-0 p-2 xxs:p-4" @click="measureDone()">X</button>
+                <div class="absolute top-3/4 text-center text-base">Imagine this is a bike</div>                
             </div>
 
             <transition>
@@ -28,7 +27,6 @@
                         </p>
                     </div>
                 </div>
-
             </transition>
 
 
@@ -62,6 +60,14 @@
                 </div>
             </transition>
 
+            <transition name="fade-from-down">
+                <ion-fab slot="fixed" vertical="bottom" horizontal="end" v-show="!allBodyPointsVisible">
+                    <ion-fab-button @click="measureDone()" color="secondary">
+                        <ion-icon :icon="playSkipForwardOutline"></ion-icon>
+                    </ion-fab-button>
+                </ion-fab>
+            </transition>
+
         </ion-content>
     </ion-page>
 </template>
@@ -71,7 +77,7 @@ import { IonPage, IonHeader, IonContent, IonIcon, IonProgressBar, IonButton, Ion
 import { ref, onMounted, Transition, watch, WatchOptions } from "vue";
 import useMediapipe from '@/composables/useMediapipe';
 import { Camera } from '@mediapipe/camera_utils';
-import { alertCircleOutline, chevronUpCircle, chevronBackOutline, hourglassOutline, options } from 'ionicons/icons';
+import { alertCircleOutline, chevronUpCircle, chevronBackOutline, hourglassOutline, options, playSkipForwardOutline } from 'ionicons/icons';
 import { getBodyAnglesFromMediapipeResults, BodyAnglesFromMediapipe, BodyAnglesMaxMin, getMaxMinEveryAngle } from '@/functions/mediapipeCalculatedHumanParams';
 import { useIonRouter } from '@ionic/vue';
 import { getUserFromDatabase } from '@/helpers/helpersDataBase'

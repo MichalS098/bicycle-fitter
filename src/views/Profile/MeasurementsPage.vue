@@ -136,7 +136,7 @@
   
 <script setup lang="ts">
 import {
-    IonButtons, IonBackButton, IonButton, IonToast, IonAlert, IonChip, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonList, IonItem
+    IonButtons, IonBackButton, IonButton, IonToast, IonAlert, IonChip, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonList, IonItem, onIonViewDidEnter
 } from '@ionic/vue';
 import { onMounted, ref } from 'vue';
 import { getUserFromDatabase } from '@/helpers/helpersDataBase';
@@ -175,7 +175,7 @@ const userButtons = [
                 valueString = 250;
             }
 
-            if (user?.value?.unitSystem === 'imperial') {                
+            if (user?.value?.unitSystem === 'imperial') {
                 valueString = Number((valueString / 0.393701).toFixed(0));
             } else {
                 valueString = Number(valueString.toFixed(0));
@@ -269,18 +269,24 @@ const userInputs = {
 
 onMounted(async () => {
     user.value = await getUserFromDatabase();
-    if (user.value != null) {
-        if (!user.value.measurementsInstructionShown) {
-            if (user.value.hasMeasuredWithCamera) {
-                checkYourMeasuresInstructionShow.value = true;
-            } else {
+});
 
-                fillInYourDimensionsInstructionShow.value = true;
-            }
+onIonViewDidEnter(async () => {
+    if (user.value === undefined) {
+        console.error('User is undefined in MeasurementsPage');
+        return;
+    }
 
-            user.value.measurementsInstructionShown = true;
-            await user.value.save();
+    if (!user.value.measurementsInstructionShown) {
+        if (user.value.hasMeasuredWithCamera) {
+            checkYourMeasuresInstructionShow.value = true;
+        } else {
+
+            fillInYourDimensionsInstructionShow.value = true;
         }
+
+        user.value.measurementsInstructionShown = true;
+        await user.value.save();
     }
 });
 
