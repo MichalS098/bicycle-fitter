@@ -11,13 +11,12 @@
             <canvas class="absolute inset-0 w-full my-auto pd-15" ref="canvas"></canvas>
 
             <div class="fixed w-full h-full top-0 left-0 bg-transparent">
-                <div class="absolute top-3/4 text-center text-base">Imagine this is a bike</div>
-                <button class="absolute top-0 right-0 p-2 xxs:p-4" @click="measureDone()">X</button>
+                <div class="absolute top-3/4 text-center text-base">Imagine this is a bike</div>                
             </div>
 
             <transition>
-                <div v-show="!allBodyPointsVisible"
-                    class="absolute top-6 left-3 right-3 rounded-2xl bg-[#1f1f1f] border-gray-900 p-3 flex gap-3 items-start shadow-lg overflow-hidden">
+                <div v-show="!allBodyPointsVisible" id="bodypoints-alert"
+                    class="absolute left-3 right-3 rounded-2xl bg-[#1f1f1f] border-gray-900 p-3 flex gap-3 items-start shadow-lg overflow-hidden">
                     <ion-icon :icon="alertCircleOutline" class="text-red-400 h-12 w-12 shrink-0"></ion-icon>
                     <div class="flex flex-col gap-3">
                         <h2 class="text-red-400 text-xl font-bold">
@@ -28,7 +27,6 @@
                         </p>
                     </div>
                 </div>
-
             </transition>
 
 
@@ -39,7 +37,7 @@
                 <ion-fab-list side="top">
                     <ion-fab-button @click="if (sideVisible == 'right') sideVisible = 'left'; else sideVisible = 'right';">
                         <ion-icon :icon="chevronBackOutline"></ion-icon>
-                    </ion-fab-button>                    
+                    </ion-fab-button>
                 </ion-fab-list>
             </ion-fab>
 
@@ -62,16 +60,24 @@
                 </div>
             </transition>
 
+            <transition name="fade-from-down">
+                <ion-fab slot="fixed" vertical="bottom" horizontal="end" v-show="!allBodyPointsVisible">
+                    <ion-fab-button @click="measureDone()" color="secondary">
+                        <ion-icon :icon="playSkipForwardOutline"></ion-icon>
+                    </ion-fab-button>
+                </ion-fab>
+            </transition>
+
         </ion-content>
     </ion-page>
 </template>
 
 <script lang="ts" setup>
-import { IonPage, IonHeader, IonContent, IonIcon, IonProgressBar, IonButton, IonFabButton, IonFabList, IonFab } from '@ionic/vue'; 
+import { IonPage, IonHeader, IonContent, IonIcon, IonProgressBar, IonButton, IonFabButton, IonFabList, IonFab } from '@ionic/vue';
 import { ref, onMounted, Transition, watch, WatchOptions } from "vue";
 import useMediapipe from '@/composables/useMediapipe';
 import { Camera } from '@mediapipe/camera_utils';
-import { alertCircleOutline, chevronUpCircle, chevronBackOutline, hourglassOutline, options } from 'ionicons/icons';
+import { alertCircleOutline, chevronUpCircle, chevronBackOutline, hourglassOutline, options, playSkipForwardOutline } from 'ionicons/icons';
 import { getBodyAnglesFromMediapipeResults, BodyAnglesFromMediapipe, BodyAnglesMaxMin, getMaxMinEveryAngle } from '@/functions/mediapipeCalculatedHumanParams';
 import { useIonRouter } from '@ionic/vue';
 import { getUserFromDatabase } from '@/helpers/helpersDataBase'
@@ -240,8 +246,9 @@ watch([allBodyPointsVisible, counter], function ([curVis, curCounter], [oldVis, 
 //         counter.value = 5;
 //     }
 // })
-
-
-
-
 </script>
+<style scoped>
+#bodypoints-alert {
+    top: calc(var(--ion-safe-area-top, 0) + 24px);
+}
+</style>

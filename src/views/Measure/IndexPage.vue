@@ -7,7 +7,7 @@
 
             <transition>
                 <div v-show="!allBodyPointsVisible" id="bodypoints-alert"
-                    class="absolute top-6 left-3 right-3 rounded-2xl bg-[#1f1f1f] border-gray-900 p-3 flex gap-3 items-start shadow-lg overflow-hidden">
+                    class="z-[10] absolute left-3 right-3 rounded-2xl bg-[#1f1f1f] border-gray-900 p-3 flex gap-3 items-start shadow-lg overflow-hidden">
                     <ion-icon :icon="alertCircleOutline" class="text-red-400 h-12 w-12 shrink-0"></ion-icon>
                     <div class="flex flex-col gap-3">
                         <h2 class="text-red-400 text-xl font-bold">
@@ -22,7 +22,7 @@
 
             <transition name="fade-from-down">
                 <div v-show="allBodyPointsVisible"
-                    class="absolute bottom-6 left-3 right-3 rounded-2xl bg-secondary border-gray-900 p-3 flex gap-3 items-start shadow-lg overflow-hidden">
+                    class="z-[10] absolute bottom-6 left-3 right-3 rounded-2xl bg-secondary border-gray-900 p-3 flex gap-3 items-start shadow-lg overflow-hidden">
                     <ion-icon :icon="hourglassOutline" class="text-white h-12 w-12 shrink-0"></ion-icon>
                     <div class="flex flex-col gap-3 w-full">
                         <h2 class="text-white text-xl font-bold">
@@ -33,6 +33,14 @@
                 </div>
             </transition>
 
+            <transition name="fade-from-down">
+                <ion-fab slot="fixed" vertical="bottom" horizontal="end" v-show="!allBodyPointsVisible">
+                    <ion-fab-button @click="skipMeasure()" color="secondary">
+                        <ion-icon :icon="playSkipForwardOutline"></ion-icon>
+                    </ion-fab-button>
+                </ion-fab>
+            </transition>
+
             <measure-finished-modal :isOpen="showMeasureFinishedModal" @close="goToTheAppAfterMeasure()" />
             <measure-instructions-modal @skipMeasure="skipMeasure()" />
         </ion-content>
@@ -40,11 +48,11 @@
 </template>
   
 <script lang="ts" setup>
-import { IonPage, IonContent, IonIcon, IonProgressBar } from '@ionic/vue';
+import { IonPage, IonContent, IonIcon, IonProgressBar, IonFab, IonFabButton } from '@ionic/vue';
 import { ref, onMounted, Transition } from "vue";
 import useMediapipe from '@/composables/useMediapipe';
 import { Camera } from '@mediapipe/camera_utils';
-import { alertCircleOutline, hourglassOutline } from 'ionicons/icons';
+import { alertCircleOutline, hourglassOutline, playSkipForwardOutline } from 'ionicons/icons';
 import { getBodyParamsFromMediapipeResultsWithCorrect, BodyParamsFromMediapipe, getBodyParamsMedian } from '@/functions/mediapipeCalculatedHumanParams';
 import { useIonRouter } from '@ionic/vue';
 import { getUserFromDatabase } from '@/helpers/helpersDataBase'
@@ -155,10 +163,10 @@ const measureDone = async () => {
 const saveUserToDatabase = async () => {
     if (user.value != null) {
         user.value.shoulderHeight = Number(bodyParams.value.shoulderHeight * 100);
-        user.value.armLength      = Number(bodyParams.value.armLength * 100);
-        user.value.shankLength    = Number(bodyParams.value.shankLength * 100);
-        user.value.thighLength    = Number(bodyParams.value.thighLength * 100);
-        user.value.inseamLength   = Number(bodyParams.value.inseamLength * 100);
+        user.value.armLength = Number(bodyParams.value.armLength * 100);
+        user.value.shankLength = Number(bodyParams.value.shankLength * 100);
+        user.value.thighLength = Number(bodyParams.value.thighLength * 100);
+        user.value.inseamLength = Number(bodyParams.value.inseamLength * 100);
         await user.value.save();
     }
 }
@@ -192,7 +200,6 @@ const skipMeasure = async () => {
         router.replace('/pages/profile/measurements');
     }
 }
-
 </script>
 
 <style scoped>

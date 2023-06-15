@@ -47,34 +47,33 @@
                     :disabled="anyExpectationSelected()" />
             </step-card>
 
-            <step-card title="Bike stem and crank length" sub-title="Insert your bike stem and crank length. If you dont know these values click info button." :this-step="5"
-                :current-step="currentStep" :number-of-steps="numberOfSteps" @prev="prevStep()" @next="nextStep()"
-                color="primary">
-                <button-input v-model="form.stemLength" type="number" inputmode="numeric"
-                    placeholder="Enter your stem length" :postfix="form.userUnitSystem === 'metric' ? 'cm' : 'inch'" />
-                <ion-alert :is-open="form.errors.stemLength != ''" header="Wrong stem length" :message="form.errors.stemLength"
-                    :buttons="['OK']" @did-dismiss="form.errors.stemLength = ''">
-                </ion-alert>
-                <button-input v-model="form.crankLength" type="number" inputmode="numeric"
-                    placeholder="Enter your crank length" :postfix="form.userUnitSystem === 'metric' ? 'cm' : 'inch'" />
-                    <ion-alert :is-open="form.errors.crankLength != ''" header="Wrong crank length" :message="form.errors.crankLength"
-                    :buttons="['OK']" @did-dismiss="form.errors.crankLength = ''">
-                </ion-alert>
+            <step-card title="Bike stem and crank length" sub-title="Insert your bike stem and crank length. If you dont know these values click info button." :this-step="5" :current-step="currentStep" :number-of-steps="numberOfSteps" @prev="prevStep()" @next="nextStep()" color="primary">
 
+                <div class="flex w-full flex-col">
+                    <div class="flex justify-end text-sm text-neutral-500 mb-1 mr-2">
+                        From 5 to 14 cm
+                    </div>
+                    <button-input v-model="form.stemLength" type="number" inputmode="numeric" placeholder="Enter your stem length" :postfix="form.userUnitSystem === 'metric' ? 'cm' : 'inch'" />                    
+                    <ion-alert :is-open="form.errors.stemLength != ''" header="Wrong stem length" :message="form.errors.stemLength" :buttons="['OK']" @did-dismiss="form.errors.stemLength = ''"></ion-alert>
+                </div>
+
+                <div class="flex w-full flex-col">                    
+                    <div class="flex justify-end text-sm text-neutral-500 mb-1 mr-2 mt-2">
+                        From 16 to 18.5 cm
+                    </div>
+                    <button-input v-model="form.crankLength" type="number" inputmode="numeric" placeholder="Enter your crank length" :postfix="form.userUnitSystem === 'metric' ? 'cm' : 'inch'" />
+                    <ion-alert :is-open="form.errors.crankLength != ''" header="Wrong crank length" :message="form.errors.crankLength" :buttons="['OK']" @did-dismiss="form.errors.crankLength = ''"></ion-alert>
+                </div>
                 <InformationCircleIcon class="mx-3 h-8 w-8 text-primary" @click="isCrankInfoModal = true" />
-
             </step-card>
-
             <crank-info-modal :is-open="isCrankInfoModal" @close="isCrankInfoModal = false" />
-
         </ion-content>
     </ion-page>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { IonList, IonItem, IonSelect, IonSelectOption, IonAlert } from '@ionic/vue';
-import { defineComponent } from 'vue';
+import { IonAlert } from '@ionic/vue';
 import { IonPage, IonContent, useIonRouter } from '@ionic/vue';
 import { InformationCircleIcon } from "@heroicons/vue/24/outline"
 import ButtonInput from '@/components/ButtonInput.vue';
@@ -82,15 +81,9 @@ import StepsRadioButton from '@/components/StepsRadioButton.vue';
 import StepsCheckBox from '@/components/StepsCheckBox.vue';
 import StepCard from '@/components/StepCard.vue';
 import { Bike } from '@/entity/Bike';
-import { User } from '@/entity/User';
 import { getUserFromDatabase } from '@/helpers/helpersDataBase';
-
 import { getBikefittingParams } from '@/functions/calculatedBikeFittingParams';
-
-import { onMounted, watch } from "vue";
-
-import { bikeExpectations } from '@/classes/bikeExpectations';
-
+import { onMounted } from "vue";
 import CrankInfoModal from '@/views/NewBikeSteps/CrankInfoModal.vue';
 
 const isCrankInfoModal = ref(false);
@@ -233,7 +226,7 @@ const createBike = async () => {
     const bike = new Bike();
     if(form.value.bikeCompany == '')
     {
-        bike.brand = "Unknow"
+        bike.brand = form.value.bikeType + " bike";
     }
     else
     {
@@ -242,7 +235,7 @@ const createBike = async () => {
     
     if(form.value.bikeModel == '')
     {
-        bike.model = "Unknow"
+        bike.model = form.value.bikeFittingGoal;
     }
     else
     {

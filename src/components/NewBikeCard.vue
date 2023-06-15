@@ -1,25 +1,50 @@
 <template>
-    <button type="button" @click="create" ref="bikeButton"
-        class="bike-button w-full aspect-[1.54] rounded-[30px] p-5 sm:p-6 md:p-8 lg:p-12 relative flex flex-col justify-between items-start overflow-hidden">
-        <div>
-            <h2 class="text-3xl xs:text-4xl text-white font-bold">
-                New bike
-            </h2>
-            <p class="text-left text-base xs:text-lg text-white">Add new bike</p>
-        </div>
-        <plus-icon class="w-10 h-10 text-white" />
-        <img src="@/../resources/images/bike.png" alt="realistic bike"
-            class="absolute object-contain top-[-25%] h-[145%] right-[-25%]" />
-    </button>
+    <div>
+        <button type="button" @click="create" ref="bikeButton"
+            class="bike-button w-full aspect-[1.54] rounded-[30px] p-5 sm:p-6 md:p-8 lg:p-12 relative flex flex-col justify-between items-start overflow-hidden">
+            <div>
+                <h2 class="text-3xl xs:text-4xl text-white font-bold">
+                    New bike
+                </h2>
+                <p class="text-left text-base xs:text-lg text-white">Add new bike</p>
+            </div>
+            <plus-icon class="w-10 h-10 text-white" />
+            <img src="@/../resources/images/bike.png" alt="realistic bike"
+                class="absolute object-contain top-[-25%] h-[145%] right-[-25%]" />
+        </button>
+
+        <IonAlert :is-open="notMeasuredAlertShowed" header="You need to measure up first"
+            message="You need to measure up first to create a new bike" :buttons="alertButtons" />
+    </div>
 </template>
 <script setup lang="ts">
+import { checkIfUserHasMeasuredUp } from '@/helpers/helpersDataBase';
 import { PlusIcon } from '@heroicons/vue/24/outline';
 import {
     useIonRouter,
     createAnimation,
-    AnimationBuilder
+    AnimationBuilder,
+    IonAlert
 } from '@ionic/vue';
 import { ref } from 'vue';
+
+const router = useIonRouter();
+const notMeasuredAlertShowed = ref<boolean>(false);
+const alertButtons = [
+    {
+        text: 'Cancel',
+        role: 'cancel',
+        handler: () => {
+            notMeasuredAlertShowed.value = false;
+        },
+    },
+    {
+        text: 'Measure up',
+        handler: () => {
+            router.navigate('/pages/profile/measurements', 'forward', 'push');
+        },
+    },
+]
 
 const bikeButton = ref<HTMLButtonElement | null>(null);
 const createBikeAnimation: AnimationBuilder = () => {
@@ -46,8 +71,14 @@ const createBikeAnimation: AnimationBuilder = () => {
     return createAnimation();
 };
 
-const router = useIonRouter();
-const create = () => {    
+const create = async () => {
+    const measured = await checkIfUserHasMeasuredUp();
+    notMeasuredAlertShowed.value = false;
+    if (!measured) {
+        notMeasuredAlertShowed.value = true;
+        return;
+    }
+
     router.navigate('/new-bike-steps', 'none', 'replace', createBikeAnimation);
 };
 </script>
