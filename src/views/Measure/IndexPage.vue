@@ -7,7 +7,7 @@
 
             <transition>
                 <div v-show="!allBodyPointsVisible" id="bodypoints-alert"
-                    class="absolute top-6 left-3 right-3 rounded-2xl bg-[#1f1f1f] border-gray-900 p-3 flex gap-3 items-start shadow-lg overflow-hidden">
+                    class="absolute left-3 right-3 rounded-2xl bg-[#1f1f1f] border-gray-900 p-3 flex gap-3 items-start shadow-lg overflow-hidden">
                     <ion-icon :icon="alertCircleOutline" class="text-red-400 h-12 w-12 shrink-0"></ion-icon>
                     <div class="flex flex-col gap-3">
                         <h2 class="text-red-400 text-xl font-bold">
