@@ -1,12 +1,14 @@
 <template>
     <ion-button expand="block" shape="round" :color="modelValue ? color : 'medium'" mode="ios" fill="outline" type="button"
-        class="radio-wizard-button" @click="$emit('update:modelValue', !modelValue)">
+        class="radio-wizard-button" @click="$emit('update:modelValue', !modelValue)">        
         {{ label }}
+        <IonIcon :icon="checkmarkOutline" v-if="modelValue" slot="end" />
     </ion-button>
 </template>
 
 <script setup lang="ts">
-import { IonButton } from '@ionic/vue';
+import { IonButton, IonIcon } from '@ionic/vue';
+import { checkmarkOutline } from 'ionicons/icons';
 import { defineProps, defineEmits } from 'vue';
 
 const props = defineProps({
