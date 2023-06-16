@@ -22,10 +22,10 @@
                         class="font-bold text-lg">
                         Get started!
                     </ion-button>
-                    <ion-button @click="goToExampleBikeFitting()" expand="block" shape="round" color="primary" mode="ios" type="button"
+                    <!-- <ion-button @click="goToExampleBikeFitting()" expand="block" shape="round" color="primary" mode="ios" type="button"
                         class="font-bold text-lg">
                         Example Bike Fitting
-                    </ion-button>
+                    </ion-button> -->
                 </div>
             </div>
 
