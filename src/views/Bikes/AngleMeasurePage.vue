@@ -164,7 +164,7 @@ const measureDone = async () => {
         angles.bike = bike.value
         await angles.save();
 
-        localStorage.setItem('shouldDisplayModal', 'true');
+        localStorage.setItem('angleMeasureDone', 'true');
         router.navigate('/bikes/' + bike.value.id, 'none', 'replace')
     }
 }

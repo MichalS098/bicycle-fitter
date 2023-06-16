@@ -55,7 +55,7 @@
                             </h2>
                             <tips-swiper :tips="tips" />
                         </div>
-                        <div>
+                        <div v-show="showAngleChart">
                             <h2 class="fitter-h2 mt-3 mb-3 text-white">
                                 Your bike fit
                             </h2>
@@ -115,6 +115,7 @@ const showModal = ref<boolean>(true);
 const router = useIonRouter();
 const threeDS = new threeDScene;
 const anglesFirst = ref<Angles | null>(null);
+const showAngleChart = ref<boolean>(false);
 
 /**
  * Bike measure popover options
@@ -197,16 +198,16 @@ onMounted(async () => {
         // threeDS.drawCylinderBetweenPoints(threeDS.bikeModelPoints.handleBar, threeDS.bikeModelPoints.handleBarGrip);
     }
 
-    console.log("shouldDisplayModal: ", localStorage.getItem('shouldDisplayModal'));
-    if (localStorage.getItem('shouldDisplayModal') === 'true') {
-
+    console.log("angleMeasureDone: ", localStorage.getItem('angleMeasureDone'));
+    if (localStorage.getItem('angleMeasureDone') === 'true') {
+        showAngleChart.value = true;
         /*if (modal.value) {
             await nextTick();
             showModal.value = true;
             isModalMinimized.value = false;
             modal.value.$el.setCurrentBreakpoint(1.0);
         }*/
-        localStorage.removeItem('shouldDisplayModal');
+        localStorage.removeItem('angleMeasureDone');
 
     }
 });
