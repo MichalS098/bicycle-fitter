@@ -100,6 +100,10 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/Profile/MeasurementsPage.vue')
     },
     {
+        path: '/pages/profile/fill-after-measure',
+        component: () => import('@/views/Profile/FillAfterMeasurePage.vue')
+    },
+    {
         path: '/pages/tips/:id',
         component: () => import('@/views/Tips/ShowPage.vue')
     },

@@ -177,7 +177,7 @@ const goToTheAppAfterMeasure = async () => {
         user.value.hasMeasuredWithCamera = true;
         user.value.measurementsInstructionShown = false;
         await user.value.save();
-        router.replace('/pages/profile/measurements');
+        router.replace('/pages/profile/fill-after-measure');
     }
 }
 
@@ -197,7 +197,7 @@ const skipMeasure = async () => {
         user.value.hasMeasuredWithCamera = false;
         user.value.measurementsInstructionShown = false;
         await user.value.save();
-        router.replace('/pages/profile/measurements');
+        router.replace('/pages/profile/fill-after-measure');
     }
 }
 </script>
