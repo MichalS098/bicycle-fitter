@@ -31,26 +31,26 @@
                     <div class="flex flex-col gap-6">
                         <div class="w-full h-[72px] flex items-center justify-between">
                             <div v-if="!isModalMinimized" class="w-full flex items-center justify-between">
-                                <button @click="goToHome()" type="button" class="text-primary">
+                                <button @click="goToHome()" type="button" class="text-primary text-sm px-2">
                                     Home
                                 </button>
-                                <button @click="minimizeModal()" type="button" class="text-primary">
+                                <button @click="minimizeModal()" type="button" class="text-primary text-sm  px-2">
                                     Close
                                 </button>
                             </div>
                             <div class="w-full flex items-center justify-between gap-6" v-if="isModalMinimized">
                                 <button @click="prevPoint"
-                                    class="rounded-full bg-neutral-900 px-7 py-3 text-sm font-bold border-solid border-white border-2 focus:text-primary focus:border-primary transition-colors">
+                                    class="rounded-full bg-neutral-900 px-7 py-2 text-sm font-bold border-solid border-white border-2 focus:text-primary focus:border-primary transition-colors">
                                     prev point
                                 </button>
                                 <button @click="nextPoint"
-                                    class="rounded-full bg-neutral-900 px-7 py-3 text-sm font-bold border-solid border-white border-2 focus:text-primary focus:border-primary transition-colors">
+                                    class="rounded-full bg-neutral-900 px-7 py-2 text-sm font-bold border-solid border-white border-2 focus:text-primary focus:border-primary transition-colors">
                                     next point
                                 </button>
                             </div>
                         </div>
                         <div>
-                            <h2 class="fitter-h2 mt-3 mb-3 text-white">
+                            <h2 class="fitter-h2 mb-3 text-white">
                                 Tips for you
                             </h2>
                             <tips-swiper :tips="tips" />
