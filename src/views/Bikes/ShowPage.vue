@@ -8,7 +8,7 @@
         <div class="h-screen w-screen bg-black relative">
             <div id="threejs-container" class="w-full h-full"></div>
 
-            <div class="absolute top-0 left-0 right-0 w-full px-6 py-6 xxs:py-12 xs:py-24 z-[10] flex justify-between">
+            <div class="absolute top-0 left-0 right-0 w-full px-6 py-2 xxs:py-4 xs:py-6 z-[10] flex justify-between">
                 <div>
                     <h1 class="text-4xl xs:text-5xl text-white font-bold">
                         {{ bike?.brand ?? 'No brand' }}

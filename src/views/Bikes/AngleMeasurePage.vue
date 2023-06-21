@@ -10,9 +10,9 @@
                 style="position: absolute; z-index: -1;"></video>
             <canvas class="absolute inset-0 w-full my-auto pd-15" ref="canvas"></canvas>
 
-            <div class="fixed w-full h-full top-0 left-0 bg-transparent">
+            <!-- <div class="fixed w-full h-full top-0 left-0 bg-transparent">
                 <div class="absolute top-3/4 text-center text-base">Imagine this is a bike</div>                
-            </div>
+            </div> -->
 
             <transition>
                 <div v-show="!allBodyPointsVisible" id="bodypoints-alert"
@@ -29,8 +29,7 @@
                 </div>
             </transition>
 
-
-            <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+<!--        <ion-fab slot="fixed" vertical="bottom" horizontal="end">
                 <ion-fab-button>
                     <ion-icon :icon="chevronUpCircle"></ion-icon>
                 </ion-fab-button>
@@ -39,7 +38,7 @@
                         <ion-icon :icon="chevronBackOutline"></ion-icon>
                     </ion-fab-button>
                 </ion-fab-list>
-            </ion-fab>
+            </ion-fab> -->
 
             <!--5s coundownd-->
             <transition>
@@ -60,14 +59,14 @@
                 </div>
             </transition>
 
-            <transition name="fade-from-down">
+            <!-- <transition name="fade-from-down">
                 <ion-fab slot="fixed" vertical="bottom" horizontal="end" v-show="!allBodyPointsVisible">
                     <ion-fab-button @click="measureDone()" color="secondary">
                         <ion-icon :icon="playSkipForwardOutline"></ion-icon>
                     </ion-fab-button>
                 </ion-fab>
-            </transition>
-
+            </transition> -->
+            <measure-angles-instructions-modal @cancelMeasure="cancelMeasure()" />
         </ion-content>
     </ion-page>
 </template>
@@ -88,6 +87,7 @@ import { Bike } from '@/entity/Bike';
 import { Angles } from '@/entity/Angles';
 import useMediapipePose from '@/composables/useMediapipe';
 import { ChevronLeftIcon } from '@heroicons/vue/24/outline';
+import MeasureAnglesInstructionsModal from './MeasureAnglesInstructionsModal.vue';
 
 const router = useIonRouter();
 const video = ref<HTMLVideoElement>();
@@ -246,6 +246,25 @@ watch([allBodyPointsVisible, counter], function ([curVis, curCounter], [oldVis, 
 //         counter.value = 5;
 //     }
 // })
+
+const cancelMeasure = async () => {
+
+    await camera.value?.stop();
+
+
+    measuringDone.value = true;
+
+
+    bike.value = await Bike.findOneBy({
+        id: bike_id
+    })
+
+
+    if (bike.value != null) {
+        localStorage.setItem('angleMeasureDone', 'false');
+        router.navigate('/bikes/' + bike.value.id, 'none', 'replace')
+    }
+}
 </script>
 <style scoped>
 #bodypoints-alert {
