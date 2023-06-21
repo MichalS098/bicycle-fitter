@@ -1,6 +1,6 @@
 {
     "appId": "com.bike.fitter.app",
-    "appName": "BicycleFitter",
+    "appName": "BikeFit",
     "webDir": "dist",
     "bundledWebRuntime": false,
     "plugins": {

@@ -2,7 +2,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
     "appId": "com.bike.fitter.app.project",
-    "appName": "BicycleFitter",
+    "appName": "BikeFit",
     "webDir": "dist",
     bundledWebRuntime: false,
     "plugins": {
