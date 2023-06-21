@@ -25,7 +25,7 @@
             title="Start measure on your bike"
             image="../../assets/images/instructions/luszwost_woman_on_a_bike_minimal_vector_design_white_background_abf43e57-9015-452e-88b4-7e22179ee87e.png"
             content="When the app sees your entire body it will 
-                    start counting down a 15 second timer. 
+                    start counting down a 5 second timer. 
                     During this time, get safely on your bike 
                     and start pedaling. The app will notify you 
                     when the measurements are complete." />

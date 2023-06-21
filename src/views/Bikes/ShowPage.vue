@@ -106,6 +106,7 @@ import { threeDScene } from '@/classes/threeDScene';
 import BikeMeasurePopover from '@/components/BikeMeasurePopover.vue';
 import AngleBarChart from '@/components/AngleBarChart.vue';
 import { Angles } from '@/entity/Angles';
+import * as THREE from 'three';
 
 const route = useRoute();
 const bike_id = Number(route.params.id);
@@ -194,6 +195,7 @@ onMounted(async () => {
     if (!threeDS.isInitialized()) {
         // console.log("threeDS is not initialized, creating new instance")        
         threeDS.init('#threejs-container');
+        threeDS.createStartCameraPozAnimation();
         // threeDS.createAnimation(threeDS.bikeModelPoints.handleBarGrip, threeDS.bikeModelPoints.handleBar, 2);
         // threeDS.drawCylinderBetweenPoints(threeDS.bikeModelPoints.handleBar, threeDS.bikeModelPoints.handleBarGrip);
     }

@@ -52,17 +52,17 @@ export class threeDScene {
     ];
 
     helperLines: Array<[THREE.Vector3, THREE.Vector3]> = [
-        [this.bikeModelPoints.saddle,        this.bikeModelPoints.aboveSaddle],
-        [this.bikeModelPoints.handleBarGrip, this.bikeModelPoints.aboveHandleBarGrip],
+        [this.bikeModelPoints.saddle,                 this.bikeModelPoints.aboveSaddle],
+        [this.bikeModelPoints.handleBarGrip,          this.bikeModelPoints.aboveHandleBarGrip],
 
-        [this.bikeModelPoints.saddle,        this.bikeModelPoints.forwardSaddle],
+        [this.bikeModelPoints.saddle,                 this.bikeModelPoints.forwardSaddle],
 
         [this.bikeModelPoints.saddle,                 this.bikeModelPoints.crankHBelowSeat],
         [this.bikeModelPoints.forwardcrankHBelowSeat, this.bikeModelPoints.crankHBelowSeat],
         [this.bikeModelPoints.crankMiddle,            this.bikeModelPoints.forwardcrankMiddle],
 
-        [this.bikeModelPoints.saddle,        this.bikeModelPoints.seatHUpwardHandleBarGrip],
-        [this.bikeModelPoints.handleBarGrip, this.bikeModelPoints.forwardhandleBarGrip]
+        [this.bikeModelPoints.saddle,                 this.bikeModelPoints.seatHUpwardHandleBarGrip],
+        [this.bikeModelPoints.handleBarGrip,          this.bikeModelPoints.forwardhandleBarGrip]
     ];
 
     _lengthFromMeasuredPointToCamera = 1;
@@ -287,6 +287,25 @@ export class threeDScene {
         });
     }
 
+    startGoToDefaultCameraPositionGSAP(duration: number, easing: string) {
+        const proxy = new THREE.Vector3(160, 110, -270);
+
+        gsap.to(proxy, {
+            x: this._defaultCameraPosition.x,
+            y: this._defaultCameraPosition.y,
+            z: this._defaultCameraPosition.z,
+            duration: duration,
+            ease: easing,
+            onUpdate: () => {
+                this._camera.position.set(proxy.x, proxy.y, proxy.z);
+                this.setCameraPosition(new THREE.Vector3(proxy.x, proxy.y, proxy.z));
+            },
+            onComplete: () => { 
+                console.log("onComplete");
+            }
+        });
+    }
+
     goToDefaultCameraLookAtGSAP(duration: number, easing: string) {
         const tweenLookAt = this.actualCameraLookAt;
 
@@ -306,6 +325,11 @@ export class threeDScene {
                 console.log("onComplete");
             }
         });
+    }
+
+    createStartCameraPozAnimation() {
+        this.startGoToDefaultCameraPositionGSAP( 2, this._easing );
+        this.goToDefaultCameraLookAtGSAP( 2, this._easing );
     }
 
     createDefaultCameraPozAnimation() {
@@ -431,6 +455,6 @@ export class threeDScene {
         requestAnimationFrame(this.animate.bind(this));
     
         this._renderer.render(this._scene, this._camera);
-        //console.log("position: ", this._camera.position);
+        // console.log("position: ", this._camera.position);
     }
 }
