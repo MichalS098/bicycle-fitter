@@ -5,7 +5,7 @@
         -->
         <div>
             <div class="pt-3">
-            <h1 class="fitter-h1">
+            <h1 class="fitter-h2">
                     Check your measures
                 </h1>
             </div>
