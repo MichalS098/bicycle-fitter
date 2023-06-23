@@ -10,7 +10,7 @@
                 </p>
                 <ion-button @click="closeModal()" expand="block" shape="round" mode="ios" type="button" color="sand-desert"
                     class="font-bold text-lg">
-                    Go to the app!
+                    Go next!
                 </ion-button>
             </div>
         </ion-content>

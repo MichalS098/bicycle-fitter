@@ -5,8 +5,8 @@
         -->
         <div>
             <div class="pt-3">
-                <h1 class="fitter-h1">
-                    Check your measurements
+            <h1 class="fitter-h1">
+                    Check your measures
                 </h1>
             </div>
 
