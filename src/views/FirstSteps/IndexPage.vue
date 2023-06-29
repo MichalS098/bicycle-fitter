@@ -22,10 +22,10 @@
                         class="font-bold text-lg">
                         Get started!
                     </ion-button>
-                        <!-- <ion-button @click="goToExampleBikeFitting()" expand="block" shape="round" color="primary" mode="ios" type="button"
+                        <ion-button @click="goToExampleBikeFitting()" expand="block" shape="round" color="primary" mode="ios" type="button"
                             class="font-bold text-lg">
                             Example Bike Fitting
-                        </ion-button> -->
+                        </ion-button>
                 </div>
             </div>
 
@@ -64,7 +64,7 @@
                 <InformationCircleIcon class="mx-3 h-8 w-8 text-secondary" @click="isRiderStyleInfoVisible = true" />
             </step-card>
 
-            <step-card title="Sit and Reach Test" sub-title="Sit and Reach Test" :this-step="4" :current-step="currentStep"
+            <step-card title="Reach Test" sub-title="How far do you reach in sit and reach test?" :this-step="4" :current-step="currentStep"
                 :number-of-steps="numberOfSteps" @prev="prevStep" @next="nextStep"
                 :error-message="form.errors.additionalSurvey">
                 <steps-radio-button @click="nextStep()" v-model="form.additionalSurvey" label="Palm to

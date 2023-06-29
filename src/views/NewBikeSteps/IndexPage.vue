@@ -39,7 +39,7 @@
                 :current-step="currentStep" :number-of-steps="numberOfSteps" @prev="prevStep()" @next="nextStep()"
                 color="primary">
                 <steps-check-box v-model="form.expectations.backOrNeckPain" label="Back Or Neck Pain" color="primary" :disabled="nothingSelected()" />
-                <steps-check-box v-model="form.expectations.butPain" label="But Pain" color="primary" :disabled="nothingSelected()" />
+                <steps-check-box v-model="form.expectations.butPain" label="Butt Pain" color="primary" :disabled="nothingSelected()" />
                 <steps-check-box v-model="form.expectations.kneePain" label="Knee pain" color="primary" :disabled="nothingSelected()" />
                 <steps-check-box v-model="form.expectations.feetPain" label="Feet pain" color="primary" :disabled="nothingSelected()" />
                 <steps-check-box v-model="form.expectations.clickPedals" label="Click pedals" color="primary" :disabled="nothingSelected()"  />
