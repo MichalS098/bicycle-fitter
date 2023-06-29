@@ -45,7 +45,7 @@ const category_tips_tip = [
         tipId: 7,
     },
     {
-        categoryId: 1,
+        categoryId: 2,
         tipId: 8,
     },
 ]
@@ -157,7 +157,7 @@ const tips = [
         A properly adjusted stem should allow you to relax your lower back, forearms and wrists. Browse your favorite marketplace for replacement stems – entry-level models aren’t usually that expensive and will give you some tools to experiment with.    </p>   `,
         favourite: false,
         featured_image_path: '../../assets/images/tip_blue.png',
-        color: 'tertiary'
+        color: 'primary'
     },
     {
         id: 6,
