@@ -101,6 +101,8 @@ const tips = [
         content: `     <p class="lead">
         Your entire bodymass is balanced between 3 points – the handlebars, the seat and the pedals. 
         To low or to high of a position may cause unnecessary tension in your joints. 
+        </p>
+        <p>Adjusting the height of the seat is not enough.
         Setting the tilt of the seat to far forward will force you to waste some of your 
         energy on supporting the mass with your feet. For every possible adjustible part 
         there are at least two ways you can end up with a misconfigured machine. Take your time. 
@@ -114,7 +116,10 @@ const tips = [
         id: 5,
         title: 'Handlebar adjustments ',
         description: 'Avoid overbent elbows and tense shoulders.',
-        content:  `     <p class="lead">If you suffer from constantly tense shoulders or overbent elbows, try swapping the stem (the part connecting the handlebar with the bike frame) with a different model. 
+        content:  `     <p class="lead">
+        If you suffer from constantly tense shoulders or overbent elbows, try swapping the stem (the part connecting the handlebar with the bike frame) with a different model. 
+        </p>
+        <p>
         A handlebar set to low or too high may cause tension in the lower back as well as your arms. If the make of your bike allows for it, try experimenting with the stem by, for instance, rotating it upside down. 
 
         A properly adjusted stem should allow you to relax your lower back, forearms and wrists. Browse your favorite marketplace for replacement stems – entry-level models aren’t usually that expensive and will give you some tools to experiment with.    </p>   `,
