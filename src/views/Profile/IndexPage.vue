@@ -57,7 +57,7 @@ import { languageOutline, optionsOutline, trashOutline } from 'ionicons/icons';
 import BikefitterPage from '@/components/BikefitterPage.vue';
 import MeasurementsCard from '@/components/MeasurementsCard.vue';
 import { User } from '@/entity/User';
-import { getUserFromDatabase, getLastBikeOfUser } from '@/helpers/helpersDataBase';
+import { getUserFromDatabase, getLastBikeOfUser, getLastAnglesOfBike, getLengthOfBikesInDataBase } from '@/helpers/helpersDataBase';
 import { onMounted, ref } from 'vue';
 
 const router = useIonRouter();
@@ -86,12 +86,27 @@ const alertButtons = [
 ];
 
 const deleteDataBaseAndReturnFirstSteps = async () => {
-    const bikeTemp = await getLastBikeOfUser();
+    let bikeTemp = null;
     const userTemp = await getUserFromDatabase();
+    let angelsTemp = null;
     try {
-        if (bikeTemp) {
-            await bikeTemp.remove();
+        const lengthOfBikeInDataBaseTemp = await getLengthOfBikesInDataBase();
+
+        for (let i = 0; i < lengthOfBikeInDataBaseTemp; i++) {
+            console.log("WYKONANO FORA");
+
+            angelsTemp = await getLastAnglesOfBike();
+            if (angelsTemp) {
+                await angelsTemp.remove();
+            }
+
+            bikeTemp = await getLastBikeOfUser();
+            if (bikeTemp) {
+                await bikeTemp.remove();
+            }
+
         }
+
         if (userTemp) {
             await userTemp.remove();
         }
