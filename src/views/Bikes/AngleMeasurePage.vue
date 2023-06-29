@@ -104,7 +104,7 @@ const route = useRoute(); //shouldnt we use IonicRouter?
 const bike_id = Number(route.params.id);
 const bike = ref<Bike | null>();
 
-const samples = 60 * 3;
+const samples = 60 * 1;
 
 const bodyAngles = ref<BodyAnglesMaxMin>({
     footFloorAngleMax: 0,
