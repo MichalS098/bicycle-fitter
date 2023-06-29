@@ -43,7 +43,11 @@ const category_tips_tip = [
     {
         categoryId: 3,
         tipId: 7,
-    }
+    },
+    {
+        categoryId: 1,
+        tipId: 8,
+    },
 ]
 
 const tips = [
@@ -51,16 +55,23 @@ const tips = [
         id: 1,
         title: 'About Bike Fitting ',
         description: 'The best bike fitting begins with a solid foundation of knowledge. ',
-        content: `<p class="lead">
-        Bike fitting is more than just a few simple adjustments - it's a science. 
-        Understanding how different parts of your bike interact will help you make the most effective changes.</p>      
+        content: `
+        <p class="lead">
+        Bike fitting is more than just a few simple adjustments - it's a science. Understanding how different parts of your bike interact will help you make the most effective changes.</p>      
+        
+        <h2>Learning the Basics</h2>
         <p>Start by learning the basics. Find out how the height of your saddle affects your pedaling efficiency and knee comfort. 
         Learn how the position of your handlebars can change your posture and impact the load on your wrists and back. 
-        Understand how the length of the crank affects the power you can generate, as well as your range of motion. 
-        Every type of bike - mountain, road, city - has its specific requirements for bike fitting, so it's worth 
-        learning what these differences are. Additionally, each of us has a unique body structure, which means that the ideal bike settings will differ for each person. 
-        Our app is a rich source of information about bike fitting. Use the available educational materials to better understand what changes you can make, what benefits 
-        these changes will bring, and what additional adjustments you may need in the future. The knowledge you gain will help you better understand the suggestions and advice given by our app. </p>`,
+        Understand how the length of the crank affects the power you can generate, as well as your range of motion.</p>
+    
+        <h2>Different Bikes, Different Requirements</h2>
+        <p>Every type of bike - mountain, road, city - has its specific requirements for bike fitting, so it's worth learning what these differences are. 
+        Additionally, each of us has a unique body structure, which means that the ideal bike settings will differ for each person.</p>
+    
+        <h2>Utilize Our App</h2>
+        <p>Our app is a rich source of information about bike fitting. Use the available educational materials to better understand what changes you can make, what benefits 
+        these changes will bring, and what additional adjustments you may need in the future. The knowledge you gain will help you better understand the suggestions and advice given by our app.</p>
+        `,
         favourite: false,
         featured_image_path: '../../assets/images/tip_education.png',
         color: 'primary'
@@ -69,12 +80,22 @@ const tips = [
         id: 2,
         title: 'Saddle Adjustment Guide',
         description: 'Saddle position is crucial for your comfort, performance, and prevention of injuries.',
-        content: `<p class="lead">
+        content: `
+        <p class="lead">
         The saddle is one of the three contact points between the cyclist and the bike, and its proper adjustment can drastically change your cycling experience.</p>      
+    
+        <h2>Saddle Height and Tilt</h2>
         <p>The first factor to consider is saddle height. It should be set in a way that allows your leg to be slightly bent when the pedal is at the lowest point. An improperly adjusted saddle can lead to inefficiency and knee pain. Next, consider saddle tilt. Ideally, it should be level to support your full body weight and allow you to move around on the seat when necessary.</p>
+    
+        <h2>Fore and Aft Positioning</h2>
         <p>The third point of saddle adjustment is fore and aft positioning. When your foot is on the pedal with the crank arm parallel to the ground, your kneecap should be directly over the pedal axle. This position promotes efficient pedaling and reduces strain on the knees. Remember, tiny adjustments can make a huge difference to your comfort and performance, so take the time to fine-tune your saddle position.</p>
+    
+        <h2>Saddle Type</h2>
         <p>Just as important is the type of saddle. Everyone's anatomy is different, and there is no one-size-fits-all. Some might prefer a wider, more cushioned saddle, while others might go for a narrow, racing style one. It may take several tries to find the one that fits you best, so don't be discouraged if the first saddle you try doesn't feel right.</p>
-        <p>Use our app to keep track of your adjustments, note the changes you feel, and progressively refine your setup. Over time, this will help you understand what works best for your body, your bike, and your style of cycling.</p>`,
+    
+        <h2>Using Our App</h2>
+        <p>Use our app to keep track of your adjustments, note the changes you feel, and progressively refine your setup. Over time, this will help you understand what works best for your body, your bike, and your style of cycling.</p>
+        `,
         favourite: false,
         featured_image_path: '../../assets/images/tip_orange.png',
         color: 'secondary'
@@ -84,12 +105,22 @@ const tips = [
         id: 3,
         title: 'Importance of Bike Geometry',
         description: 'Understanding bike geometry will allow you to choose a bike that best suits your riding style and comfort needs.',
-        content: `<p class="lead">
+        content: `
+        <p class="lead">
         Bike geometry refers to the various lengths and angles that make up a bike frame. These measurements greatly affect how a bike will perform and feel.</p>      
+    
+        <h2>Top Tube Length</h2>
         <p>One of the most important aspects is the top tube length, as it largely determines the reach - the distance from the saddle to the handlebars. If the reach is too long, you may end up stretching out and straining your back and shoulders; if it's too short, you might feel cramped and unable to breathe properly.</p>
+    
+        <h2>Seat Tube Angle</h2>
         <p>The seat tube angle also matters, as it determines the position of your body relative to the pedals. A steeper angle (more vertical) puts you over the pedals, which is good for climbing and racing, while a slacker angle (more horizontal) offers a more relaxed position.</p>
+    
+        <h2>Head Tube Angle</h2>
         <p>Similarly, the head tube angle affects steering responsiveness. Steeper angles result in quicker but potentially twitchier steering, suitable for racing bikes. Slacker angles yield more stable, relaxed steering, common on endurance and mountain bikes.</p>
-        <p>Knowing these fundamentals of bike geometry will help you make an informed choice when buying a bike or adjusting an existing one to your needs. Combined with a proper saddle and handlebar adjustment, understanding bike geometry will allow you to optimize your ride for comfort, speed, or anything in between. Consult our app for more specific advice on bike geometry.</p>`,
+    
+        <h2>Making an Informed Choice</h2>
+        <p>Knowing these fundamentals of bike geometry will help you make an informed choice when buying a bike or adjusting an existing one to your needs. Combined with a proper saddle and handlebar adjustment, understanding bike geometry will allow you to optimize your ride for comfort, speed, or anything in between. Consult our app for more specific advice on bike geometry.</p>
+        `,
         favourite: false,
         featured_image_path: '../../assets/images/tip_modification.png',
         color: 'secondary'
@@ -98,16 +129,17 @@ const tips = [
         id: 4,
         title: 'Not so plug-and-play ',
         description: 'Expect to spend some time on adjusting your bike. ',
-        content: `     <p class="lead">
-        Your entire bodymass is balanced between 3 points – the handlebars, the seat and the pedals. 
-        To low or to high of a position may cause unnecessary tension in your joints. 
-        </p>
-        <p>Adjusting the height of the seat is not enough.
-        Setting the tilt of the seat to far forward will force you to waste some of your 
-        energy on supporting the mass with your feet. For every possible adjustible part 
-        there are at least two ways you can end up with a misconfigured machine. Take your time. 
-        Repeat the process as many times as you need or want. Configuring the optimal position will 
-        take time and effort, so don’t be afraid of some trial and error.  </p>   `,
+        content: `    
+        <p class="lead">
+    Your entire body mass is balanced between 3 points – the handlebars, the seat and the pedals. 
+    Too low or too high of a position may cause unnecessary tension in your joints.</p>      
+
+    <h2>Seat Adjustments</h2>
+    <p>Adjusting the height of the seat is not enough. Setting the tilt of the seat too far forward will force you to waste some of your energy on supporting the mass with your feet. For every possible adjustable part, there are at least two ways you can end up with a misconfigured machine.</p>
+
+    <h2>The Importance of Trial and Error</h2>
+    <p>Take your time. Repeat the process as many times as you need or want. Configuring the optimal position will take time and effort, so don’t be afraid of some trial and error.</p>
+          `,
         favourite: true,
         featured_image_path: '../../assets/images/tip_interactivity.png',
         color: 'primary'
@@ -145,16 +177,64 @@ const tips = [
         id: 7,
         title: 'Preparation for Your Bike Trip',
         description: 'Proper planning and preparation can make your cycling trip a success.',
-        content: `<p class="lead">
-        A well-prepared bike trip can be a rewarding adventure, whether it's a short day trip or a long-distance journey. Here are some important things to consider.</p>
+        content: `
+        <p class="lead">
+        A well-prepared bike trip can be a rewarding adventure, whether it's a short day trip or a long-distance journey. Here are some important things to consider.</p>      
+    
+        <h2>Bike Inspection and Repair Kit</h2>
         <p>Firstly, always inspect your bike before setting off. Check the tire pressure, brakes, chain, and gears to ensure everything is functioning correctly. A basic repair kit including a multitool, inner tubes, patch kit, tire levers, and a portable pump or CO2 inflator is essential.</p>
+    
+        <h2>Planning Your Route</h2>
         <p>Planning your route in advance is key. Research the terrain and consider the difficulty level - be realistic about your abilities. Using GPS navigation or a cycling app can help keep you on track. Remember to check the weather forecast and plan accordingly.</p>
+    
+        <h2>Hydration and Nutrition</h2>
         <p>Hydration and nutrition are vital, especially for longer rides. Carry enough water and high-energy snacks to replenish your energy. For longer trips, plan where you can restock.</p>
+    
+        <h2>Clothing and Safety</h2>
         <p>Wear suitable clothing. Consider the weather and the length of your ride. A helmet is essential, and cycling-specific clothing can greatly enhance your comfort. Don't forget about sun protection and a pair of quality cycling gloves.</p>
-        <p>Lastly, always inform someone about your route and estimated return time. Safety should be your top priority.</p>
-        <p>Our app provides comprehensive resources for bike trip planning, including gear checklists, route suggestions, and advice on nutrition and hydration. Leverage these to make your next bike trip an unforgettable adventure.</p>`,
+        <p>Lastly, always inform someone about your route and estimated return time. Safety should be your top priority.</p>    
+        `,
         favourite: false,
         featured_image_path: '../../assets/images/tip_jezus.png',
+        color: 'tertiary'
+    },
+    {
+        id: 8,
+        title: 'Choosing the Right Bike Frame Size',
+        description: 'Choosing the right bike frame size is crucial for your comfort and performance.',
+        content: `<h2>Frame Sizes in the Market</h2>
+        <p>Bike frame sizes are usually expressed in inches or centimeters. The most common sizes range from 14 to 24 inches for mountain bikes, and 48 to 62 cm for road bikes. Note that different brands may use slightly different scales, so always check the product details.</p>
+    
+        <h2>Matching Frame Size to Your Height</h2>
+        <p>To match the frame size to your height, you can use the following guidelines:</p>
+        <ul>
+            <li>Mountain Bike:
+                <ul>
+                    <li>14" - for people with a height of 150-160 cm</li>
+                    <li>16" - for people with a height of 160-170 cm</li>
+                    <li>18" - for people with a height of 170-180 cm</li>
+                    <li>20" - for people with a height of 180-190 cm</li>
+                    <li>22" - for people with a height of 190 cm or above</li>
+                </ul>
+            </li>
+            <li>Road Bike:
+                <ul>
+                    <li>48-51 cm - for people with a height of 157-168 cm</li>
+                    <li>52-54 cm - for people with a height of 169-178 cm</li>
+                    <li>55-57 cm - for people with a height of 179-188 cm</li>
+                    <li>58-61 cm - for people with a height of 189-200 cm</li>
+                    <li>62 cm and above - for people with a height of 200 cm or above</li>
+                </ul>
+            </li>
+        </ul>
+    
+        <h2>Always Try It Out</h2>
+        <p>Remember, different brands and models of bikes can differ in size, even if they have the same nominal frame size. Therefore, it is always worthwhile to try out the bike before buying.</p>
+        
+        <p>Remember, safety and comfort are paramount. By choosing the right frame size, you will not only gain comfort but also increase your performance during your ride.</p>
+        `,
+        favourite: true,
+        featured_image_path: '../../assets/images/framesize2.png',
         color: 'tertiary'
     }
 ]
